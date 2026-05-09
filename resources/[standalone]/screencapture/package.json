@@ -1,0 +1,8 @@
+{
+  "name": "screencapture",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "supports-color": "8.1.1"
+  }
+}

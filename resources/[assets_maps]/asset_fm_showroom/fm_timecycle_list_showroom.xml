@@ -1,0 +1,53 @@
+<timecycle_modifier_data version="1.000000">
+<modifier name="fm_showroom_tc" numMods="49" userFlags="2">
+        <light_natural_amb_down_intensity>0.000 0.000</light_natural_amb_down_intensity>
+        <light_natural_amb_up_intensity>0.000 0.000</light_natural_amb_up_intensity>
+        <light_natural_amb_up_intensity_mult>0.000 0.000</light_natural_amb_up_intensity_mult>
+        <light_natural_push>0.000 0.000</light_natural_push>
+        <light_artificial_int_down_col_r>1.000 1.000</light_artificial_int_down_col_r>
+        <light_artificial_int_down_col_g>0.894 1.000</light_artificial_int_down_col_g>
+        <light_artificial_int_down_col_b>0.792 1.000</light_artificial_int_down_col_b>
+        <light_artificial_int_down_intensity>0.500 0.000</light_artificial_int_down_intensity>
+        <light_artificial_int_up_col_r>1.000 1.000</light_artificial_int_up_col_r>
+        <light_artificial_int_up_col_g>0.894 1.000</light_artificial_int_up_col_g>
+        <light_artificial_int_up_col_b>0.792 1.000</light_artificial_int_up_col_b>
+        <light_artificial_int_up_intensity>0.400 0.000</light_artificial_int_up_intensity>
+        <ped_light_col_r>0.973 1.000</ped_light_col_r>
+        <ped_light_col_g>0.827 1.000</ped_light_col_g>
+        <ped_light_col_b>0.573 1.000</ped_light_col_b>
+        <ped_light_mult>1.000 0.200</ped_light_mult>
+        <light_amb_occ_mult>2.664 0.000</light_amb_occ_mult>
+        <light_amb_occ_mult_ped>0.205 0.000</light_amb_occ_mult_ped>
+        <light_amb_occ_mult_veh>1.000 0.000</light_amb_occ_mult_veh>
+        <light_amb_occ_mult_prop>0.185 0.000</light_amb_occ_mult_prop>
+        <light_amb_volumes_in_diffuse>0.579 0.000</light_amb_volumes_in_diffuse>
+        <ssao_inten>4.272 0.000</ssao_inten>
+        <postfx_exposure_min>-1.000 0.000</postfx_exposure_min>
+        <postfx_exposure_max>0.400 0.000</postfx_exposure_max>
+        <postfx_bright_pass_thresh>0.650 0.000</postfx_bright_pass_thresh>
+        <postfx_intensity_bloom>0.200 0.000</postfx_intensity_bloom>
+        <dir_shadow_softness>1.000 0.000</dir_shadow_softness>
+        <fog_start>5000.000 5000.000</fog_start>
+        <fog_density>1.000 1.000</fog_density>
+        <fog_falloff>0.500 0.500</fog_falloff>
+        <fog_base_height>0.000 0.000</fog_base_height>
+        <fog_haze_col_r>0.412 1.000</fog_haze_col_r>
+        <fog_haze_col_g>0.576 1.000</fog_haze_col_g>
+        <fog_haze_col_b>0.776 1.000</fog_haze_col_b>
+        <fog_volume_light_size>1.000 0.000</fog_volume_light_size>
+        <fogray_intensity>0.000 0.000</fogray_intensity>
+        <fogray_density>1.000 0.000</fogray_density>
+        <fogray_nearfade>0.000 0.000</fogray_nearfade>
+        <fogray_farfade>1.000 0.000</fogray_farfade>
+        <reflection_lod_range_start>0.000 0.000</reflection_lod_range_start>
+        <reflection_lod_range_end>0.000 0.000</reflection_lod_range_end>
+        <reflection_slod_range_start>0.000 0.000</reflection_slod_range_start>
+        <reflection_slod_range_end>0.000 0.000</reflection_slod_range_end>
+        <reflection_interior_range>150.000 0.000</reflection_interior_range>
+        <reflection_tweak_interior_amb>6.000 0.000</reflection_tweak_interior_amb>
+        <reflection_tweak_emissive>4.000 0.000</reflection_tweak_emissive>
+        <temperature>20.000 0.000</temperature>
+        <natural_ambient_multiplier>0.000 0.000</natural_ambient_multiplier>
+        <artificial_int_ambient_multiplier>0.700 0.000</artificial_int_ambient_multiplier>
+    </modifier>
+</timecycle_modifier_data>
