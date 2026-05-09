@@ -1,0 +1,158 @@
+/* No Mantine global bundle — FiveM NUI must never paint body/html opaque */
+
+.sale-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.75rem 0.75rem 0.75rem clamp(0.5rem, 2vw, 1.5rem);
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.sale-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  /* Explicitly no backdrop-filter (FiveM CEF) */
+}
+
+.sale-panel {
+  position: relative;
+  z-index: 1;
+  width: min(20rem, 100%);
+  flex: 0 1 auto;
+  background: #000000;
+  border: 1px solid rgba(201, 125, 255, 0.22);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.sale-accent-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #7a22c9;
+}
+
+.sale-inner {
+  padding: 0.5rem 0.55rem 0.9rem 1rem;
+  margin-left: 3px;
+}
+
+.sale-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
+.sale-close-x {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(201, 125, 255, 0.65);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.sale-close-x:hover {
+  color: #e8c8ff;
+  background: rgba(122, 34, 201, 0.22);
+}
+
+.sale-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.sale-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(201, 125, 255, 0.22);
+  background: rgba(122, 34, 201, 0.06);
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.sale-item:hover {
+  background: rgba(122, 34, 201, 0.14);
+  border-color: rgba(201, 125, 255, 0.5);
+}
+
+.sale-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.sale-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.sale-stock {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #c97dff;
+  opacity: 0.75;
+}
+
+.sale-price {
+  font-size: 0.7rem;
+  color: #c97dff;
+  opacity: 0.65;
+}
+
+.sale-item-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c97dff;
+  text-align: right;
+}
+
+.sale-cancel {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #7a22c9;
+  background: transparent;
+  color: #c97dff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.sale-cancel:hover {
+  background: rgba(122, 34, 201, 0.15);
+}

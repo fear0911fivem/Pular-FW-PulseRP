@@ -1,0 +1,28 @@
+/*
+  FiveM NUI: keep the entire CEF layer transparent whenever the sale UI is closed.
+  Do not import @mantine/core/styles.css here — it sets body { background-color: ... }
+  and blacks out the game.
+*/
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: transparent !important;
+  background-color: transparent !important;
+  /* Let clicks pass to the game when the UI is empty; .sale-shell sets pointer-events: auto */
+  pointer-events: none;
+}
