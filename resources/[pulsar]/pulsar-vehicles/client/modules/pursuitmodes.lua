@@ -11,7 +11,7 @@ end)
 local _timeout = false
 
 AddEventHandler('Vehicles:Client:StartUp', function()
-    exports['pulsar-hud']:InteractionRegisterMenu("vehicle-megaphone", false, "megaphone", function(data)
+    exports['pulsar-hud']:InteractionRegisterMenu("vehicle-megaphone", false, "bullhorn", function(data)
         exports['pulsar-hud']:InteractionHide()
         _inPursuitVehicleMegaphone = not _inPursuitVehicleMegaphone
         Entity(_inPursuitVehicle).state:set('VehicleMegaphone', _inPursuitVehicleMegaphone, true)
