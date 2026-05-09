@@ -171,10 +171,6 @@ function UpdateVOIPIndicatorStatus()
 		indicatorColor = "#ababab"
 		indicatorIcon = "microphone"
 
-		if RADIO_CHANNEL and RADIO_CHANNEL > 0 then
-			indicatorIcon = "walkie-talkie"
-		end
-
 		if CALL_CHANNEL and CALL_CHANNEL > 0 then
 			indicatorIcon = "phone-volume"
 		end
@@ -185,6 +181,7 @@ function UpdateVOIPIndicatorStatus()
 
 		if RADIO_TALKING then
 			talking = 2
+			indicatorIcon = "walkie-talkie"
 		end
 
 		fillPercent = (100 / #VOIP_CONFIG.Modes) * CURRENT_VOICE_MODE
