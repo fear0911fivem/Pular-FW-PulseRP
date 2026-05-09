@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Text } from '@mantine/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
@@ -7,40 +7,26 @@ import { useInteractionStore } from '../../store/interaction'
 import { nui } from '../../nui'
 import {
   COLOR_PRIMARY, COLOR_BG_DARK, COLOR_BAR_BG,
-  INTERACTION_RADIUS, INTERACTION_DEAD_ZONE,
+  INTERACTION_RADIUS,
 } from '../../hudTheme'
 
 const RADIUS    = INTERACTION_RADIUS
 const ITEM_SIZE = 66
-const DEAD_ZONE = INTERACTION_DEAD_ZONE
 
 export default function InteractionMenu() {
   const { showing, items, layer } = useInteractionStore()
   const [hoveredIdx, setHoveredIdx] = useState(-1)
-  const containerRef = useRef<HTMLDivElement>(null)
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const el = containerRef.current
-    if (!el || items.length === 0) return
-    const rect = el.getBoundingClientRect()
-    const dx = e.clientX - (rect.left + rect.width  / 2)
-    const dy = e.clientY - (rect.top  + rect.height / 2)
-    if (Math.sqrt(dx * dx + dy * dy) < DEAD_ZONE) { setHoveredIdx(-1); return }
-    const mouseAngle = Math.atan2(dy, dx)
-    let closest = 0, minDiff = Infinity
-    items.forEach((_, i) => {
-      const itemAngle = (i / items.length) * 2 * Math.PI - Math.PI / 2
-      let diff = Math.abs(mouseAngle - itemAngle)
-      if (diff > Math.PI) diff = 2 * Math.PI - diff
-      if (diff < minDiff) { minDiff = diff; closest = i }
-    })
-    setHoveredIdx(closest)
-  }, [items])
-
-  const handleClick = () => {
-    if (hoveredIdx < 0 || !items[hoveredIdx]) return
-    nui.send('Interaction:Trigger', { id: items[hoveredIdx].id })
-  }
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.key === 'F1' || e.key === 'Escape') && showing) {
+        e.preventDefault()
+        nui.send('Interaction:Hide', {})
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [showing])
 
   const handleBack = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -60,9 +46,7 @@ export default function InteractionMenu() {
 
   return (
     <Box
-      ref={containerRef}
       onClick={handleHide}
-      onMouseMove={handleMouseMove}
       style={{
         position: 'absolute',
         inset: 0,
@@ -72,8 +56,7 @@ export default function InteractionMenu() {
         zIndex: 500,
       }}
     >
-      {/* Items */}
-      {items.map((item, i) => {
+      {(items ?? []).map((item, i) => {
         const angle  = (i / items.length) * 2 * Math.PI - Math.PI / 2
         const x      = Math.cos(angle) * RADIUS
         const y      = Math.sin(angle) * RADIUS
@@ -82,7 +65,12 @@ export default function InteractionMenu() {
         return (
           <Box
             key={item.id}
-            onClick={handleClick}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(-1)}
+            onClick={(e) => {
+              e.stopPropagation()
+              nui.send('Interaction:Trigger', { id: item.id })
+            }}
             style={{
               position: 'absolute',
               width:  rem(ITEM_SIZE),
@@ -108,27 +96,28 @@ export default function InteractionMenu() {
                 style={{ color: active ? COLOR_PRIMARY : 'rgba(255,255,255,0.7)', fontSize: rem(24) }}
               />
             )}
-            <Text
-              style={{
-                fontSize: rem(12),
-                fontWeight: 600,
-                color: active ? '#fff' : 'rgba(255,255,255,0.55)',
-                letterSpacing: '0.04em',
-                textAlign: 'center',
-                lineHeight: 1.2,
-                maxWidth: rem(ITEM_SIZE - 8),
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {item.label}
-            </Text>
+            {item.label && (
+              <Text
+                style={{
+                  fontSize: rem(12),
+                  fontWeight: 600,
+                  color: active ? '#fff' : 'rgba(255,255,255,0.55)',
+                  letterSpacing: '0.04em',
+                  textAlign: 'center',
+                  lineHeight: 1.2,
+                  maxWidth: rem(ITEM_SIZE - 8),
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {item.label}
+              </Text>
+            )}
           </Box>
         )
       })}
 
-      {/* Center hub */}
       <Box
         onClick={layer > 0 ? handleBack : handleClose}
         style={{

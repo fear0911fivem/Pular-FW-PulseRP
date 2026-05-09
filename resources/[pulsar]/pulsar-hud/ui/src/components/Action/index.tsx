@@ -28,11 +28,12 @@ export function ActionBanner() {
         <Box
           style={{
             ...styles,
+            willChange: 'opacity',
             position: 'absolute',
-            bottom: '15%',
-            left: 0, right: 0,
-            margin: 'auto',
-            width: 'fit-content',
+            bottom: '10%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 'max-content',
             maxWidth: rem(500),
             background: COLOR_BG_DARK,
             border: `1px solid ${primary}40`,

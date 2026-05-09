@@ -63,6 +63,7 @@ export default function ProgressBar() {
         <Box
           style={{
             ...styles,
+            willChange: 'opacity',
             position: 'absolute',
             bottom: rem(PROGRESS_BOTTOM),
             left: '50%',

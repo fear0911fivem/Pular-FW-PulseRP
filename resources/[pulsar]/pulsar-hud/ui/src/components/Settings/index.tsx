@@ -88,7 +88,7 @@ export default function Settings() {
   useEffect(() => { if (isOpen) setState({ ...config }) }, [isOpen])
 
   useEffect(() => {
-    const validTypes = (BAR_TYPES[state.layout] ?? BAR_TYPES.default).map((t) => t.value)
+    const validTypes = (BAR_TYPES[state.layout] ?? BAR_TYPES.minimap).map((t) => t.value)
     if (!validTypes.includes(state.statusType)) {
       setState((s) => ({ ...s, statusType: validTypes[0] as HudConfig['statusType'] }))
     }
@@ -109,7 +109,7 @@ export default function Settings() {
   const set = (key: keyof HudConfig, value: unknown) =>
     setState((s) => ({ ...s, [key]: value }))
 
-  const statusTypeOptions = BAR_TYPES[state.layout] ?? BAR_TYPES.default
+  const statusTypeOptions = BAR_TYPES[state.layout] ?? BAR_TYPES.minimap
 
   if (!isOpen) return null
   return (

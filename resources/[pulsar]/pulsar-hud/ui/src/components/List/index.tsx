@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Box, Text, ScrollArea, Transition } from '@mantine/core'
+import { Box, Text, Transition } from '@mantine/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { rem } from '@mantine/core'
@@ -112,11 +112,11 @@ export default function ListMenu() {
           <Box style={{ height: rem(1), background: COLOR_DIVIDER, flexShrink: 0 }} />
 
           {/* Items */}
-          <ScrollArea style={{ flex: 1 }}>
-            {menu.items.map((item: ListItem, k: number) => (
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+            {(menu.items ?? []).map((item: ListItem, k: number) => (
               <ListItemRow key={`${active}-${k}`} index={k} item={item} />
             ))}
-          </ScrollArea>
+          </div>
         </Box>
       )}
     </Transition>

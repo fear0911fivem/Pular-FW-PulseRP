@@ -34,7 +34,7 @@ export default function ProgressTicks({ pct, curr, dur, displayLabel, cancelled,
           {displayLabel}
         </Text>
         {!cancelled && !finished && !failed && dur > 0 && (
-          <Text style={{ fontSize: rem(13), color: 'rgba(255,255,255,0.75)', letterSpacing: '0.04em', lineHeight: 1 }}>
+          <Text style={{ fontSize: rem(13), color: 'rgba(255,255,255,0.75)', letterSpacing: '0.04em', lineHeight: 1, minWidth: rem(28), textAlign: 'right' }}>
             {secsLeft}s
           </Text>
         )}
@@ -54,6 +54,7 @@ export default function ProgressTicks({ pct, curr, dur, displayLabel, cancelled,
                 background: isLit ? fillColor : 'rgba(255,255,255,0.07)',
                 boxShadow: isLeading ? `0 0 10px ${fillColor}, 0 0 4px ${fillColor}` : 'none',
                 transition: 'background 0.08s, box-shadow 0.08s, height 0.08s',
+                animation: isLeading && !cancelled && !finished && !failed ? 'tick-bounce 0.6s ease-in-out infinite' : 'none',
                 flexShrink: 0,
               }}
             />

@@ -2,10 +2,20 @@
 html { font-size: 0.833vw; color-scheme: normal !important; }
 body { background: transparent !important; }
 
+::-webkit-scrollbar       { width: 0.2rem; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 0.15rem; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
 @keyframes hud-flash {
   0%   { opacity: 1; }
   50%  { opacity: 0.1; }
   100% { opacity: 1; }
+}
+
+@keyframes tick-bounce {
+  0%, 100% { transform: scaleY(1);   }
+  50%       { transform: scaleY(1.5); }
 }
 
 @keyframes hud-flash-mild {
