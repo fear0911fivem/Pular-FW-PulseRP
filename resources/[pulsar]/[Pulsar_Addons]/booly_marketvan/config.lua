@@ -1,15 +1,15 @@
 Config = {
     Debug = false,
     UseBlip = false,
-    EnableSpotlight = true, -- Draws a spotlight over the weapon previews
-    Framework = 'mythic', -- mythic, sandbox (autlaws), pulsar
+    EnableSpotlight = false, -- Draws a spotlight over the weapon previews
+    Framework = 'pulsar', -- mythic, sandbox (autlaws), pulsar
     VpnItem = 'vpn',
     Vehicle = {
         color = {
             primary = 7,
             secondary = 0
         },
-        plate = "TREYSVAN"
+        plate = "PULSE"
     }
 }
 
