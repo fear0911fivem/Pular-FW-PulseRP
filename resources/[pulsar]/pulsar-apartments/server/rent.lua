@@ -8,7 +8,7 @@ end
 
 local function SendRentEmail(source, subject, body)
 	if not source or source <= 0 then return end
-	exports["pulsar-phone"]:EmailSend(source, "rent@nexus.gov", os.time(), subject, body)
+	exports["pulsar-phone"]:EmailSend(source, "rent@pulse.gov", os.time(), subject, body)
 end
 
 -- Attempt to charge rent from the character's personal bank account.
