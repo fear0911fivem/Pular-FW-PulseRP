@@ -109,4 +109,7 @@ Config.ExcludedModels = {
     [`ambulance`] = true,
     [`firetruk`] = true,
     [`taxi`] = true,
+    -- ONX MODELS ( WIP )
+    [`onx_polbuff`] = true,
+    [`onx_polscout`] = true,
 }
