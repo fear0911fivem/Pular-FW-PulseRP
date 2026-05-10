@@ -2357,7 +2357,6 @@ AnimData.Emotes = {
 		AdditionalOptions = {
 			AvailableToChar = true,
 			EmoteLoop = true,
-			EmoteLoop = true,
 		},
 	},
 	["warmth"] = {
@@ -3302,7 +3301,7 @@ AnimData.Emotes = {
 		},
 	},
 
-	["jazzhands"] = {
+	--[["jazzhands"] = {
 		AnDictionary = "anim@mp_player_intcelebrationfemale@jazz_hands",
 		AnAnim = "jazz_hands",
 		AdditionalOptions = {
@@ -3311,6 +3310,7 @@ AnimData.Emotes = {
 			EmoteDuration = 6000,
 		},
 	},
+	--]]
 
 	["threaten"] = {
 		AnDictionary = "random@atmrobberygen",
@@ -3805,7 +3805,7 @@ AnimData.PropEmotes = {
 			BlockVehicle = true,
 		},
 	},
-	["map"] = {
+	--[[["map"] = {
 		AnDictionary = "amb@world_human_tourist_map@male@idle_b",
 		AnAnim = "idle_d",
 		AdditionalOptions = {
@@ -3817,7 +3817,7 @@ AnimData.PropEmotes = {
 			EmoteMoving = true,
 			BlockVehicle = true,
 		},
-	},
+	},--]]
 	["mining"] = {
 		AnDictionary = "melee@large_wpn@streamed_core",
 		AnAnim = "ground_attack_on_spot",
