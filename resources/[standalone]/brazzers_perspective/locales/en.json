@@ -1,0 +1,11 @@
+{
+    "freemCamEnable": "Enable/Disable Freecam",
+    "freeCamForward": "Freecam Forward",
+    "freeCamBackward": "Freecam Backward",
+    "freeCamLeft": "Freecam Left",
+    "freeCamRight": "Freecam Right",
+    "freeCamUp": "Freecam Up",
+    "freeCamDown": "Freecam Down",
+    "zoom": "Zoom Camera",
+    "freeCamLock": "Lock freecam"
+}
