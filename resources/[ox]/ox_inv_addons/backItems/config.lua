@@ -63,6 +63,15 @@ Config.BackItems = {
     ['WEAPON_MILITARYRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
     ['WEAPON_HEAVYRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
     ['WEAPON_TACTICALRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
+    -- MARKO MODS
+    ['WEAPON_UBR_OG'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_UBR_MODERN'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_UBR_CQB'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_FMAS'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_DRAGON'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_DRAGON_GOLD'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_VIRTUS_1'] = { prio = 3, group = 'back', visibility = 1 },
+    ['WEAPON_MB47'] = { prio = 3, group = 'back', visibility = 1 },
 
     -- SMGs
     ['WEAPON_SMG'] = { prio = 2, group = 'back', visibility = 1 },
@@ -114,9 +123,9 @@ Config.BackItems = {
     ['WEAPON_HOMINGLAUNCHER'] = { prio = 5, group = 'back', visibility = 1 },
 
     -- Melee
-    --['WEAPON_BAT'] = { prio = 1, group = 'back', visibility = 1, customPos = { pos = { x = 0.4, y = -0.15 }, rot = { y = 270.0 } } },
-    --['WEAPON_CROWBAR'] = { prio = 1, group = 'back', visibility = 1 },
-    --['WEAPON_GOLFCLUB'] = { prio = 1, group = 'back', visibility = 1 },
+    ['WEAPON_BAT'] = { prio = 1, group = 'back', visibility = 1, customPos = { pos = { x = 0.4, y = -0.15 }, rot = { y = 270.0 } } },
+    ['WEAPON_CROWBAR'] = { prio = 1, group = 'back', visibility = 1 },
+    ['WEAPON_GOLFCLUB'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_HAMMER'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_HATCHET'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_MACHETE'] = { prio = 1, group = 'back', visibility = 1 },
@@ -129,7 +138,7 @@ Config.BackItems = {
     --['WEAPON_KNUCKLE'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_NIGHTSTICK'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_FLASHLIGHT'] = { prio = 1, group = 'back', visibility = 1 },
-    --['WEAPON_POOLCUE'] = { prio = 1, group = 'back', visibility = 1 },
+    ['WEAPON_POOLCUE'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_STONE_HATCHET'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_SHOVEL'] = { prio = 1, group = 'back', visibility = 1 },
     --['WEAPON_SHIV'] = { prio = 1, group = 'back', visibility = 1 },
