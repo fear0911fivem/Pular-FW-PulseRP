@@ -1,0 +1,381 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: transparent;
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================================ */
+/* Radio Wheel - GTA V Style                    */
+/* ============================================ */
+
+#radio-wheel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: wheelFadeIn 180ms ease-out;
+    background: radial-gradient(circle at center,
+        rgba(0,0,0,0.65) 0%,
+        rgba(0,0,0,0.45) 30%,
+        rgba(0,0,0,0.15) 55%,
+        transparent 75%);
+}
+
+@keyframes wheelFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#wheel-container {
+    position: relative;
+    width: 780px;
+    height: 780px;
+    pointer-events: none;
+}
+
+#stations-ring {
+    position: absolute;
+    inset: 0;
+    transition: transform 220ms cubic-bezier(.22,.9,.33,1);
+    transform-origin: 50% 50%;
+}
+
+/* Station items around the wheel */
+.station-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255,255,255,0.55);
+    font-size: 26px;
+    pointer-events: auto;
+    filter: grayscale(1) brightness(0.8);
+    opacity: 0.75;
+    transition: transform 220ms cubic-bezier(.22,.9,.33,1),
+                filter 220ms ease, opacity 220ms ease,
+                box-shadow 220ms ease, border-color 220ms ease,
+                background 220ms ease;
+}
+
+.station-item .icon-inner {
+    transition: transform 220ms cubic-bezier(.22,.9,.33,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.station-item .icon-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.station-item.selected {
+    filter: none;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: #3B82F6;
+    border-width: 3px;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+    z-index: 5;
+}
+
+/* .active = currently playing station (visual hint kept subtle, not conflicting with .selected) */
+.station-item.active:not(.selected) {
+    border-color: rgba(255, 255, 255, 0.35);
+    opacity: 0.9;
+}
+
+/* Fixed OFF button below wheel */
+#off-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% + 380px));
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: rgba(239, 68, 68, 0.85);
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(239, 68, 68, 0.45);
+    cursor: pointer;
+    z-index: 11;
+    transition: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+#off-button:hover, #off-button.selected {
+    color: #fff;
+    background: rgba(239, 68, 68, 0.3);
+    border-color: #EF4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.35), 0 0 24px rgba(239, 68, 68, 0.5);
+}
+
+/* ============================================ */
+/* Center text (station name + song info)       */
+/* ============================================ */
+
+#wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#center-label {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+    line-height: 1.2;
+}
+
+#now-playing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    margin-top: 10px;
+}
+
+#np-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+}
+
+#np-artist {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+}
+
+/* ============================================ */
+/* Volume Control                               */
+/* ============================================ */
+
+#volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 6px 14px;
+}
+
+#volume-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.1em;
+}
+
+#volume-slider {
+    -webkit-appearance: none;
+    width: 120px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.2);
+    outline: none;
+    pointer-events: none;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+}
+
+#volume-value {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    min-width: 32px;
+}
+
+/* ============================================ */
+/* Now Playing Bar (persistent, bottom screen)  */
+/* ============================================ */
+
+#now-playing-bar {
+    position: fixed;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(15, 15, 15, 0.93);
+    border-radius: 10px;
+    z-index: 5000;
+    pointer-events: none;
+    animation: npbFadeIn 250ms ease-out;
+    width: 250px;
+    box-sizing: border-box;
+}
+
+@keyframes npbFadeIn {
+    from { opacity: 0; transform: translate(8px, -50%); }
+    to { opacity: 1; transform: translate(0, -50%); }
+}
+
+#npb-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#npb-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
+
+#npb-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: 2px;
+}
+
+#npb-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    line-height: 1.3;
+}
+
+#npb-artist {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    line-height: 1.3;
+}
+
+#npb-artist .scroll-inner,
+#npb-title .scroll-inner {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.scrolling .scroll-inner {
+    animation: npbMarquee 12s linear infinite;
+}
+
+@keyframes npbMarquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ============================================ */
+/* Progress Bar + Times                         */
+/* ============================================ */
+
+#npb-progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#npb-progress {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+#npb-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 2px;
+}
+
+#npb-progress-dot {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+#npb-times {
+    display: flex;
+    justify-content: space-between;
+}
+
+#npb-time-current,
+#npb-time-total {
+    font-size: 9px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.35);
+    font-variant-numeric: tabular-nums;
+}
