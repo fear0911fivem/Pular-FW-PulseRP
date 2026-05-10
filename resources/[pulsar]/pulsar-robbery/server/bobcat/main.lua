@@ -59,7 +59,7 @@ local function SpawnPeds(source)
 	local peds = {}
 
 	for k, v in ipairs(_bc.pedLocations) do
-		local p = CreatePed(5, `s_m_m_armoured_03`, v[1], v[2], v[3], v[4], true, true)
+		local p = CreatePed(5, `s_m_m_armoured_01`, v[1], v[2], v[3], v[4], true, true)
 		local w = _bc.weapons[math.random(#_bc.weapons)]
 		Entity(p).state.crimePed = true
 		GiveWeaponToPed(p, w, 99999, false, true, true)
@@ -400,7 +400,7 @@ AddEventHandler("Robbery:Server:Setup", function()
 													for i = 1, amount do
 														local model = `S_M_M_Security_01`
 														if type == 2 then
-															model = `s_m_m_armoured_03`
+															model = `s_m_m_armoured_01`
 														end
 
 														local p = CreatePed(5, model, coords.x + math.random(-1.0, 1.0),
