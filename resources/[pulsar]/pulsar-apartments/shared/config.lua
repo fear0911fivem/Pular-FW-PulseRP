@@ -3,11 +3,11 @@ Config = {}
 -- Reception Ped Configuration
 Config.ReceptionPeds = {
     { model = 'a_m_y_business_02', coords = vector4(-462.133, -914.929, 27.186, 89.516) },
-    { model = 'a_m_y_business_02', coords = vector4(-469.433, -1038.747, 23.438, 356.081) },
-    { model = 'a_m_y_business_02', coords = vector4(-825.249, -701.638, 27.134, 317.235) },
+    --{ model = 'a_m_y_business_02', coords = vector4(-469.433, -1038.747, 23.438, 356.081) },
+    --{ model = 'a_m_y_business_02', coords = vector4(-825.249, -701.638, 27.134, 317.235) },
 }
 
-Config.HotelElevatorsDesc = {
+--[[Config.HotelElevatorsDesc = {
     ["nexus_apartment_block_1"] = {
         [-1] = "Garage",
         [0] = "Lobby",
@@ -29,9 +29,9 @@ Config.HotelElevatorsDesc = {
         [6] = "Rooms: 600 - 606",
         [7] = "Rooms: 700 - 706",
     }
-}
+}--]]
 
-Config.HotelElevators = {
+--[[Config.HotelElevators = {
     ["nexus_apartment_block_1"] = { -- hotel
         [-1] = { -- GARAGE
             bucketReset = true, -- Resets bucket to global route when arriving at this floor
@@ -334,9 +334,9 @@ Config.HotelElevators = {
             },
         },
     },
-}
+}--]]
 
-Config.HotelRooms = {
+--[[Config.HotelRooms = {
     ["nexus_apartment_block_1"] = {
         label = "La Putura - Building 1",
         -- FIRST FLOOR
@@ -928,8 +928,8 @@ Config.HotelRooms = {
                 shower = vector3(-461.4172, -890.1202, 108.20253)
             }
         },
-    },
-    ["nexus_apartment_block_2"] = {
+    },--]]
+    --[[["nexus_apartment_block_2"] = {
         label = "La Putura - Building 2",
         -- FIRST FLOOR
         [1] = {
@@ -1527,181 +1527,181 @@ Config.HotelRooms = {
             }
         },
     }
+}--]]
+--[[
+    ["pink_cage"] = {
+        -- FIRST FLOOR
+        [1] = {
+            roomLabel = 1,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(307.33673, -213.2884, 54.219924),
+                stash = vector3(306.04263, -204.5437, 54.225761),
+                wardrobe = vector3(302.41131, -207.3485, 54.225765),
+                logout = vector3(304.64755, -203.2297, 54.367156),
+                shower = vector3(304.64755, -203.2297, 54.367156)
+            }
+        },
+        [2] = {
+            roomLabel = 2,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(311.20318, -203.4407, 54.219985),
+                stash = vector3(309.81057, -194.8552, 54.225807),
+                wardrobe = vector3(306.28399, -197.4455, 54.225811),
+                logout = vector3(308.4595, -193.2355, 54.36721),
+                shower = vector3(308.4595, -193.2355, 54.36721)
+            }
+        },
+        [3] = {
+            roomLabel = 3,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(315.7221, -195.0128, 54.226726),
+                stash = vector3(324.51397, -193.3554, 54.225608),
+                wardrobe = vector3(321.77215, -189.7904, 54.225608),
+                logout = vector3(325.92556, -191.9423, 54.367015),
+                shower = vector3(325.92556, -191.9423, 54.367015)
+            }
+        },
+        [4] = {
+            roomLabel = 4,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(339.02346, -219.43, 54.219886),
+                stash = vector3(340.64877, -228.0033, 54.22631),
+                wardrobe = vector3(344.19903, -225.4467, 54.226306),
+                logout = vector3(341.98272, -229.6227, 54.367721),
+                shower = vector3(341.98272, -229.6227, 54.367721)
+            }
+        },
+        [5] = {
+            roomLabel = 5,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(342.854, -209.5079, 54.219882),
+                stash = vector3(344.49694, -218.2412, 54.225849),
+                wardrobe = vector3(348.00646, -215.5657, 54.225849),
+                logout = vector3(345.82028, -219.7119, 54.36716),
+                shower = vector3(345.82028, -219.7119, 54.36716)
+            }
+        },
+        [6] = {
+            roomLabel = 6,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(346.78799, -199.6912, 54.219989),
+                stash = vector3(348.23336, -208.4419, 54.226295),
+                wardrobe = vector3(351.79397, -205.7006, 54.226287),
+                logout = vector3(349.59753, -209.835, 54.367717),
+                shower = vector3(349.59753, -209.835, 54.367717)
+            }
+        },
+        [7] = {
+            roomLabel = 7,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(314.97994, -219.6829, 58.021438),
+                stash = vector3(306.26611, -221.1683, 58.024612),
+                wardrobe = vector3(308.87796, -224.6223, 58.024612),
+                logout = vector3(304.61627, -222.4891, 58.166099),
+                shower = vector3(304.61627, -222.4891, 58.166099)
+            }
+        },
+        [8] = {
+            roomLabel = 8,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(307.45831, -213.4686, 58.015094),
+                stash = vector3(305.97183, -204.8853, 58.023372),
+                wardrobe = vector3(302.44631, -207.2843, 58.023365),
+                logout = vector3(304.64727, -203.1623, 58.164672),
+                shower = vector3(304.64727, -203.1623, 58.164672)
+            }
+        },
+        [9] = {
+            roomLabel = 9,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(311.3294, -203.4826, 58.015159),
+                stash = vector3(309.77593, -194.869, 58.023723),
+                wardrobe = vector3(306.20745, -197.4423, 58.023727),
+                logout = vector3(308.49035, -193.1714, 58.165111),
+                shower = vector3(308.49035, -193.1714, 58.165111)
+            }
+        },
+        [10] = {
+            roomLabel = 10,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(315.72058, -194.7438, 58.015186),
+                stash = vector3(324.44482, -193.2924, 58.023944),
+                wardrobe = vector3(321.71762, -189.7593, 58.023941),
+                logout = vector3(325.86767, -191.9611, 58.16534),
+                shower = vector3(325.86767, -191.9611, 58.16534)
+            }
+        },
+        [11] = {
+            roomLabel = 11,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(334.98779, -227.3412, 58.015033),
+                stash = vector3(326.41311, -228.9187, 58.023796),
+                wardrobe = vector3(328.94766, -232.4894, 58.023788),
+                logout = vector3(324.70172, -230.2014, 58.165184),
+                shower = vector3(324.70172, -230.2014, 58.165184)
+            }
+        },
+        [12] = {
+            roomLabel = 12,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(339.01776, -219.3259, 58.01511),
+                stash = vector3(340.58706, -228.1559, 58.022747),
+                wardrobe = vector3(344.19671, -225.4566, 58.02275),
+                logout = vector3(342.0693, -229.6536, 58.164196),
+                shower = vector3(342.0693, -229.6536, 58.164196)
+            }
+        },
+        [13] = {
+            roomLabel = 13,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(342.87957, -209.6293, 58.015117),
+                stash = vector3(344.5487, -218.1159, 58.02275),
+                wardrobe = vector3(347.96704, -215.5266, 58.022747),
+                logout = vector3(345.75149, -219.7943, 58.164161),
+                shower = vector3(345.75149, -219.7943, 58.164161)
+            }
+        },
+        [14] = {
+            roomLabel = 14,
+            type = 'regular',
+            floor = 1,
+            zones = {
+                doorEntry = vector3(346.81661, -199.8673, 58.015045),
+                stash = vector3(348.22488, -208.4799, 58.022747),
+                wardrobe = vector3(351.91177, -205.7503, 58.022739),
+                logout = vector3(349.59234, -209.9286, 58.164058),
+                shower = vector3(349.59234, -209.9286, 58.164058)
+            }
+        },
+    }
 }
-
---     ["pink_cage"] = {
---         -- FIRST FLOOR
---         [1] = {
---             roomLabel = 1,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(307.33673, -213.2884, 54.219924),
---                 stash = vector3(306.04263, -204.5437, 54.225761),
---                 wardrobe = vector3(302.41131, -207.3485, 54.225765),
---                 logout = vector3(304.64755, -203.2297, 54.367156),
---                 shower = vector3(304.64755, -203.2297, 54.367156)
---             }
---         },
---         [2] = {
---             roomLabel = 2,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(311.20318, -203.4407, 54.219985),
---                 stash = vector3(309.81057, -194.8552, 54.225807),
---                 wardrobe = vector3(306.28399, -197.4455, 54.225811),
---                 logout = vector3(308.4595, -193.2355, 54.36721),
---                 shower = vector3(308.4595, -193.2355, 54.36721)
---             }
---         },
---         [3] = {
---             roomLabel = 3,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(315.7221, -195.0128, 54.226726),
---                 stash = vector3(324.51397, -193.3554, 54.225608),
---                 wardrobe = vector3(321.77215, -189.7904, 54.225608),
---                 logout = vector3(325.92556, -191.9423, 54.367015),
---                 shower = vector3(325.92556, -191.9423, 54.367015)
---             }
---         },
---         [4] = {
---             roomLabel = 4,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(339.02346, -219.43, 54.219886),
---                 stash = vector3(340.64877, -228.0033, 54.22631),
---                 wardrobe = vector3(344.19903, -225.4467, 54.226306),
---                 logout = vector3(341.98272, -229.6227, 54.367721),
---                 shower = vector3(341.98272, -229.6227, 54.367721)
---             }
---         },
---         [5] = {
---             roomLabel = 5,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(342.854, -209.5079, 54.219882),
---                 stash = vector3(344.49694, -218.2412, 54.225849),
---                 wardrobe = vector3(348.00646, -215.5657, 54.225849),
---                 logout = vector3(345.82028, -219.7119, 54.36716),
---                 shower = vector3(345.82028, -219.7119, 54.36716)
---             }
---         },
---         [6] = {
---             roomLabel = 6,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(346.78799, -199.6912, 54.219989),
---                 stash = vector3(348.23336, -208.4419, 54.226295),
---                 wardrobe = vector3(351.79397, -205.7006, 54.226287),
---                 logout = vector3(349.59753, -209.835, 54.367717),
---                 shower = vector3(349.59753, -209.835, 54.367717)
---             }
---         },
---         [7] = {
---             roomLabel = 7,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(314.97994, -219.6829, 58.021438),
---                 stash = vector3(306.26611, -221.1683, 58.024612),
---                 wardrobe = vector3(308.87796, -224.6223, 58.024612),
---                 logout = vector3(304.61627, -222.4891, 58.166099),
---                 shower = vector3(304.61627, -222.4891, 58.166099)
---             }
---         },
---         [8] = {
---             roomLabel = 8,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(307.45831, -213.4686, 58.015094),
---                 stash = vector3(305.97183, -204.8853, 58.023372),
---                 wardrobe = vector3(302.44631, -207.2843, 58.023365),
---                 logout = vector3(304.64727, -203.1623, 58.164672),
---                 shower = vector3(304.64727, -203.1623, 58.164672)
---             }
---         },
---         [9] = {
---             roomLabel = 9,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(311.3294, -203.4826, 58.015159),
---                 stash = vector3(309.77593, -194.869, 58.023723),
---                 wardrobe = vector3(306.20745, -197.4423, 58.023727),
---                 logout = vector3(308.49035, -193.1714, 58.165111),
---                 shower = vector3(308.49035, -193.1714, 58.165111)
---             }
---         },
---         [10] = {
---             roomLabel = 10,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(315.72058, -194.7438, 58.015186),
---                 stash = vector3(324.44482, -193.2924, 58.023944),
---                 wardrobe = vector3(321.71762, -189.7593, 58.023941),
---                 logout = vector3(325.86767, -191.9611, 58.16534),
---                 shower = vector3(325.86767, -191.9611, 58.16534)
---             }
---         },
---         [11] = {
---             roomLabel = 11,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(334.98779, -227.3412, 58.015033),
---                 stash = vector3(326.41311, -228.9187, 58.023796),
---                 wardrobe = vector3(328.94766, -232.4894, 58.023788),
---                 logout = vector3(324.70172, -230.2014, 58.165184),
---                 shower = vector3(324.70172, -230.2014, 58.165184)
---             }
---         },
---         [12] = {
---             roomLabel = 12,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(339.01776, -219.3259, 58.01511),
---                 stash = vector3(340.58706, -228.1559, 58.022747),
---                 wardrobe = vector3(344.19671, -225.4566, 58.02275),
---                 logout = vector3(342.0693, -229.6536, 58.164196),
---                 shower = vector3(342.0693, -229.6536, 58.164196)
---             }
---         },
---         [13] = {
---             roomLabel = 13,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(342.87957, -209.6293, 58.015117),
---                 stash = vector3(344.5487, -218.1159, 58.02275),
---                 wardrobe = vector3(347.96704, -215.5266, 58.022747),
---                 logout = vector3(345.75149, -219.7943, 58.164161),
---                 shower = vector3(345.75149, -219.7943, 58.164161)
---             }
---         },
---         [14] = {
---             roomLabel = 14,
---             type = 'regular',
---             floor = 1,
---             zones = {
---                 doorEntry = vector3(346.81661, -199.8673, 58.015045),
---                 stash = vector3(348.22488, -208.4799, 58.022747),
---                 wardrobe = vector3(351.91177, -205.7503, 58.022739),
---                 logout = vector3(349.59234, -209.9286, 58.164058),
---                 shower = vector3(349.59234, -209.9286, 58.164058)
---             }
---         },
---     }
--- }
-
+--]]
 -- Convert hotel rooms to apartment format
 function GetApartmentDataFromConfig()
     local apartments = {}
