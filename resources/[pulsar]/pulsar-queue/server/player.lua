@@ -5,8 +5,8 @@ function PlayerClass(identifier, player, deferrals, steamName)
 	local msg = ""
 
 	if exports['pulsar-queue']:HasCrashPriority(identifier) then
-		msg = msg .. "\n💥 Crash Priority | +50"
-		prio = prio + 50
+		msg = msg .. "\n💥 Crash Priority | +125"
+		prio = prio + 125
 	end
 
 	local tempPrio = exports['pulsar-queue']:HasTempPriority(identifier)
