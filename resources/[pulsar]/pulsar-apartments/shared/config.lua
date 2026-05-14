@@ -3,11 +3,11 @@ Config = {}
 -- Reception Ped Configuration
 Config.ReceptionPeds = {
     { model = 'a_m_y_business_02', coords = vector4(-462.133, -914.929, 27.186, 89.516) },
-    --{ model = 'a_m_y_business_02', coords = vector4(-469.433, -1038.747, 23.438, 356.081) },
-    --{ model = 'a_m_y_business_02', coords = vector4(-825.249, -701.638, 27.134, 317.235) },
+    { model = 'a_m_y_business_02', coords = vector4(-469.433, -1038.747, 23.438, 356.081) },
+    { model = 'a_m_y_business_02', coords = vector4(-825.249, -701.638, 27.134, 317.235) },
 }
 
---[[Config.HotelElevatorsDesc = {
+Config.HotelElevatorsDesc = {
     ["nexus_apartment_block_1"] = {
         [-1] = "Garage",
         [0] = "Lobby",
@@ -29,9 +29,9 @@ Config.ReceptionPeds = {
         [6] = "Rooms: 600 - 606",
         [7] = "Rooms: 700 - 706",
     }
-}--]]
+}
 
---[[Config.HotelElevators = {
+Config.HotelElevators = {
     ["nexus_apartment_block_1"] = { -- hotel
         [-1] = { -- GARAGE
             bucketReset = true, -- Resets bucket to global route when arriving at this floor
@@ -334,9 +334,9 @@ Config.ReceptionPeds = {
             },
         },
     },
-}--]]
+}
 
---[[Config.HotelRooms = {
+Config.HotelRooms = {
     ["nexus_apartment_block_1"] = {
         label = "La Putura - Building 1",
         -- FIRST FLOOR
@@ -928,8 +928,8 @@ Config.ReceptionPeds = {
                 shower = vector3(-461.4172, -890.1202, 108.20253)
             }
         },
-    },--]]
-    --[[["nexus_apartment_block_2"] = {
+    },
+    ["nexus_apartment_block_2"] = {
         label = "La Putura - Building 2",
         -- FIRST FLOOR
         [1] = {
@@ -1527,7 +1527,7 @@ Config.ReceptionPeds = {
             }
         },
     }
-}--]]
+}
 --[[
     ["pink_cage"] = {
         -- FIRST FLOOR
