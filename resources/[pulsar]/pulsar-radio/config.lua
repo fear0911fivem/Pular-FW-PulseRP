@@ -40,21 +40,21 @@ _tunaRestriction = {
 	reqDuty = true,
 }
 
--- _restrictedRadioChannels = {
---     [11] = {
---         name = 'Corrections',
---         radio = 1,
---         restriction = emergencyRestriction,
---     },
--- }
+_restrictedRadioChannels = {
+    [11] = {
+        name = 'Corrections',
+        radio = 1,
+        restriction = emergencyRestriction,
+    },
+}
 
--- for i = 1, 10, 1 do
---     _restrictedRadioChannels[i] = {
---         name = 'Emergency #'.. i,
---         radio = 1,
---         restriction = emergencyRestriction,
---     }
--- end
+for i = 1, 10, 1 do
+    _restrictedRadioChannels[i] = {
+        name = 'Emergency #'.. i,
+        radio = 1,
+        restriction = emergencyRestriction,
+    }
+end
 
 _radioData = {
 	{ -- Encrypted Radio
@@ -65,7 +65,7 @@ _radioData = {
 			'ems',
 			'prison',
 			'dgang',
-			'blackline',
+			--'blackline',
 		},
 	},
 	{ -- Extendy Radio
