@@ -7,28 +7,18 @@ return {
         },
         {
             id = 2,
-            label = "Alta St",
-            location = { x = -206.57, y = -1015.18, z = 30.14, h = 72.41 },
-        },
-        {
-            id = 3,
             label = "Bolingbroke Penitentiary",
             location = { x = 1767.49, y = 2501.12, z = 45.72, h = 90.70 },
         },
         {
-            id = 4,
+            id = 3,
             label = "Mission Row PD",
             location = { x = 436.67, y = -974.42, z = 30.71, h = 87.87 },
         },
         {
-            id = 5,
+            id = 4,
             label = "Sandy PD",
             location = { x = 1866.09, y = 3688.27, z = 34.26, h = 257.95 },
-        },
-        {
-            id = 6,
-            label = "Paleto PD",
-            location = { x = -448.32, y = 6026.57, z = 31.48, h = 0.0 },
         },
     },
     PrisonSpawn = {
@@ -46,17 +36,17 @@ return {
         event = "Hospital:SpawnICU",
     },
     LogoutLocations = {
-        -- { -- Mt Zonah
-        --     center = vector3(-435.59, -305.86, 35.0),
-        --     length = 1.8,
-        --     width = 2.2,
-        --     options = {
-        --         heading = 22,
-        --         --debugPoly=true,
-        --         minZ = 34.0,
-        --         maxZ = 36.8
-        --     },
-        -- },
+        { -- Mt Zonah
+            center = vector3(-435.59, -305.86, 35.0),
+            length = 1.8,
+            width = 2.2,
+            options = {
+                heading = 22,
+                --debugPoly=true,
+                minZ = 34.0,
+                maxZ = 36.8
+            },
+        },
         { -- St Fiacre Medical Bathroom
             center = vector3(1123.17, -1546.83, 35.03),
             length = 1.4,
@@ -101,29 +91,7 @@ return {
                 maxZ = 41.26
             },
         },
-        { -- SAST Bathroom
-            center = vector3(-452.1, 5998.76, 37.01),
-            length = 3.0,
-            width = 4.0,
-            options = {
-                heading = 45,
-                --debugPoly=true,
-                minZ = 35.81,
-                maxZ = 39.81
-            },
-        },
-        -- {
-        --     center = vector3(1849.23, 3691.41, 29.82),
-        --     length = 2.0,
-        --     width = 2.0,
-        --     options = {
-        --         heading = 30,
-        --         --debugPoly=true,
-        --         minZ = 28.82,
-        --         maxZ = 31.22
-        --     },
-        -- },
-        { -- pillbox
+        { -- Pillbox
             center = vector3(304.05, -568.87, 43.28),
             length = 1.0,
             width = 2.2,
