@@ -7,7 +7,7 @@ client_script("@pulsar-pwnzor/client/check.lua")
 description("Pulsar Framework Businesses Script")
 name("Pulsar Framework: pulsar-businesses")
 author("Dr Nick")
-version "1.0.1"
+version '1.0.3'
 
 client_scripts({
   "client/**/*.lua",

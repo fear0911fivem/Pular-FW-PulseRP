@@ -25,11 +25,47 @@ AddEventHandler('onResourceStart', function(resource)
   end
 end)
 
+local function RegisterBusinessBenches()
+  while GetResourceState('ox_inventory') ~= 'started' do
+    Wait(500)
+  end
+  for k = 1, #Config.Businesses do
+    local v = Config.Businesses[k]
+    if v.Benches then
+      for benchId, bench in pairs(v.Benches) do
+        local location = nil
+        if bench.targeting and bench.targeting.poly then
+          local opts = bench.targeting.poly.options or {}
+          location = {
+            x = bench.targeting.poly.coords.x,
+            y = bench.targeting.poly.coords.y,
+            z = bench.targeting.poly.coords.z,
+            h = opts.heading or 0,
+          }
+        end
+        exports.ox_inventory:CraftingRegisterBench(
+          string.format('business-%s-%s', k, benchId),
+          bench.label,
+          bench.targeting,
+          location,
+          { job = { id = v.Job, grade = 0 } },
+          bench.recipes,
+          false
+        )
+      end
+    end
+  end
+end
+
 function Startup()
-  for k, v in ipairs(Config.Businesses) do
+  CreateThread(RegisterBusinessBenches)
+
+  for k = 1, #Config.Businesses do
+    local v = Config.Businesses[k]
     exports['pulsar-core']:LoggerTrace("Businesses", string.format("Registering Business ^3%s^7", v.Name))
     if v.Pickups then
-      for num, pickup in pairs(v.Pickups) do
+      for num = 1, #v.Pickups do
+        local pickup = v.Pickups[num]
         table.insert(_pickups, pickup.id)
         pickup.num = num
         pickup.job = v.Job
@@ -39,9 +75,9 @@ function Startup()
         exports.ox_inventory:RegisterStash(
           stashId,
           string.format("%s Pickup #%s", v.Name, num),
-          10,       -- slots
-          10000,    -- maxWeight
-          pickup.id -- owner
+          10,
+          10000,
+          pickup.id
         )
 
         pickup.data = pickup.data or {}
