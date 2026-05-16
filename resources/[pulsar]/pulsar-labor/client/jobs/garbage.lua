@@ -134,10 +134,7 @@ RegisterNetEvent("Garbage:Client:OnDuty", function(joiner, time)
 					local obj = GetClosestObjectOfType(playerCoords.x, playerCoords.y, playerCoords.z, 50.0, v, false,
 						false, false)
 					if obj and obj ~= 0 then
-						local entityId = GetEntityModel(obj) ..
-							"_" ..
-							GetEntityCoords(obj).x .. "_" .. GetEntityCoords(obj).y .. "_" .. GetEntityCoords(obj).z
-						if not _entities[entityId] then
+						if not _entities[obj] then
 							exports.ox_target:addLocalEntity(obj, {
 								{
 									icon = "fas fa-trash-can",
@@ -145,19 +142,14 @@ RegisterNetEvent("Garbage:Client:OnDuty", function(joiner, time)
 									event = "Garbage:Client:TrashGrab",
 									distance = 3.0,
 									canInteract = function(entity)
-										local entityId = GetEntityModel(entity) ..
-											"_" ..
-											GetEntityCoords(entity).x ..
-											"_" .. GetEntityCoords(entity).y .. "_" .. GetEntityCoords(entity).z
-										local isGrabbed = _entities[entityId] == "grabbed"
 										return LocalPlayer.state.inGarbagbeZone
 											and GarbageObject == nil
 											and _state == 2
-											and not isGrabbed
+											and _entities[entity] ~= "grabbed"
 									end,
 								},
 							})
-							_entities[entityId] = obj
+							_entities[obj] = true
 						end
 					end
 				end
@@ -223,14 +215,11 @@ RegisterNetEvent("Garbage:Client:OnDuty", function(joiner, time)
 			GarbageObject = nil
 		end
 
-		local entityId = GetEntityModel(entity.entity) ..
-			"_" ..
-			GetEntityCoords(entity.entity).x ..
-			"_" .. GetEntityCoords(entity.entity).y .. "_" .. GetEntityCoords(entity.entity).z
-		exports["pulsar-core"]:ServerCallback("Garbage:TrashGrab", ObjToNet(entity.entity), function(s)
+		local ent = entity.entity
+		exports["pulsar-core"]:ServerCallback("Garbage:TrashGrab", ObjToNet(ent), function(s)
 			if s then
 				LocalPlayer.state.carryingGarbabge = true
-				_entities[entityId] = "grabbed"
+				_entities[ent] = "grabbed"
 			end
 		end)
 	end)
@@ -316,8 +305,8 @@ RegisterNetEvent("Garbage:Client:OffDuty", function(time)
 		RemoveEventHandler(v)
 	end
 
-	for entityId, entity in pairs(_entities) do
-		if entity and entity ~= 0 and entity ~= "grabbed" then
+	for entity, state in pairs(_entities) do
+		if type(entity) == "number" and state ~= "grabbed" then
 			exports.ox_target:removeLocalEntity(entity)
 		end
 	end
