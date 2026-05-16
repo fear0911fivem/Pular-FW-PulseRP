@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Box, Text, Grid, Select, Switch, Stack } from '@mantine/core'
+import { Box, Text, Grid, Select, Switch, Stack, rem } from '@mantine/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { rem } from '@mantine/core'
 import { useHudStore, HudConfig } from '../../store/hud'
 import { nui } from '../../nui'
 import { useHudTheme } from '../../hooks/useHudTheme'
@@ -157,6 +156,7 @@ export default function Settings() {
         <form onSubmit={onSave}>
           <Box style={{ padding: `${rem(18)} ${rem(20)}` }}>
             <Grid gutter={rem(32)}>
+              <Grid gap={rem(32)}>
               {/* Left column */}
               <Grid.Col span={6}>
                 <SectionHeader primary={primary}>General</SectionHeader>
