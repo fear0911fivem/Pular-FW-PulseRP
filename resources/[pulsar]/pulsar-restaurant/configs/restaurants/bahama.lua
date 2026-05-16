@@ -1,6 +1,37 @@
 table.insert(Config.Restaurants, {
 	Name = "Bahama Mamas",
 	Job = "bahama",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(-1399.93, -598.08, 30.32),
+					w = 2.0,
+					l = 1.0,
+					options = {
+						heading = 33,
+						--debugPoly=true,
+						minZ = 26.87,
+						maxZ = 31.07,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.bahama_mamas,
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				_cocktailRecipies.jaeger_bomb,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+			},
+		},
+	},
 	Pickups = {
 		{
 			id = "bahama-pickup-1",

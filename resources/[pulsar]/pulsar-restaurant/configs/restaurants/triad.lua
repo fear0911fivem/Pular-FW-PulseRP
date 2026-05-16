@@ -1,6 +1,36 @@
 table.insert(Config.Restaurants, {
     Name = "Triad Records Bar",
     Job = "triad",
+    Benches = {
+    	bar = {
+            label = "Bar",
+            targeting = {
+                actionString = "Making",
+                icon = "martini-glass-citrus",
+    			poly = {
+    				coords = vector3(-828.54, -730.53, 28.06),
+    				w = 1.2,
+    				l = 2.6,
+    				options = {
+                        heading = 0,
+                        --debugPoly=true,
+                        minZ = 27.06,
+                        maxZ = 29.06
+    				},
+    			},
+    		},
+    		recipes = {
+                _cocktailRecipies.raspberry_mimosa,
+                _cocktailRecipies.pina_colada,
+                _cocktailRecipies.bloody_mary,
+                _cocktailRecipies.vodka_shot,
+                _cocktailRecipies.whiskey_glass,
+                --_cocktailRecipies.jaeger_bomb,
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+    		},
+    	},
+    },
     Pickups = {
         {
             id = "triad-pickup-1",

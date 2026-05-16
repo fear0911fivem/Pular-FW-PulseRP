@@ -1,6 +1,36 @@
 table.insert(Config.Restaurants, {
 	Name = "Vagos Clubhouse Bar",
 	Job = "vagos",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(338.41, -1989.41, 24.21),
+					w = 4.0,
+					l = 0.8,
+					options = {
+						heading = 320,
+						--debugPoly=true,
+						minZ = 22.01,
+						maxZ = 26.01,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				--_cocktailRecipies.jaeger_bomb,
+				-- _genericRecipies.glass_cock,
+				-- _genericRecipies.lemonade,
+			},
+		},
+	},
 	IgnoreDuty = true,
 	Pickups = {
 		{

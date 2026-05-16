@@ -1,6 +1,116 @@
 table.insert(Config.Restaurants, {
 	Name = "Black Woods Saloon",
 	Job = "woods_saloon",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(-303.37, 6269.09, 31.53),
+					l = 0.8,
+					w = 0.8,
+					options = {
+						heading = 225,
+						--debugPoly=true,
+						minZ = 30.28,
+						maxZ = 32.48,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				_cocktailRecipies.beer,
+				_cocktailRecipies.jaeger_bomb,
+				{
+					result = { name = "tequila_shot", count = 5 },
+					items = {
+						{ name = "tequila", count = 1 },
+					},
+					time = 2000,
+				},
+				{
+					result = { name = "tequila_sunrise", count = 6 },
+					items = {
+						{ name = "tequila", count = 1 },
+						{ name = "orange", count = 5 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+				_genericRecipies.glass_cock,
+				_genericRecipies.green_tea,
+				_genericRecipies.lemonade,
+				_genericRecipies.gingerale,
+				_genericRecipies.sandwich,
+				_genericRecipies.sandwich_turkey,
+				_genericRecipies.sandwich_beef,
+				_genericRecipies.fishandchips,
+				_genericRecipies.sandwich_blt,
+				_genericRecipies.salad,
+			},
+		},
+		bar2 = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(-305.2, 6267.41, 31.53),
+					l = 0.8,
+					w = 0.8,
+					options = {
+						heading = 225,
+						--debugPoly=true,
+						minZ = 30.28,
+						maxZ = 32.48,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				_cocktailRecipies.beer,
+				_cocktailRecipies.jaeger_bomb,
+				{
+					result = { name = "tequila_shot", count = 5 },
+					items = {
+						{ name = "tequila", count = 1 },
+					},
+					time = 2000,
+				},
+				{
+					result = { name = "tequila_sunrise", count = 6 },
+					items = {
+						{ name = "tequila", count = 1 },
+						{ name = "orange", count = 5 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+				_genericRecipies.glass_cock,
+				_genericRecipies.green_tea,
+				_genericRecipies.lemonade,
+				_genericRecipies.gingerale,
+				_genericRecipies.sandwich,
+				_genericRecipies.sandwich_turkey,
+				_genericRecipies.sandwich_beef,
+				_genericRecipies.fishandchips,
+				_genericRecipies.sandwich_blt,
+				_genericRecipies.salad,
+			},
+		},
+	},
 	Pickups = {
 		{
 			id = "woods-saloon-pickup-1",

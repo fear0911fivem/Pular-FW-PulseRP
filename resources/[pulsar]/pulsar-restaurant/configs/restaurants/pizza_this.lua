@@ -1,6 +1,163 @@
 table.insert(Config.Restaurants, {
     Name = "Pizza This",
     Job = "pizza_this",
+    Benches = {
+        drinks = {
+            label = "Drinks",
+            targeting = {
+                actionString = "Preparing",
+                icon = "cup-straw-swoosh",
+                poly = {
+                    coords = vector3(810.74, -764.46, 26.78),
+                    w = 1.0,
+                    l = 2.0,
+                    options = {
+                        heading = 0,
+                        --debugPoly=true,
+                        minZ = 25.78,
+                        maxZ = 28.18
+                    },
+                },
+            },
+            recipes = {
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+            },
+        },
+        drinksbar = {
+            label = "Drinks",
+            targeting = {
+                actionString = "Preparing",
+                icon = "cup-straw-swoosh",
+                poly = {
+                    coords = vector3(814.05, -749.35, 26.78),
+                    w = 1.0,
+                    l = 2.2,
+                    options = {
+                        heading = 0,
+                        --debugPoly=true,
+                        minZ = 25.98,
+                        maxZ = 28.78
+                    },
+                },
+            },
+            recipes = {
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+                _cocktailRecipies.vodka_shot,
+                _cocktailRecipies.whiskey_glass,
+            },
+        },
+        pizza = {
+            label = "Pizza Oven",
+            targeting = {
+                actionString = "Cooking",
+                icon = "pizza",
+                poly = {
+                    coords = vector3(813.97, -752.85, 26.78),
+                    w = 2.0,
+                    l = 2.0,
+                    options = {
+                        heading = 0,
+                        --debugPoly=true,
+                        minZ = 25.78,
+                        maxZ = 27.98
+                    },
+                },
+            },
+            recipes = {
+                {
+                    result = { name = "pepperoni_pizza", count = 1 },
+                    items = {
+                        { name = "dough", count = 1 },
+                        { name = "tomato", count = 5 },
+                        { name = "unk_meat", count = 5 },
+                        { name = "cheese", count = 1 },
+                    },
+                    time = 3000,
+                },
+                {
+                    result = { name = "margherita_pizza", count = 1 },
+                    items = {
+                        { name = "dough", count = 1 },
+                        { name = "tomato", count = 5 },
+                        { name = "cheese", count = 2 },
+                    },
+                    time = 3000,
+                },
+                {
+                    result = { name = "san_manzano_pizza", count = 1 },
+                    items = {
+                        { name = "dough", count = 1 },
+                        { name = "tomato", count = 5 },
+                        { name = "lettuce", count = 4 },
+                        { name = "cheese", count = 2 },
+                    },
+                    time = 3000,
+                },
+            },
+        },
+        food = {
+            label = "Food",
+            targeting = {
+                actionString = "Cooking",
+                icon = "pizza",
+                poly = {
+                    coords = vector3(808.69, -761.17, 26.78),
+                    w = 3.0,
+                    l = 2.2,
+                    options = {
+                        heading = 0,
+                        --debugPoly=true,
+                        minZ = 25.78,
+                        maxZ = 28.38
+                    },
+                },
+            },
+            recipes = {
+                {
+                    result = { name = "pasta_fresca", count = 4 },
+                    items = {
+                        { name = "dough", count = 2 },
+                        { name = "tomato", count = 6 },
+                        { name = "lettuce", count = 4 },
+                        { name = "cheese", count = 4 },
+                    },
+                    time = 4000,
+                },
+                {
+                    result = { name = "pesto_cavatappi", count = 4 },
+                    items = {
+                        { name = "dough", count = 2 },
+                        { name = "cheese", count = 4 },
+                        { name = "milk_can", count = 1 },
+                    },
+                    time = 4000,
+                },
+                {
+                    result = { name = "spag_bowl", count = 4 },
+                    items = {
+                        { name = "dough", count = 1 },
+                        { name = "cheese", count = 4 },
+                        { name = "tomato", count = 6 },
+                        { name = "beef", count = 3 },
+                    },
+                    time = 4000,
+                },
+                {
+                    result = { name = "chips", count = 5 },
+                    items = {
+                        { name = "potato", count = 6 },
+                    },
+                    time = 3000,
+                },
+                _genericRecipies.sandwich,
+                _genericRecipies.sandwich_turkey,
+                _genericRecipies.sandwich_beef,
+                _genericRecipies.sandwich_blt,
+            },
+        },
+    },
     Pickups = {
         {
             id = "pizza_this-pickup-1",

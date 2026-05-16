@@ -1,6 +1,37 @@
 table.insert(Config.Restaurants, {
 	Name = "Vanilla Unicorn",
 	Job = "unicorn",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(131.03, -1282.28, 29.27),
+					w = 2.2,
+					l = 1.2,
+					options = {
+						heading = 30,
+						--debugPoly=true,
+						minZ = 28.87,
+						maxZ = 30.47,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				_cocktailRecipies.jaeger_bomb,
+				_cocktailRecipies.beer,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+			},
+		},
+	},
 	Pickups = {
 		{
 			id = "unicorn-pickup-1",

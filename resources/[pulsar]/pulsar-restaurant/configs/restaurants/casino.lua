@@ -1,6 +1,127 @@
 table.insert(Config.Restaurants, {
 	Name = "Casino",
 	Job = "casino",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(979.53, 23.84, 71.46),
+					l = 2.2,
+					w = 2.2,
+					options = {
+						heading = 0,
+						--debugPoly=true,
+						minZ = 70.86,
+						maxZ = 72.86,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				--_cocktailRecipies.jaeger_bomb,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+				_genericRecipies.sandwich,
+				_genericRecipies.sandwich_turkey,
+				_genericRecipies.sandwich_beef,
+				_genericRecipies.sandwich_blt,
+				_genericRecipies.salad,
+				{
+					result = { name = "diamond_drink", count = 6 },
+					items = {
+						{ name = "vodka", count = 1 },
+						{ name = "orange", count = 3 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+			},
+		},
+		bar2 = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(944.85, 13.95, 116.16),
+					w = 1.0,
+					l = 2.0,
+					options = {
+						heading = 57,
+						--debugPoly=true,
+						minZ = 115.56,
+						maxZ = 117.36,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				--_cocktailRecipies.jaeger_bomb,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+				{
+					result = { name = "diamond_drink", count = 6 },
+					items = {
+						{ name = "vodka", count = 1 },
+						{ name = "orange", count = 3 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+			},
+		},
+		bar3 = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(983.77, 76.5, -76.01),
+					w = 3.4,
+					l = 0.6,
+					options = {
+						heading = 235,
+						--debugPoly=true,
+						minZ = -75.86,
+						maxZ = -74.86,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				--_cocktailRecipies.jaeger_bomb,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+				{
+					result = { name = "diamond_drink", count = 6 },
+					items = {
+						{ name = "vodka", count = 1 },
+						{ name = "orange", count = 3 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+			},
+		},
+	},
 	Pickups = {
 		{
 			id = "casino-pickup-1",

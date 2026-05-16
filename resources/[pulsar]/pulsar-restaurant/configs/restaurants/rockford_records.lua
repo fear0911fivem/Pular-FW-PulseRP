@@ -1,6 +1,36 @@
 table.insert(Config.Restaurants, {
     Name = "Rockford Records Bar",
     Job = "rockford_records",
+    Benches = {
+    	bar = {
+            label = "Bar",
+            targeting = {
+                actionString = "Making",
+                icon = "martini-glass-citrus",
+    			poly = {
+    				coords = vector3(-995.74, -256.04, 39.04),
+    				w = 1.8,
+    				l = 1.0,
+    				options = {
+                        heading = 55,
+                        --debugPoly=true,
+                        minZ = 38.04,
+                        maxZ = 40.64
+    				},
+    			},
+    		},
+    		recipes = {
+                _cocktailRecipies.raspberry_mimosa,
+                _cocktailRecipies.pina_colada,
+                _cocktailRecipies.bloody_mary,
+                _cocktailRecipies.vodka_shot,
+                _cocktailRecipies.whiskey_glass,
+                --_cocktailRecipies.jaeger_bomb,
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+    		},
+    	},
+    },
     Pickups = {
         {
             id = "rockford_records-pickup-1",

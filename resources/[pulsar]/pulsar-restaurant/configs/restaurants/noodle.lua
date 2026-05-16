@@ -1,6 +1,103 @@
 table.insert(Config.Restaurants, {
     Name = "Noodle Exchange",
     Job = "noodle",
+    Benches = {
+        food = {
+            label = "Kitchen",
+            targeting = {
+                actionString = "Preparing",
+                icon = "bowl-chopsticks-noodles",
+                poly = {
+                    coords = vector3(-1185.3, -1157.42, 7.67),
+                    l = 1.0,
+                    w = 2.8,
+                    options = {
+                        heading = 15,
+                        --debugPoly=true,
+                        minZ = 6.67,
+                        maxZ = 7.87
+                    },
+                },
+            },
+            recipes = {
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+                {
+                    result = { name = "chips", count = 5 },
+                    items = {
+                        { name = "potato", count = 10 },
+                    },
+                    time = 3000,
+                },
+                {
+                    result = { name = "japanese_pan_noodles", count = 5 },
+                    items = {
+                        { name = "eggs", count = 5 },
+                        { name = "flour", count = 10 },
+                        { name = "cucumber", count = 2 },
+                    },
+                    time = 1500,
+                },
+                {
+                    result = { name = "guksu", count = 5 },
+                    items = {
+                        { name = "eggs", count = 7 },
+                        { name = "flour", count = 10 },
+                        { name = "cucumber", count = 2 },
+                        { name = "lettuce", count = 4 },
+                        { name = "fishing_seaweed", count = 5 },
+                        { name = "fishing_oil", count = 1 },
+                    },
+                    time = 1500,
+                },
+                {
+                    result = { name = "pad_thai", count = 5 },
+                    items = {
+                        { name = "eggs", count = 5 },
+                        { name = "flour", count = 10 },
+                        { name = "sugar", count = 2 },
+                        { name = "lettuce", count = 4 },
+                        { name = "fishing_kelp", count = 2 },
+                    },
+                    time = 1500,
+                },
+                {
+                    result = { name = "maki_calirolls", count = 5 },
+                    items = {
+                        { name = "rice", count = 2 },
+                        { name = "cucumber", count = 2 },
+                        { name = "fishing_seaweed", count = 2 },
+                        { name = "fishing_kelp", count = 1 },
+                        { name = "fishing_rockfish", count = 1 },
+                    },
+                    time = 1500,
+                },
+                {
+                    result = { name = "maki_tuna", count = 5 },
+                    items = {
+                        { name = "rice", count = 2 },
+                        { name = "fishing_tuna", count = 4 },
+                        { name = "fishing_seaweed", count = 1 },
+                        { name = "cucumber", count = 1 },
+                    },
+                    time = 1500,
+                },
+                {
+                    result = { name = "sashimi_mix", count = 5 },
+                    items = {
+                        { name = "rice", count = 2 },
+                        { name = "fishing_tuna", count = 3 },
+                        { name = "fishing_rainbowtrout", count = 3 },
+                        { name = "fishing_bass", count = 1 },
+                        { name = "fishing_seaweed", count = 2 },
+                        { name = "lettuce", count = 1 },
+                    },
+                    time = 1500,
+                },
+                _genericRecipies.salad,
+            },
+        },
+    },
     Pickups = {
         {
             id = "noodle-pickup-1",

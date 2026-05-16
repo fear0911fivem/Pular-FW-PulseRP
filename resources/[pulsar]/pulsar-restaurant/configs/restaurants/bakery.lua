@@ -1,6 +1,110 @@
 table.insert(Config.Restaurants, {
     Name = "Bakery",
     Job = "bakery",
+    Benches = {
+        food = {
+            label = "Food",
+            targeting = {
+                actionString = "Preparing",
+                icon = "baguette",
+                poly = {
+                    coords = vector3(-1263.97, -282.88, 37.39),
+                    l = 5.2,
+                    w = 2.0,
+                    options = {
+                        heading = 20,
+                        --debugPoly=true,
+                        minZ = 36.39,
+                        maxZ = 37.59
+                    },
+                },
+            },
+            recipes = {
+                _genericRecipies.glass_cock,
+                _genericRecipies.lemonade,
+                {
+                    result = { name = "smoothie_orange", count = 3 },
+                    items = {
+                        { name = "plastic_cup", count = 1 },
+                        { name = "orange", count = 3 },
+                        { name = "sugar", count = 1 },
+                    },
+                    time = 5000,
+                },
+                _genericRecipies.sandwich,
+                _genericRecipies.sandwich_turkey,
+                _genericRecipies.sandwich_beef,
+                _genericRecipies.sandwich_blt,
+                _genericRecipies.salad,
+                {
+                    result = { name = "baguette", count = 4 },
+                    items = {
+                        { name = "dough", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "bavarois", count = 6 },
+                    items = {
+                        { name = "sugar", count = 1 },
+                        { name = "raspberry", count = 1 },
+                        { name = "milk_can", count = 1 },
+                        { name = "icing", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "choux", count = 6 },
+                    items = {
+                        { name = "sugar", count = 1 },
+                        { name = "dough", count = 1 },
+                        { name = "milk_can", count = 1 },
+                        { name = "icing", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "choclat_eclair", count = 3 },
+                    items = {
+                        { name = "sugar", count = 2 },
+                        { name = "dough", count = 1 },
+                        { name = "milk_can", count = 1 },
+                        { name = "icing", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "charlotte", count = 6 },
+                    items = {
+                        { name = "sugar", count = 2 },
+                        { name = "dough", count = 1 },
+                        { name = "milk_can", count = 1 },
+                        { name = "raspberry", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "latte", count = 4 },
+                    items = {
+                        { name = "coffee_beans", count = 5 },
+                        { name = "milk_can", count = 1 },
+                    },
+                    time = 5000,
+                },
+                {
+                    result = { name = "donut_stack", count = 5 },
+                    items = {
+                        { name = "sugar", count = 2 },
+                        { name = "dough", count = 1 },
+                        { name = "milk_can", count = 1 },
+                        { name = "raspberry", count = 1 },
+                        { name = "chocolate_bar", count = 1 },
+                    },
+                    time = 5000,
+                },
+            },
+        },
+    },
     Pickups = {
         {
             id = "bakery-pickup-1",

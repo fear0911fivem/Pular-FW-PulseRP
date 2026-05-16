@@ -1,6 +1,61 @@
 table.insert(Config.Restaurants, {
 	Name = "Tequi-La-La",
 	Job = "tequila",
+	Benches = {
+		bar = {
+			label = "Bar",
+			targeting = {
+				actionString = "Making",
+				icon = "martini-glass-citrus",
+				poly = {
+					coords = vector3(-562.94, 286.86, 82.18),
+					l = 3.0,
+					w = 1.0,
+					options = {
+						heading = 265,
+						--debugPoly=true,
+						minZ = 81.18,
+						maxZ = 82.98,
+					},
+				},
+			},
+			recipes = {
+				_cocktailRecipies.raspberry_mimosa,
+				_cocktailRecipies.pina_colada,
+				_cocktailRecipies.bloody_mary,
+				_cocktailRecipies.vodka_shot,
+				_cocktailRecipies.whiskey_glass,
+				_cocktailRecipies.beer,
+				--_cocktailRecipies.jaeger_bomb,
+				{
+					result = { name = "tequila_shot", count = 5 },
+					items = {
+						{ name = "tequila", count = 1 },
+					},
+					time = 2000,
+				},
+				{
+					result = { name = "tequila_sunrise", count = 6 },
+					items = {
+						{ name = "tequila", count = 1 },
+						{ name = "orange", count = 5 },
+						{ name = "raspberry", count = 1 },
+						{ name = "raspberry_liqueur", count = 1 },
+					},
+					time = 2000,
+				},
+				_genericRecipies.green_tea,
+				_genericRecipies.glass_cock,
+				_genericRecipies.lemonade,
+				_genericRecipies.gingerale,
+				_genericRecipies.sandwich,
+				_genericRecipies.sandwich_turkey,
+				_genericRecipies.sandwich_beef,
+				_genericRecipies.sandwich_blt,
+				_genericRecipies.salad,
+			},
+		},
+	},
 	Pickups = {
 		{
 			id = "tequila-pickup-1",
