@@ -472,7 +472,8 @@ _propertyCrafting = {
 }
 
 function SetupPropertyCrafting()
-	for k, v in ipairs(_propertyCrafting) do
+	for k = 1, #_propertyCrafting do
+		local v = _propertyCrafting[k]
 		exports.ox_inventory:CraftingRegisterBench("property-" .. v.id, false, false, false, v.restrictions,
 			v.recipies, v.canUseSchematics)
 		GlobalState[string.format("Property:Crafting:%s", v.id)] = {
