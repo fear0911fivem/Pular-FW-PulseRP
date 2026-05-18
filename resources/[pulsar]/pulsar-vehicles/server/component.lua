@@ -11,6 +11,7 @@ _savedVehicleProperties = {}
 AddEventHandler('onResourceStart', function(resource)
     if resource == GetCurrentResourceName() then
         Wait(1000)
+        exports['pulsar-core']:VersionCheck('PulsarFW/pulsar-vehicles')
         RegisterCallbacks()
         RegisterMiddleware()
         RegisterPersonalPlateCallbacks()
@@ -98,25 +99,6 @@ function SaveVehicle(VIN)
 
         veh:SetData('LastSave', os.time())
 
-        -- Ensure Properties exists
-        if not data.Properties then
-            data.Properties = {}
-        end
-        
-        -- Save Storage to Properties ONLY if it's impound (Type=0) and has TimeHold or Fine
-        -- If Storage is garage (Type=1) or property (Type=2), clear Properties.Storage to avoid old impound data
-        if data.Storage then
-            if data.Storage.Type == 0 and (data.Storage.TimeHold or (data.Storage.Fine and data.Storage.Fine > 0)) then
-                -- It's impound data, save to Properties
-                data.Properties.Storage = data.Storage
-            elseif data.Storage.Type == 1 or data.Storage.Type == 2 then
-                -- It's garage or property, clear old Properties.Storage if it exists
-                if data.Properties.Storage then
-                    data.Properties.Storage = nil
-                end
-            end
-        end
-
         local updateData = {
             Type = data.Type or 0,
             Make = data.Make or 'Unknown',
@@ -124,8 +106,7 @@ function SaveVehicle(VIN)
             RegisteredPlate = data.RegisteredPlate or '',
             OwnerType = data.Owner and data.Owner.Type or data.OwnerType or 0,
             OwnerId = data.Owner and data.Owner.Id or data.OwnerId or 0,
-            OwnerWorkplace = data.Owner and data.Owner.Workplace or data.OwnerWorkplace or nil,
-            OwnerQualification = data.Owner and data.Owner.Qualification or data.OwnerQualification or nil,
+            OwnerWorkplace = data.Owner and data.Owner.Workplace or data.OwnerWorkplace or false,
             StorageType = data.Storage and data.Storage.Type or data.StorageType or 0,
             StorageId = data.Storage and data.Storage.Id or data.StorageId or 0,
             FirstSpawn = data.FirstSpawn or false,
@@ -149,7 +130,6 @@ function SaveVehicle(VIN)
             Donator = data.Donator or false,
             Seized = data.Seized or false,
             SeizedTime = data.SeizedTime or false,
-            LastDriver = json.encode(veh:GetData('LastDriver') or {}),
             Properties = json.encode(data.Properties or {}),
             LastSave = os.time()
         }
@@ -157,14 +137,14 @@ function SaveVehicle(VIN)
         local success = MySQL.update.await(
             "UPDATE vehicles SET " ..
             "Type = ?, Make = ?, Model = ?, RegisteredPlate = ?, " ..
-            "OwnerType = ?, OwnerId = ?, OwnerWorkplace = ?, OwnerQualification = ?, " ..
+            "OwnerType = ?, OwnerId = ?, OwnerWorkplace = ?, " ..
             "StorageType = ?, StorageId = ?, " ..
             "FirstSpawn = ?, Mileage = ?, Fuel = ?, DirtLevel = ?, " ..
             "Value = ?, Class = ?, Vehicle = ?, FakePlate = ?, RegistrationDate = ?, " ..
             "Damage = ?, DamagedParts = ?, Polish = ?, PurgeColor = ?, " ..
             "PurgeLocation = ?, Harness = ?, Nitrous = ?, NeonsDisabled = ?, " ..
             "WheelFitment = ?, Donator = ?, Seized = ?, SeizedTime = ?, " ..
-            "LastDriver = ?, Properties = ?, LastSave = ? WHERE VIN = ?",
+            "Properties = ?, LastSave = ? WHERE VIN = ?",
             {
                 updateData.Type,
                 updateData.Make,
@@ -173,7 +153,6 @@ function SaveVehicle(VIN)
                 updateData.OwnerType,
                 updateData.OwnerId,
                 updateData.OwnerWorkplace,
-                updateData.OwnerQualification,
                 updateData.StorageType,
                 updateData.StorageId,
                 updateData.FirstSpawn,
@@ -197,7 +176,6 @@ function SaveVehicle(VIN)
                 updateData.Donator,
                 updateData.Seized,
                 updateData.SeizedTime,
-                updateData.LastDriver,
                 updateData.Properties,
                 updateData.LastSave,
                 VIN
@@ -400,7 +378,6 @@ exports("OwnedAdd",
                 OwnerId = ownerData.Id,
                 OwnerWorkplace = ownerData.Workplace and ownerData.Workplace or nil,
                 OwnerLevel = ownerData.Level or 0,
-                OwnerQualification = ownerData.Qualification or nil,
                 StorageType = storageData and storageData.Type or 0,
                 StorageId = storageData and storageData.Id or 0,
                 Make = infoData.make or 'Unknown',
@@ -416,11 +393,11 @@ exports("OwnedAdd",
             }
 
             local success = MySQL.insert.await(
-                "INSERT INTO vehicles (VIN, Type, Make, Model, RegisteredPlate, OwnerType, OwnerId, OwnerWorkplace, OwnerLevel, OwnerQualification, StorageType, StorageId, " ..
+                "INSERT INTO vehicles (VIN, Type, Make, Model, RegisteredPlate, OwnerType, OwnerId, OwnerWorkplace, OwnerLevel, StorageType, StorageId, " ..
                 "FirstSpawn, Mileage, Fuel, DirtLevel, Value, Class, Vehicle, FakePlate, RegistrationDate, " ..
                 "Damage, DamagedParts, Polish, PurgeColor, PurgeLocation, Harness, Nitrous, NeonsDisabled, " ..
-                "WheelFitment, Donator, Seized, SeizedTime, LastDriver, Properties, Created, LastSave) " ..
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?))",
+                "WheelFitment, Donator, Seized, SeizedTime, Properties, Created, LastSave) " ..
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?))",
                 {
                     VIN,
                     vehicleType,
@@ -431,7 +408,6 @@ exports("OwnedAdd",
                     ownerData.Id,
                     ownerData.Workplace and ownerData.Workplace or nil,
                     ownerData.Level or 0,
-                    ownerData.Qualification or nil,
                     storageData and storageData.Type or 0,
                     storageData and storageData.Id or 0,
                     doc.FirstSpawn or false,
@@ -455,7 +431,6 @@ exports("OwnedAdd",
                     doc.Donator or false,
                     doc.Seized or false,
                     doc.SeizedTime or false,
-                    json.encode(doc.LastDriver or {}),
                     json.encode(doc.Properties or {}),
                     os.time(),
                     os.time()
@@ -485,8 +460,7 @@ exports("OwnedGetVIN", function(VIN, cb)
         "SELECT VIN, Type, Make, Model, RegisteredPlate, OwnerType, OwnerId, OwnerWorkplace, StorageType, StorageId, " ..
         "FirstSpawn, Mileage, Fuel, DirtLevel, Value, Class, Vehicle, FakePlate, RegistrationDate, " ..
         "Damage, DamagedParts, Polish, PurgeColor, PurgeLocation, Harness, Nitrous, NeonsDisabled, " ..
-        "WheelFitment, Donator, Seized, SeizedTime, LastDriver, Properties, ModelType, OwnerLevel, OwnerQualification " ..
-        "FROM vehicles WHERE VIN = ?",
+        "WheelFitment, Donator, Seized, SeizedTime, Properties, ModelType, OwnerLevel FROM vehicles WHERE VIN = ?",
         { VIN }
     )
 
@@ -545,38 +519,17 @@ exports("OwnedGetVIN", function(VIN, cb)
             end
         end
 
-        if vehicle.LastDriver and vehicle.LastDriver ~= "" then
-            local success, lastDriver = pcall(json.decode, vehicle.LastDriver)
-            if success and lastDriver then
-                vehicle.LastDriver = lastDriver
-            else
-                vehicle.LastDriver = {}
-            end
-        else
-            vehicle.LastDriver = {}
-        end
-        -- Legacy fallback: if column is empty but Properties contains LastDriver
-        if (not vehicle.LastDriver or type(vehicle.LastDriver) ~= 'table' or next(vehicle.LastDriver) == nil) and vehicle.Properties and vehicle.Properties.LastDriver then
-            vehicle.LastDriver = vehicle.Properties.LastDriver
-        end
-
         vehicle.Owner = {
             Type = vehicle.OwnerType,
             Id = vehicle.OwnerId,
             Workplace = vehicle.OwnerWorkplace,
-            Level = vehicle.OwnerLevel,
-            Qualification = vehicle.OwnerQualification
+            Level = vehicle.OwnerLevel
         }
 
-        -- Load Storage from Properties if it exists (for impound data with TimeHold), otherwise use StorageType/StorageId
-        if vehicle.Properties and vehicle.Properties.Storage then
-            vehicle.Storage = vehicle.Properties.Storage
-        else
-            vehicle.Storage = {
-                Type = vehicle.StorageType,
-                Id = vehicle.StorageId
-            }
-        end
+        vehicle.Storage = {
+            Type = vehicle.StorageType,
+            Id = vehicle.StorageId
+        }
 
         local defaultDamagedParts = {
             Axle = 100.0,
@@ -650,7 +603,7 @@ exports("OwnedGetAll",
             "SELECT VIN, Type, Make, Model, RegisteredPlate, OwnerType, OwnerId, OwnerWorkplace, StorageType, StorageId, " ..
             "FirstSpawn, Mileage, Fuel, DirtLevel, Value, Class, Vehicle, FakePlate, RegistrationDate, " ..
             "Damage, DamagedParts, Polish, PurgeColor, PurgeLocation, Harness, Nitrous, NeonsDisabled, " ..
-            "WheelFitment, Donator, Seized, SeizedTime, Properties, OwnerLevel, OwnerQualification FROM vehicles " ..
+            "WheelFitment, Donator, Seized, SeizedTime, Properties, OwnerLevel FROM vehicles " ..
             whereClause,
             params
         )
@@ -710,11 +663,6 @@ exports("OwnedGetAll",
                                 end
                             end
 
-                            -- Load SeizedOfficer if it exists
-                            if properties.SeizedOfficer then
-                                v.SeizedOfficer = properties.SeizedOfficer
-                            end
-
                         end
                     end
 
@@ -722,8 +670,7 @@ exports("OwnedGetAll",
                         Type = v.OwnerType,
                         Id = v.OwnerId,
                         Workplace = v.OwnerWorkplace,
-                        Level = v.OwnerLevel,
-                        Qualification = v.OwnerQualification
+                        Level = v.OwnerLevel
                     }
 
                     v.Storage = {
@@ -731,24 +678,11 @@ exports("OwnedGetAll",
                         Id = v.StorageId
                     }
 
-                    -- Load Storage from Properties ONLY if:
-                    -- 1. StorageType from DB is 0 (impound) AND
-                    -- 2. Properties.Storage exists and has TimeHold or Fine (impound data)
-                    -- Otherwise use StorageType/StorageId from datacore (garage/property storage)
-                    if v.StorageType == 0 and v.Properties and type(v.Properties) == 'table' and v.Properties.Storage and type(v.Properties.Storage) == 'table' then
-                        local propsStorage = v.Properties.Storage
-                        -- Only use Properties.Storage if it's impound data (has TimeHold or Fine)
-                        if propsStorage.TimeHold or (propsStorage.Fine and propsStorage.Fine > 0) then
-                            v.Storage = propsStorage
-                        end
-                    end
-
                     v.Spawned = exports['pulsar-vehicles']:OwnedGetActive(v.VIN)
 
                     if v.Storage and v.Storage.Type == 2 then
-                        local propId = tonumber(v.Storage.Id) or v.Storage.Id
-                        local prop = exports['pulsar-properties']:Get(propId) or exports['pulsar-properties']:Get(v.Storage.Id)
-                        if prop and prop.id then
+                        local prop = exports['pulsar-properties']:Get(v.Storage.Id)
+                        if prop and prop.id and prop.label then
                             v.PropertyStorage = prop
                         end
                     end
@@ -770,7 +704,6 @@ end)
 exports("OwnedSpawn", function(source, VIN, coords, heading, cb, extraData)
     exports['pulsar-vehicles']:OwnedGetVIN(VIN, function(vehicle)
         if vehicle and not exports['pulsar-vehicles']:OwnedGetActive(VIN) then
-            -- local spawnedVehicle = CreateVehicle(vehicle.ModelType, vehicle.Vehicle, coords,
             local spawnedVehicle = CreateVehicleFunc(vehicle.ModelType, vehicle.Vehicle, coords,
                 (heading and heading + 0.0 or 0.0))
             if spawnedVehicle then
@@ -973,7 +906,6 @@ exports("OwnedSpawn", function(source, VIN, coords, heading, cb, extraData)
                 if inVeh and DoesEntityExist(inVeh) then
                     DeleteEntity(inVeh)
                 end
-                TriggerEvent("vehicleSpawned", spawnedVehicle)
             else
                 cb(false)
             end
@@ -983,22 +915,11 @@ exports("OwnedSpawn", function(source, VIN, coords, heading, cb, extraData)
     end)
 end)
 
-exports("OwnedStore", function(VIN, storageType, storageId, cb, forceUnseize)
+exports("OwnedStore", function(VIN, storageType, storageId, cb)
     local vehData = exports['pulsar-vehicles']:OwnedGetActive(VIN)
     if vehData and vehData:GetData('VIN') then
         local isSeized = vehData:GetData('Seized')
-        local hasSeizedOfficer = vehData:GetData('Properties') and vehData:GetData('Properties').SeizedOfficer
-        if not isSeized and not hasSeizedOfficer then
-            vehData:SetData('Storage', {
-                Type = storageType,
-                Id = storageId,
-            })
-        elseif forceUnseize and (isSeized or hasSeizedOfficer) then
-            vehData:SetData('Seized', false)
-            vehData:SetData('SeizedTime', false)
-            local props = vehData:GetData('Properties') or {}
-            props.SeizedOfficer = nil
-            vehData:SetData('Properties', props)
+        if not isSeized then
             vehData:SetData('Storage', {
                 Type = storageType,
                 Id = storageId,
@@ -1029,20 +950,13 @@ exports("OwnedDelete", function(VIN, cb, ignoredExists)
                 DeleteEntity(entity)
                 ACTIVE_OWNED_VEHICLES[VIN] = nil
                 exports['pulsar-vehicles']:StoresDelete(VIN)
+                cb(true)
             end
             cb(success)
         elseif ignoredExists then
             ACTIVE_OWNED_VEHICLES[VIN] = nil
             exports['pulsar-vehicles']:StoresDelete(VIN)
             cb(true, true)
-        else
-            -- Entity doesn't exist but we still want to clean up and store
-            local success = SaveVehicle(vehData:GetData('VIN'))
-            if success then
-                ACTIVE_OWNED_VEHICLES[VIN] = nil
-                exports['pulsar-vehicles']:StoresDelete(VIN)
-            end
-            cb(success)
         end
     else
         cb(false)
@@ -1139,74 +1053,6 @@ exports("OwnedSeize", function(VIN, seizeState) -- Vehicle Siezure for Loans
     end
 end)
 
-exports("OwnedSeizeOfficer", function(VIN, seizeData) -- Vehicle Seizure for Officers (nil to release)
-    local vehicleData = exports['pulsar-vehicles']:OwnedGetActive(VIN)
-    if vehicleData then                         -- Vehicle is currently out
-        local data = vehicleData:GetData()
-        if not data.Properties then
-            data.Properties = {}
-        end
-        
-        if seizeData then
-            data.Properties.SeizedOfficer = seizeData
-            -- Store in impound
-            vehicleData:SetData('Storage', {
-                Type = 0,
-                Id = 0,
-                Fine = 0,
-                TimeHold = false,
-            })
-        else
-            data.Properties.SeizedOfficer = nil
-        end
-        
-        vehicleData:SetData('Properties', data.Properties)
-        local success = SaveVehicle(VIN)
-        return success
-    else -- Vehicle is stored, update DB directly
-        local vehicle = MySQL.single.await("SELECT Properties FROM vehicles WHERE VIN = ?", { VIN })
-        if vehicle then
-            local properties = {}
-            if vehicle.Properties and vehicle.Properties ~= "" then
-                local success, decoded = pcall(json.decode, vehicle.Properties)
-                if success and decoded then
-                    properties = decoded
-                end
-            end
-            
-            if seizeData then
-                properties.SeizedOfficer = seizeData
-                local success = MySQL.update.await(
-                    "UPDATE vehicles SET Properties = JSON_SET(COALESCE(Properties, '{}'), '$.SeizedOfficer', ?), StorageType = 0, StorageId = 0 WHERE VIN = ?",
-                    { json.encode(seizeData), VIN }
-                )
-                return success
-            else
-                local success = MySQL.update.await(
-                    "UPDATE vehicles SET Properties = JSON_REMOVE(COALESCE(Properties, '{}'), '$.SeizedOfficer') WHERE VIN = ?",
-                    { VIN }
-                )
-                return success
-            end
-        end
-        return false
-    end
-end)
-
-exports("OwnedReleaseToGarage", function(VIN, storageType, storageId)
-    local vehicleData = exports['pulsar-vehicles']:OwnedGetActive(VIN)
-    if vehicleData then
-        return false
-    end
-    local storageT = storageType or 1
-    local storageI = storageId or "alta_parking"
-    local success = MySQL.update.await(
-        "UPDATE vehicles SET StorageType = ?, StorageId = ?, Seized = 0, Properties = JSON_REMOVE(COALESCE(Properties, '{}'), '$.SeizedOfficer') WHERE VIN = ?",
-        { storageT, storageI, VIN }
-    )
-    return success
-end)
-
 exports("OwnedTrack", function(VIN)
     local p = promise.new()
 
@@ -1225,27 +1071,17 @@ exports("OwnedTrack", function(VIN)
         end
     else
         exports['pulsar-vehicles']:OwnedGetVIN(VIN, function(c)
-            if not c or not c.Storage then
-                p:resolve(false)
-                return
-            end
             if c.Storage.Type == 0 then
-                local imp = exports['pulsar-vehicles']:GaragesImpound()
-                p:resolve((imp and imp.coords) or false)
+                p:resolve(exports['pulsar-vehicles']:GaragesImpound().coords)
             elseif c.Storage.Type == 1 then
-                local garage = exports['pulsar-vehicles']:GaragesGet(c.Storage.Id)
-                p:resolve((garage and garage.coords) or false)
+                p:resolve(exports['pulsar-vehicles']:GaragesGet(c.Storage.Id).coords)
             elseif c.Storage.Type == 2 then
-                local propId = tonumber(c.Storage.Id) or c.Storage.Id
-                local prop = exports['pulsar-properties']:Get(propId) or exports['pulsar-properties']:Get(c.Storage.Id)
-                local garage = prop and prop.location and prop.location.garage
-                if garage and garage.x and garage.y and garage.z then
-                    p:resolve(vector3(garage.x, garage.y, garage.z))
+                local prop = exports['pulsar-properties']:Get(c.Storage.Id)
+                if prop and prop.location and prop.location.garage then
+                    p:resolve(vector3(prop.location.garage.x, prop.location.garage.y, prop.location.garage.z))
                 else
                     p:resolve(false)
                 end
-            else
-                p:resolve(false)
             end
         end)
     end
@@ -1256,7 +1092,6 @@ end)
 exports("SpawnTemp",
     function(source, model, modelType, coords, heading, cb, vehicleInfoData, properties, preDamage, suppliedPlate,
              suppliedVIN, spawnAsShit)
-        --local spawnedVehicle = CreateVehicle(modelType, model, coords, heading, spawnAsShit)
         local spawnedVehicle = CreateVehicleFunc(modelType, model, coords, heading, spawnAsShit)
         local vehState = Entity(spawnedVehicle).state
         local plate = suppliedPlate or exports['pulsar-vehicles']:PlateGenerate(true)
@@ -1300,7 +1135,6 @@ exports("SpawnTemp",
         if inVeh and DoesEntityExist(inVeh) then
             DeleteEntity(inVeh)
         end
-        TriggerEvent("vehicleSpawned", spawnedVehicle)
         cb(spawnedVehicle, vehState.VIN, plate)
     end)
 
