@@ -1809,7 +1809,7 @@ end)
 
 lib.callback.register('ox_inventory:startCrafting', function(id, recipe)
 	recipe = CraftingBenches[id].items[recipe]
-local p = promise.new()
+	local p = promise.new()
 	exports['pulsar-hud']:Progress({
 		name      = 'ox_crafting',
 		duration  = recipe.duration or 3000,

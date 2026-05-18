@@ -1840,7 +1840,7 @@ CreateThread(function()
         TriggerClientEvent('Inventory:Client:Halloween:Pumpkin', source, 'pumpkin1')
     end)
 
-    --[[-- ERP
+    -- ERP
     Inventory.Items:RegisterUse('buttplug_black', 'ERP', function(source)
         TriggerClientEvent('Inventory:Client:ERP:ButtPlug', source, 'black')
     end)
@@ -1850,7 +1850,7 @@ CreateThread(function()
     Inventory.Items:RegisterUse('vibrator_pink', 'ERP', function(source)
         TriggerClientEvent('Inventory:Client:ERP:Vibrator', source, 'pink')
     end)
-end)]]
+end)
 
 -- Gang chains
 
