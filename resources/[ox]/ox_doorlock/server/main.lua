@@ -458,7 +458,7 @@ RegisterNetEvent('ox_doorlock:teleportToDoor', function(id)
 	SetEntityCoords(ped, door.coords.x, door.coords.y, door.coords.z, false, false, false, false)
 end)
 
--- Reload Door (sandbox-admin)
+-- Reload Door (sandbox-admin) or Refresh Door (pulsar-admin)
 RegisterNetEvent('ox_doorlock:reloadDoor', function(id)
 	MySQL.query('SELECT id, name, data FROM ox_doorlock WHERE id = ?', { id }, function(result)
 		if result and result[1] then
@@ -469,7 +469,7 @@ RegisterNetEvent('ox_doorlock:reloadDoor', function(id)
 	end)
 end)
 
--- Remove Door (sandbox-admin)
+-- Remove Door (sandbox-admin) or Delete Door (pulsar-admin)
 RegisterNetEvent('ox_doorlock:removeDoor', function(id)
 	doors[id] = nil
 	TriggerClientEvent('ox_doorlock:editDoorlock', -1, id, nil)
@@ -478,6 +478,12 @@ end)
 if utils.isFrameworkActive('sandbox-base') then
 	exports["sandbox-chat"]:RegisterAdminCommand("doorlock", function(source, args, rawCommand)
 		TriggerClientEvent("sandbox-admin:openDoorlockMenu", source)
+	end, {
+		help = "Open doorlock management menu",
+	}, 0)
+elseif utils.isFrameworkActive('pulsar-core') then
+	exports["pulsar-chat"]:RegisterAdminCommand("doorlock", function(source, args, rawCommand)
+		TriggerClientEvent("pulsar-admin:openDoorlockMenu", source)
 	end, {
 		help = "Open doorlock management menu",
 	}, 0)
