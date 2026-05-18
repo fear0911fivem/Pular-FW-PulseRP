@@ -112,7 +112,6 @@ return {
 		container = 91,
 		--durability = (60 * 60 * 24 * 30),
 	},
-
 	{
     	name = "storage_box_small",
     	label = "Small Storage Box",

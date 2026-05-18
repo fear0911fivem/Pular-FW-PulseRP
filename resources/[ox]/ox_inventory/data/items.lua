@@ -701,6 +701,4 @@ return {
     ['ocean_run_entry'] = { label = 'Ocean Run Entry', weight = 10, stack = false },
     ['smuggling_nas'] = { label = 'NAS Device', weight = 2000, stack = false },
     ['smuggling_hdd'] = { label = 'Hard Drive', weight = 200 },
-
-	
 }
