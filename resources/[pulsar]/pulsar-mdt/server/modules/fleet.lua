@@ -33,13 +33,14 @@ AddEventHandler("MDT:Server:RegisterCallbacks", function()
           v.Owner = {
             Type = v.OwnerType,
             Id = v.OwnerId,
-            Workplace = v.OwnerWorkplace
+            Workplace = v.OwnerWorkplace or "None"
           }
 
           if v.StorageType ~= nil then
             local storageName = nil
             if v.StorageType == 0 then
-              storageName = exports['pulsar-vehicles']:GaragesImpound().name
+              local impound = exports['pulsar-vehicles']:GaragesImpound()
+              storageName = impound and impound.name or nil
             elseif v.StorageType == 1 then
               local garage = exports['pulsar-vehicles']:GaragesGet(v.StorageId)
               storageName = garage and garage.name or nil
