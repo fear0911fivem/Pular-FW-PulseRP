@@ -396,7 +396,7 @@ RegisterNetEvent("Hunting:Client:OnDuty", function(joiner, time)
 end)
 
 AddEventHandler("Hunting:Client:OpenShop", function()
-	exports.ox_inventory:openInventory("shop", { type = "HuntingSupplies" })
+	exports.ox_inventory:openInventory("shop", { type = "shop:hunting-supplies" })
 end)
 
 AddEventHandler("Hunting:Client:Sell", function(data)

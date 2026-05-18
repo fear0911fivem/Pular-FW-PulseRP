@@ -180,7 +180,7 @@ AddEventHandler("Labor:Client:Setup", function()
             icon = "cart-shopping",
             text = "Shop",
             onSelect = function()
-                TriggerEvent("Fishing:Client:OpenShop", { type = "FishingSupplies" })
+                TriggerEvent("Fishing:Client:OpenShop", { type = "shop:fishing-supplies" })
             end,
             isEnabled = function()
                 return exports['pulsar-characters']:RepGetLevel("Fishing") < 3
@@ -190,7 +190,7 @@ AddEventHandler("Labor:Client:Setup", function()
             icon = "cart-shopping",
             text = "Advanced Shop",
             onSelect = function()
-                TriggerEvent("Fishing:Client:OpenShop", { type = "FishingSuppliesAdvanced" })
+                TriggerEvent("Fishing:Client:OpenShop", { type = "shop:fishing-supplies-advanced" })
             end,
             rep = {
                 id = "Fishing",
