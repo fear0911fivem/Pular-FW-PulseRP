@@ -68,9 +68,9 @@ function HospitalCallbacks()
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
 		local bed = exports['pulsar-damage']:HospitalRequestBed(source)
 
-		local cost = 1500
+		local cost = 100
 		-- if not GlobalState["Duty:ems"] or GlobalState["Duty:ems"] == 0 then
-		-- 	cost = 150
+		-- 	cost = 100
 		-- end
 
 		exports['pulsar-finance']:BillingCharge(source, cost, "Medical Services",
@@ -101,9 +101,9 @@ function HospitalCallbacks()
 			exports['pulsar-pwnzor']:TempPosIgnore(source)
 			local bed = exports['pulsar-damage']:HospitalRequestBed(source)
 
-			local cost = 1500
+			local cost = 100
 			-- if not GlobalState["Duty:ems"] or GlobalState["Duty:ems"] == 0 then
-			-- 	cost = 150
+			-- 	cost = 100
 			-- end
 
 			exports['pulsar-finance']:BillingCharge(source, cost, "Medical Services",

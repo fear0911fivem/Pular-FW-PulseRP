@@ -22,7 +22,7 @@ local hospitalCheckin = {
 	},
 	{
 		icon = "fas fa-clipboard-check",
-		label = "Check In - $1500",
+		label = "Check In - $100",
 		event = "Hospital:Client:CheckIn",
 		canInteract = function()
 			if not GlobalState["Duty:ems"] or GlobalState["Duty:ems"] == 0 then
@@ -34,7 +34,7 @@ local hospitalCheckin = {
 	},
 	{
 		icon = "fas fa-clipboard-check",
-		label = "Check In - $1500",
+		label = "Check In - $100",
 		event = "Hospital:Client:CheckIn",
 		canInteract = function()
 			if GlobalState["Duty:ems"] and GlobalState["Duty:ems"] > 0 then

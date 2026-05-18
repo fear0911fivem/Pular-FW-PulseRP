@@ -182,10 +182,10 @@ AddEventHandler('Polyzone:Enter', function(id, point, insideZone, data)
 		if not LocalPlayer.state.isEscorted and (GlobalState["ems:pmc:doctor"] == nil or GlobalState["ems:pmc:doctor"] == 0) then
 			if not GlobalState["Duty:ems"] or GlobalState["Duty:ems"] == 0 then
 				exports['pulsar-hud']:ActionShow("medical",
-					'{keybind}primary_action{/keybind} Check In {key}$1500{/key}')
+					'{keybind}primary_action{/keybind} Check In {key}$100{/key}')
 			else
 				exports['pulsar-hud']:ActionShow("medical",
-					'{keybind}primary_action{/keybind} Check In {key}$1500{/key}')
+					'{keybind}primary_action{/keybind} Check In {key}$100{/key}')
 			end
 		end
 	end
