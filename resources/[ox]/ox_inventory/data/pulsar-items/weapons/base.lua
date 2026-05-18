@@ -2305,8 +2305,8 @@ return {
 	{-- PD AGC Rifle
 		name = "WEAPON_AGC",
 		label = "PD AGC",
-		ammoType = "AMMO_RIFLE",
-		qualification = "PD_AR",
+		ammoType = "AMMO_SMG",
+		qualification = "PD_SMG",
 		requiresLicense = true,
 		price = 700,
 		isUsable = true,
@@ -2343,8 +2343,8 @@ return {
 	{-- PD KVR Rifle
 		name = "WEAPON_KVR",
 		label = "PD KVR",
-		ammoType = "AMMO_RIFLE",
-		qualification = "PD_AR",
+		ammoType = "AMMO_SMG",
+		qualification = "PD_SMG",
 		requiresLicense = true,
 		price = 700,
 		isUsable = true,
