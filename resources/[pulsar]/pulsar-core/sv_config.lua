@@ -17,7 +17,7 @@ local GroupsConfig = {
 		Name = "Management",
 		Abv = "Management",
 		Queue = {
-			Priority = 100,
+			Priority = 1000,
 		},
 		Permission = {
 			Group = "admin", -- Can restart resources
@@ -29,7 +29,7 @@ local GroupsConfig = {
 		Name = "Developer",
 		Abv = "Dev",
 		Queue = {
-			Priority = 50,
+			Priority = 1000,
 		},
 		Permission = {
 			Group = "admin",
@@ -41,7 +41,7 @@ local GroupsConfig = {
 		Name = "Admin",
 		Abv = "Admin",
 		Queue = {
-			Priority = 50,
+			Priority = 500,
 		},
 		Permission = {
 			Group = "staff",
@@ -53,7 +53,7 @@ local GroupsConfig = {
 		Name = "Operations",
 		Abv = "Operations",
 		Queue = {
-			Priority = 50,
+			Priority = 250,
 		},
 		Permission = {
 			Group = "",
