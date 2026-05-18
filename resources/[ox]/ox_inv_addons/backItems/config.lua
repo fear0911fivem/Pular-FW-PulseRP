@@ -29,8 +29,8 @@ local Config = {}
 Config.defaultSlots = {
     ['back'] = {
         { bone = 24818, pos = vec3(0.09, -0.16, 0.12),  rot = vec3(0.0, 180.0, 0.0) },
-        { bone = 24818, pos = vec3(0.09, -0.16, 0.00),  rot = vec3(0.0, 180.0, 0.0) },
-        { bone = 24818, pos = vec3(0.09, -0.16, -0.12), rot = vec3(0.0, 180.0, 0.0) }
+        --{ bone = 24818, pos = vec3(0.09, -0.16, 0.00),  rot = vec3(0.0, 180.0, 0.0) },
+        --{ bone = 24818, pos = vec3(0.09, -0.16, -0.12), rot = vec3(0.0, 180.0, 0.0) }
     },
     -- ['another group'] = { -- add as many slot groups as you like for different types of items
     --     { bone = 24818, pos = vec3(0.09, -0.16, 0.12),  rot = vec3(0.0, 180.0, 0.0) },
@@ -63,6 +63,7 @@ Config.BackItems = {
     ['WEAPON_MILITARYRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
     ['WEAPON_HEAVYRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
     ['WEAPON_TACTICALRIFLE'] = { prio = 3, group = 'back', visibility = 1 },
+
     -- MARKO MODS
     ['WEAPON_UBR_OG'] = { prio = 3, group = 'back', visibility = 1 },
     ['WEAPON_UBR_MODERN'] = { prio = 3, group = 'back', visibility = 1 },
