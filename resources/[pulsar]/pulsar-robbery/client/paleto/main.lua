@@ -61,6 +61,18 @@ AddEventHandler("Robbery:Client:Setup", function()
 		)
 	end
 
+	local pcPropModel = `prop_laptop_01a`
+	RequestModel(pcPropModel)
+	while not HasModelLoaded(pcPropModel) do Wait(100) end
+	for k, v in ipairs(_pb.pcHackAreas) do
+		local t = v.target
+		local prop = CreateObject(pcPropModel, t.coords.x, t.coords.y, t.coords.z, false, false, false)
+		SetEntityHeading(prop, t.options.heading or 0)
+		PlaceObjectOnGroundProperly(prop)
+		FreezeEntityPosition(prop, true)
+	end
+	SetModelAsNoLongerNeeded(pcPropModel)
+
 	for k, v in ipairs(_pb.subStationZones) do
 		exports['pulsar-polyzone']:CreateBox(
 			string.format("pb_substation_%s", v.data.subStationId),
@@ -329,7 +341,7 @@ AddEventHandler("Polyzone:Enter", function(id, testedPoint, insideZones, data)
 			exports['pulsar-lasers']:SetActive(string.format("paleto_lasers_%s", k), not powerDisabled)
 			exports['pulsar-lasers']:SetVisible(string.format("paleto_lasers_%s", k), not powerDisabled)
 		end
-	elseif id == "paleto_hack_access" and not exports['ox_doorlock']:IsLocked("bank_savings_paleto_gate") then
+	elseif id == "paleto_hack_access" and not exports['ox_doorlock']:IsLocked("pulsar_bank_savings_paleto_gate") then
 		LocalPlayer.state:set("inPaletoWSPoint", true, true)
 	elseif data and data.subStationId ~= nil then
 		LocalPlayer.state:set("inSubStation", data.subStationId, true)

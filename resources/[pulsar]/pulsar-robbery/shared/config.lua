@@ -377,7 +377,7 @@ RobberyConfig = {
     -- LOMBANK
     lombank = {
         serverStartWait = 1000 * 60 * math.random(60, 90),
-        requiredPolice  = 4,
+        requiredPolice  = 0,
         resetTime       = 60 * 60 * 8,
 
         -- STEP 1: disable power boxes to deactivate lasers (hack or thermite per box)
@@ -653,15 +653,7 @@ RobberyConfig = {
             { coords = vector3(3616.07, 5024.11, 11.45), length = 7.6,  width = 9.0,  options = { heading = 290, minZ = 10.45, maxZ = 13.65 }, data = { pcId = 4 }, target = { coords = vector3(3616.07, 5024.11, 11.45), length = 1.2, width = 1.2, options = { heading = 290, minZ = 10.45, maxZ = 13.45 } } },
         },
 
-        -- STEP 2: breach the workstation inside the bank (adv_electronics_kit + vpn, all 4 exploits required)
-        -- hackAccessBox is the polyzone that sets inPaletoWSPoint; workstation is inside targets below
-        hackAccessBox = {
-            coords  = vector3(-107.04, 6474.16, 31.63),
-            length  = 1.8, width = 1.2,
-            options = { heading = 315, minZ = 30.63, maxZ = 32.63 },
-        },
-
-        -- STEP 3: destroy remote substations with thermite to begin cutting power
+        -- STEP 2: destroy remote substations with thermite to begin cutting power
         --  subStations = thermite placement + explosion points for each substation
         --  subStationZones = player detection polyzones around each substation
         subStations = {
@@ -678,8 +670,8 @@ RobberyConfig = {
             { coords = vector3(234.31, 6402.54, 31.65), length = 19.8, width = 27.6, options = { heading = 26,  minZ = 30.65, maxZ = 35.45 }, data = { subStationId = 4 } },
         },
 
-        -- STEP 4: hack the 4 power interface boxes around the map (adv_electronics_kit)
-        -- completing all substations + all boxes triggers IsPaletoPowerDisabled() = lasers off
+        -- STEP 3: hack the 4 power interface boxes around the map (adv_electronics_kit)
+        -- completing all substations + all boxes triggers IsPaletoPowerDisabled() = gate opens + lasers off
         powerHacks = {
             { coords = vector3(-442.17, 5602.08, 68.38), length = 0.6, width = 1.0, options = { heading = 4,   minZ = 67.98, maxZ = 69.78 }, data = { boxId = 1, ptFxPoint = vector3(-442.168, 5601.922, 68.80035) } },
             { coords = vector3(8.99, 6221.59, 31.47), length = 0.4, width = 0.8, options = { heading = 28,  minZ = 30.87, maxZ = 32.67 }, data = { boxId = 2, ptFxPoint = vector3(8.950461, 6221.659, 31.73336) } },
@@ -687,7 +679,15 @@ RobberyConfig = {
             { coords = vector3(-83.59, 6131.98, 30.46), length = 1.2, width = 0.6, options = { heading = 319, minZ = 30.26, maxZ = 32.26 }, data = { boxId = 4, ptFxPoint = vector3(-83.68681, 6132,     31.04742) } },
         },
 
-        -- STEP 5: breach the back of the bank
+        -- STEP 4 (cont.): workstation inside the bank — accessible once gate opens (power disabled)
+        -- hackAccessBox is the polyzone that sets inPaletoWSPoint; workstation targets are below
+        hackAccessBox = {
+            coords  = vector3(-107.04, 6474.16, 31.63),
+            length  = 1.8, width = 1.2,
+            options = { heading = 315, minZ = 30.63, maxZ = 32.63 },
+        },
+
+        -- STEP 5: breach the back of the bank (requires exploits + power disabled)
         --   thermite the two back doors, then use door hacks / lockpick / security power to get inside
         doorThermite = {
             { coords = vector3(-97.33757, 6475.071, 31.50123), heading = 136.012, door = "pulsar_bank_savings_paleto_back_1", requiredDoors = {} },
@@ -780,7 +780,7 @@ RobberyConfig = {
     -- VANGELICO
     vangelico = {
         serverStartWait = 1000 * 60 * math.random(60, 70), -- ms delay after server boot
-        requiredPolice  = 4,                                -- minimum on-duty police
+        requiredPolice  = 0,                                -- minimum on-duty police
 
         -- STEP 1: smash jewelry cases with a melee weapon to collect loot
         cases = {
@@ -836,7 +836,7 @@ RobberyConfig = {
             vector4(855.208, -2306.472, 30.346, 175.001), vector4(981.240, -2508.671, 28.302, 353.925),
             vector4(690.640, -2287.796, 28.089, 355.932), vector4(733.442, -1907.685, 29.292, 174.127),
             vector4(837.710, -1990.537, 29.301,  81.766), vector4(909.788, -1519.038, 30.590, 267.368),
-            vector4(222.403,  1255.156,225.460,  12.525), vector4(-61.567, 1960.274,190.186, 296.237),
+            vector4(222.403, 1255.156, 225.460,  12.525), vector4(-61.567, 1960.274,190.186, 296.237),
             vector4(810.427, 2154.283, 52.278, 155.035), vector4(1225.317, 2745.066, 38.006,  86.496),
             vector4(2003.305, 3039.629, 47.215, 327.551), vector4(2659.275, 3277.859, 55.241, 310.082),
             vector4(1643.865, 4838.119, 42.028,   5.168), vector4(1977.816, 5170.238, 47.639, 311.102),
@@ -930,9 +930,9 @@ RobberyConfig = {
 
         -- terminal zone where players start the ATM job
         terminal = {
-            coords = vector3(699.5, -1261.68, 26.24),
-            length = 1.2,
-            width  = 1.2,
+            ped     = vector4(699.528, -1261.740, 25.444, 180.716),
+            length  = 1.2,
+            width   = 1.2,
             options = { heading = 0, minZ = 25.5, maxZ = 28.5 },
         },
 

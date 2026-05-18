@@ -2,8 +2,20 @@ local _vg = RobberyConfig.vangelico
 
 local _alerted = nil
 local _caseResetTime = nil
+local _alarmSource = nil
+
+local _alarmCoords = vector3(-630.732, -237.111, 38.078)
+
+function StopVangelicoAlarm()
+	if _alarmSource then
+		TriggerClientEvent("Sounds:Client:Stop:Distance", -1, _alarmSource, "bank_alarm.ogg")
+		_alarmSource = nil
+	end
+	GlobalState["Vangelico:Alarm"] = false
+end
 
 function PutShittyThingsOnCD()
+	StopVangelicoAlarm()
 	local time = _caseResetTime or os.time() + (60 * math.random(100, 140))
 	GlobalState["Vangelico:State"] = 2
 	GlobalState["Vangelico:InProgress"] = false
@@ -89,6 +101,9 @@ AddEventHandler("Robbery:Server:Setup", function()
 				if not _caseResetTime then
 					_caseResetTime = os.time() + (60 * math.random(100, 140))
 					StartJewelryTimer()
+					_alarmSource = source
+					exports["pulsar-sounds"]:LoopLocation(source, _alarmCoords, 30.0, "bank_alarm.ogg", 0.15)
+					GlobalState["Vangelico:Alarm"] = true
 				end
 
 				if not GlobalState["AntiShitlord"] or os.time() >= GlobalState["AntiShitlord"] then
@@ -163,6 +178,16 @@ AddEventHandler("Robbery:Server:Setup", function()
 					},
 				}
 			)
+		end
+	end)
+
+	exports["pulsar-core"]:RegisterServerCallback("Robbery:Vangelico:DisableAlarm", function(source, data, cb)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+		if char and Player(source).state.onDuty == "police" then
+			if GlobalState["Vangelico:Alarm"] then
+				StopVangelicoAlarm()
+				exports['pulsar-hud']:Notification(source, "success", "Alarm Disabled", 5000)
+			end
 		end
 	end)
 end)

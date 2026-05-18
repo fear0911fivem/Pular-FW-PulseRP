@@ -394,6 +394,7 @@ function RegisterCommands()
 
 	exports["pulsar-chat"]:RegisterAdminCommand("disablelockdown", function(source, args, rawCommand)
 		GlobalState["RestartLockdown"] = false
+		GlobalState["Vangelico:State"] = nil
 		exports["pulsar-chat"]:SendSystemSingle(source, "<b>Restart Lockdown</b>: Disabled")
 	end, {
 		help = "Disable Restart Lockdown",

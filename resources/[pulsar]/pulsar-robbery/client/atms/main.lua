@@ -7,28 +7,31 @@ AddEventHandler("Robbery:Client:Setup", function()
     while not GlobalState["ATMRobberyTerminal"] do
         Wait(10)
     end
-    local atmRobbery = GlobalState["ATMRobberyTerminal"]
 
-    exports.ox_target:addBoxZone({
-        id = "atm-robbery-terminal",
-        coords = atmRobbery.coords,
-        size = vector3(atmRobbery.length, atmRobbery.width, 2.0),
-        rotation = atmRobbery.options.heading or 0,
-        debug = false,
-        minZ = atmRobbery.options.minZ,
-        maxZ = atmRobbery.options.maxZ,
-        options = {
+    local ped = _atm.terminal.ped
+
+    exports['pulsar-pedinteraction']:Add(
+        "ATMContactPed",
+        GetHashKey("s_m_y_dealer_01"),
+        vector3(ped.x, ped.y, ped.z),
+        ped.w,
+        50.0,
+        {
             {
-                icon = "fas fa-eye-slash",
-                label = "Do Illegal Things",
-                event = "Robbery:Client:ATM:UseTerminal",
-                item = _atm.items.terminal,
-                canInteract = function()
+                icon    = "fas fa-eye-slash",
+                text    = "Do Illegal Things",
+                isEnabled = function()
+                    if exports.ox_inventory:GetItemCount(_atm.items.terminal) <= 0 then return false end
                     return not LocalPlayer.state.ATMRobbery or LocalPlayer.state.ATMRobbery <= 0
                 end,
+                onSelect = function()
+                    TriggerEvent("Robbery:Client:ATM:UseTerminal")
+                end,
             },
-        }
-    })
+        },
+        nil,
+        "WORLD_HUMAN_STAND_MOBILE"
+    )
 
     for k, v in ipairs(_atm.objects) do
         exports.ox_target:addModel(v, {
@@ -105,7 +108,7 @@ end)
 function StartATMRobbery(location, firstLocation)
     _atmZone = location
 
-    if not _atmZone then return; end
+    if not _atmZone then return end
 
     if _blip then
         RemoveBlip(_blip)
@@ -176,7 +179,7 @@ AddEventHandler('Robbery:Client:ATM:StartHack', function(entity)
     end
 
     DoATMProgress("Connecting & Installing", (math.random(10) + 20) * 1000, true, function(status)
-        if status then return; end
+        if status then return end
 
         local size = math.random(5, 7)
         local toGet = math.random(4, 6)

@@ -149,6 +149,12 @@ AddEventHandler("Robbery:Client:Fleeca:Drill", function(entity, data)
 	exports["pulsar-core"]:ServerCallback("Robbery:Fleeca:Drill", data, function() end)
 end)
 
+RegisterNetEvent("Robbery:Client:Fleeca:LootSuccess")
+AddEventHandler("Robbery:Client:Fleeca:LootSuccess", function()
+	loadAnimDict("pickup_object")
+	TaskPlayAnim(LocalPlayer.state.ped, "pickup_object", "pickup_low", 8.0, 1.0, 2000, 48, 0, false, false, false)
+end)
+
 function OpenDoor(checkOrigin, door)
 	local obj =
 		GetClosestObjectOfType(checkOrigin[1], checkOrigin[2], checkOrigin[3], 25.0, door.object, false, false, false)

@@ -149,22 +149,45 @@ AddEventHandler("Robbery:Client:Vangelico:SecureStore", function(data)
 	end)
 end)
 
+AddEventHandler("Robbery:Client:Vangelico:DisableAlarm", function()
+	exports['pulsar-hud']:Progress({
+		name = "disable_vangelico_alarm",
+		duration = 10000,
+		label = "Disabling Alarm",
+		useWhileDead = false,
+		canCancel = true,
+		controlDisables = {
+			disableMovement = true,
+			disableCarMovement = true,
+			disableMouse = false,
+			disableCombat = true,
+		},
+		animation = {
+			anim = "cop3",
+		},
+	}, function(status)
+		if not status then
+			exports["pulsar-core"]:ServerCallback("Robbery:Vangelico:DisableAlarm")
+		end
+	end)
+end)
+
 AddEventHandler("Polyzone:Enter", function(id, point, insideZones, data)
 	if id == "vangelico" then
-		exports.ox_target:addModel(GetHashKey("hei_prop_hei_keypad_03"), {
-			-- {
-			-- 	icon = "fas fa-bell",
-			-- 	label = "Disable Alarm",
-			-- 	event = "Robbery:Client:Vangelico:DisableAlarm",
-			-- 	groups = { "police" },
-			-- 	canInteract = function()
-			-- 		local dist = #(
-			-- 				vector3(LocalPlayer.state.myPos.x, LocalPlayer.state.myPos.y, LocalPlayer.state.myPos.z)
-			-- 				- _pdAlarm
-			-- 			)
-			-- 		return dist <= 2.0 and GlobalState["Vangelico:Alarm"]
-			-- 	end,
-			-- },
+		local _keypadOptions = {
+			{
+				icon = "fas fa-bell",
+				label = "Disable Alarm",
+				event = "Robbery:Client:Vangelico:DisableAlarm",
+				groups = { "police" },
+				canInteract = function()
+					local dist = #(
+							vector3(LocalPlayer.state.myPos.x, LocalPlayer.state.myPos.y, LocalPlayer.state.myPos.z)
+							- _pdAlarm
+						)
+					return dist <= 2.0 and GlobalState["Vangelico:Alarm"]
+				end,
+			},
 			-- {
 			-- 	icon = "fas fa-terminal",
 			-- 	label = "Hack Keypad",
@@ -191,7 +214,10 @@ AddEventHandler("Polyzone:Enter", function(id, point, insideZones, data)
 			-- 		return dist <= 2.0 and not GlobalState["Vangelico:Lockdown"]
 			-- 	end,
 			-- },
-		})
+		}
+		if #_keypadOptions > 0 then
+			exports.ox_target:addModel(GetHashKey("hei_prop_hei_keypad_03"), _keypadOptions)
+		end
 	end
 end)
 

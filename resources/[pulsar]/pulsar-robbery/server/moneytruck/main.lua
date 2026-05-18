@@ -129,8 +129,9 @@ function SpawnBobcatTruck(truckModel, skipCooldown)
 
 				Entity(veh).state.moneyTruck = true
 				SetEntityDistanceCullingRadius(veh, 20000.0)
+				local netId = NetworkGetNetworkIdFromEntity(veh)
 				Wait(1000)
-				p:resolve(NetworkGetNetworkIdFromEntity(veh))
+				p:resolve(netId)
 			end)
 		return Citizen.Await(p)
 	else
