@@ -20,7 +20,7 @@ const loadingTips = [
   'Press F1 for utilities, emotes, and cash options!',
   'Press TAB to open your inventory!',
   'Press M to open your phone!',
-  'Press U to lock/unlock your vehicle!',
+  'Press L to lock/unlock your vehicle!',
   'Press F to enter/exit vehicles!',
   'Press Left Alt for third eye/interact menu!',
   'Press Z to cycle voice chat channels!',
