@@ -79,7 +79,7 @@ exports('AddFrontdoor', function(id, pos)
   currentLocation.front = pos
   local locationJson = json.encode(currentLocation)
 
-  exports.oxmysql:execute('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
+  exports.oxmysql:update('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
     function(affectedRows)
       if affectedRows > 0 then
         if _properties[id] and _properties[id].location then
@@ -105,7 +105,7 @@ exports('AddBackdoor', function(id, pos)
   currentLocation.backdoor = pos
   local locationJson = json.encode(currentLocation)
 
-  exports.oxmysql:execute('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
+  exports.oxmysql:update('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
     function(affectedRows)
       if affectedRows > 0 then
         if _properties[id] and _properties[id].location then
@@ -131,7 +131,7 @@ exports('AddGarage', function(id, pos)
   currentLocation.garage = pos
   local locationJson = json.encode(currentLocation)
 
-  exports.oxmysql:execute('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
+  exports.oxmysql:update('UPDATE properties SET location = ? WHERE id = ?', { locationJson, id },
     function(affectedRows)
       if affectedRows > 0 then
         if _properties[id] and _properties[id].location then
@@ -153,7 +153,7 @@ exports('SetLabel', function(id, label)
   end
 
   local p = promise.new()
-  exports.oxmysql:execute('UPDATE properties SET label = ? WHERE id = ?', { label, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET label = ? WHERE id = ?', { label, id }, function(affectedRows)
     if affectedRows > 0 then
       if _properties[id] and _properties[id].label then
         _properties[id].label = label
@@ -174,7 +174,7 @@ exports('SetPrice', function(id, price)
   end
 
   local p = promise.new()
-  exports.oxmysql:execute('UPDATE properties SET price = ? WHERE id = ?', { price, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET price = ? WHERE id = ?', { price, id }, function(affectedRows)
     if affectedRows > 0 then
       if _properties[id] and _properties[id].price then
         _properties[id].price = price
@@ -199,7 +199,7 @@ exports('SetData', function(id, key, value)
   currentData[key] = value
   local dataJson = json.encode(currentData)
 
-  exports.oxmysql:execute('UPDATE properties SET data = ? WHERE id = ?', { dataJson, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET data = ? WHERE id = ?', { dataJson, id }, function(affectedRows)
     if affectedRows > 0 then
       if _properties[id] then
         if not _properties[id].data then _properties[id].data = {} end
@@ -217,7 +217,7 @@ end)
 
 exports('Delete', function(id)
   local p = promise.new()
-  exports.oxmysql:execute('DELETE FROM properties WHERE id = ?', { id }, function(affectedRows)
+  exports.oxmysql:update('DELETE FROM properties WHERE id = ?', { id }, function(affectedRows)
     if affectedRows > 0 then
       _properties[id] = nil
 
@@ -248,7 +248,7 @@ exports('UpgradeSet', function(id, upgrade, level)
       currentUpgrades[upgrade] = level
       local upgradesJson = json.encode(currentUpgrades)
 
-      exports.oxmysql:execute('UPDATE properties SET upgrades = ? WHERE id = ?', { upgradesJson, id },
+      exports.oxmysql:update('UPDATE properties SET upgrades = ? WHERE id = ?', { upgradesJson, id },
         function(affectedRows)
           if affectedRows > 0 then
             if _properties[id] then
@@ -310,7 +310,7 @@ exports('UpgradeSetInterior', function(id, interior)
       currentUpgrades.interior = interior
       local upgradesJson = json.encode(currentUpgrades)
 
-      exports.oxmysql:execute('UPDATE properties SET upgrades = ? WHERE id = ?', { upgradesJson, id },
+      exports.oxmysql:update('UPDATE properties SET upgrades = ? WHERE id = ?', { upgradesJson, id },
         function(affectedRows)
           if affectedRows > 0 then
             if _properties[id] then
@@ -331,7 +331,7 @@ end)
 
 exports('Sell', function(id)
   local p = promise.new()
-  exports.oxmysql:execute('UPDATE properties SET sold = 0, owner = NULL, `keys` = NULL WHERE id = ?', { id },
+  exports.oxmysql:update('UPDATE properties SET sold = 0, owner = NULL, `keys` = NULL WHERE id = ?', { id },
     function(affectedRows)
       if affectedRows > 0 and _properties[id] then
         _properties[id].sold = false
@@ -352,6 +352,7 @@ exports('Sell', function(id)
         end
 
         _properties[id].keys = nil
+        _properties[id].owner = nil
         TriggerClientEvent("Properties:Client:Update", -1, id, _properties[id])
         p:resolve(true)
       else
@@ -366,10 +367,11 @@ exports('Buy', function(id, owner, payment)
   local keysData = { [owner.Char] = owner }
   local keysJson = json.encode(keysData)
 
-  exports.oxmysql:execute('UPDATE properties SET soldAt = ?, sold = 1, owner = ?, `keys` = ? WHERE id = ?',
-    { os.time(), owner, keysJson, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET soldAt = ?, sold = 1, owner = ?, `keys` = ? WHERE id = ?',
+    { os.time(), json.encode(owner), keysJson, id }, function(affectedRows)
       if affectedRows > 0 then
         _properties[id].sold = true
+        _properties[id].owner = owner
         _properties[id].keys = keysData
         _properties[id].soldAt = os.time()
 
@@ -399,7 +401,7 @@ exports('Foreclose', function(id, state)
   end
 
   local p = promise.new()
-  exports.oxmysql:execute('UPDATE properties SET foreclosed = ? WHERE id = ?', { state and 1 or 0, id },
+  exports.oxmysql:update('UPDATE properties SET foreclosed = ? WHERE id = ?', { state and 1 or 0, id },
     function(affectedRows)
       if affectedRows > 0 then
         if _properties[id] then
@@ -464,7 +466,7 @@ exports('GiveKey', function(charData, id, isOwner, permissions, updating)
   }
   local keysJson = json.encode(currentKeys)
 
-  exports.oxmysql:execute('UPDATE properties SET `keys` = ? WHERE id = ?', { keysJson, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET `keys` = ? WHERE id = ?', { keysJson, id }, function(affectedRows)
     if affectedRows > 0 then
       if _properties[id] then
         _properties[id].keys = currentKeys
@@ -503,7 +505,7 @@ exports('TakeKey', function(target, id)
   currentKeys[target] = nil
   local keysJson = json.encode(currentKeys)
 
-  exports.oxmysql:execute('UPDATE properties SET `keys` = ? WHERE id = ?', { keysJson, id }, function(affectedRows)
+  exports.oxmysql:update('UPDATE properties SET `keys` = ? WHERE id = ?', { keysJson, id }, function(affectedRows)
     if affectedRows > 0 then
       if _properties[id] then
         _properties[id].keys = currentKeys

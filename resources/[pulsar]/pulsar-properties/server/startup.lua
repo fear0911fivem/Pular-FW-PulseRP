@@ -33,7 +33,7 @@ function Startup()
 				label = v.label,
 				price = v.price,
 				sold = v.sold == 1,
-				owner = v.owner,
+				owner = v.owner and json.decode(v.owner) or nil,
 				location = v.location and json.decode(v.location) or nil,
 				upgrades = v.upgrades and json.decode(v.upgrades) or nil,
 				locked = v.locked == 1,
