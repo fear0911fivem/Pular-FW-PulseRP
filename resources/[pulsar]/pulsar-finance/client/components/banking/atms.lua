@@ -121,13 +121,10 @@ AddEventHandler("Banking:Client:StartOpenATM", function(entityData)
 		disarm = true,
 	}, function(cancelled)
 		if not cancelled then
-			SetNuiFocus(true, true)
-			SendNUIMessage({
-				type = "SET_APP",
-				data = {
-					brand = "fleeca",
-					app = "ATM",
-				},
+			FinanceOpenBanking("ATM", {
+				depositVisible = false,
+				street = "ATM",
+				maxWithdraw = 5000,
 			})
 		end
 	end)

@@ -13,9 +13,9 @@ export const Fleeca = (theme) => {
 	return {
 		...StandardPalette(theme),
 		primary: {
-			main: '#25883d',
-			light: '#51c46d',
-			dark: '#124f21',
+			main: '#882525',
+			light: '#c45151',
+			dark: '#4f1212',
 			contrastText: theme === 'dark' ? '#ffffff' : '#26292d',
 		},
 		secondary: {
@@ -93,9 +93,9 @@ export const StandardPalette = (theme) => {
 			dark: '#b05d1a',
 		},
 		info: {
-			main: '#247ba5',
-			light: '#247ba5',
-			dark: '#175878',
+			main: '#a52424',
+			light: '#a52424',
+			dark: '#781717',
 		},
 		text: {
 			main: '#ffffff',

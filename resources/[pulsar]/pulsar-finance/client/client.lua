@@ -1,11 +1,16 @@
-local inBank = true
-
 function TableLength(tbl)
 	local c = 0
 	for k, v in pairs(tbl) do
 		c += 1
 	end
 	return c
+end
+
+local function RegisterFinanceInteractionMenus()
+	exports['pulsar-hud']:InteractionRegisterMenu("cash", "Show Cash", "dollar-sign", function()
+		TriggerServerEvent("Wallet:ShowCash")
+		exports['pulsar-hud']:InteractionHide()
+	end)
 end
 
 AddEventHandler('onClientResourceStart', function(resource)
@@ -109,19 +114,18 @@ AddEventHandler('onClientResourceStart', function(resource)
 		-- 	}
 		-- })
 
-		exports['pulsar-hud']:InteractionRegisterMenu("cash", "Show Cash", "dollar-sign", function()
-			TriggerServerEvent("Wallet:ShowCash")
-			exports['pulsar-hud']:InteractionHide()
-		end)
+		RegisterFinanceInteractionMenus()
 	end
 end)
 
+AddEventHandler("PulsarHud:Client:RegisterInteractions", RegisterFinanceInteractionMenus)
+
 RegisterNetEvent("UI:Client:Reset", function()
-	SetNuiFocus(false, false)
-	SendNUIMessage({
-		type = "APP_HIDE",
-		data = {},
-	})
+	if FinanceCloseBanking then
+		FinanceCloseBanking(false)
+	else
+		SetNuiFocus(false, false)
+	end
 end)
 
 AddEventHandler("Finance:Client:Paycheck", function(entity, data)
@@ -136,82 +140,18 @@ AddEventHandler("Finance:Client:Paycheck", function(entity, data)
 	end)
 end)
 
-RegisterNUICallback("Close", function(data, cb)
-	SetNuiFocus(false, false)
-	SendNUIMessage({
-		type = "APP_HIDE",
-	})
-
-	if not inBank then
-		exports['pulsar-hud']:Progress({
-			name = "atm_removing",
-			duration = 1500,
-			label = "Removing Card",
-			useWhileDead = false,
-			canCancel = false,
-			ignoreModifier = true,
-			controlDisables = {
-				disableMovement = true,
-				disableCarMovement = true,
-				disableMouse = false,
-				disableCombat = true,
-			},
-			animation = {
-				animDict = "amb@prop_human_atm@male@idle_a",
-				anim = "idle_b",
-				flags = 49,
-			},
-			disarm = true,
-		}, function(cancelled) end)
-	end
-
-	inBank = false
-end)
-
 RegisterNetEvent("Finance:Client:OpenUI", function()
-	inBank = true
-	SetNuiFocus(true, true)
-	SendNUIMessage({
-		type = "SET_APP",
-		data = {
-			brand = "fleeca",
-			app = "BANK",
-		},
-	})
+	FinanceOpenBanking("BANKING")
 end)
 
 AddEventHandler("Characters:Client:Updated", function(key)
 	if key == "Cash" then
-		SendNUIMessage({
-			type = "SET_DATA",
-			data = {
-				type = "character",
-				data = {
-					ID = LocalPlayer.state.Character:GetData("ID"),
-					SID = LocalPlayer.state.Character:GetData("SID"),
-					First = LocalPlayer.state.Character:GetData("First"),
-					Last = LocalPlayer.state.Character:GetData("Last"),
-					Cash = LocalPlayer.state.Character:GetData("Cash"),
-				},
-			},
-		})
+		FinanceSendPlayerUpdate()
 	end
 end)
 
 AddEventHandler("Characters:Client:Spawn", function()
-	SendNUIMessage({
-		type = "SET_DATA",
-		data = {
-			type = "character",
-			data = {
-				ID = LocalPlayer.state.Character:GetData("ID"),
-				SID = LocalPlayer.state.Character:GetData("SID"),
-				First = LocalPlayer.state.Character:GetData("First"),
-				Last = LocalPlayer.state.Character:GetData("Last"),
-				Cash = LocalPlayer.state.Character:GetData("Cash"),
-			},
-		},
-	})
+	FinanceSendPlayerUpdate()
 end)
 
 RegisterNetEvent("Finance:Client:HandOffCash", function()

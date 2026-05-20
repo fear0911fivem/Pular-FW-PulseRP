@@ -18,6 +18,11 @@ shared_scripts({
   "shared/**/*.lua",
 })
 
-ui_page("ui/dist/index.html")
+ui_page("ui/srp/index.html")
 
-files({ "ui/dist/index.html", "ui/dist/*.js", "ui/dist/*.png", "ui/dist/*.webp" })
+files({
+  "ui/srp/index.html",
+  "ui/srp/assets/*",
+  "ui/srp/**/*",
+  "locales/*.json",
+})

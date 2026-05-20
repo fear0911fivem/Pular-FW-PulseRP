@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"scripts": {
 		"clean": "npx rimraf ./dist",
-		"start": "cross-env NODE_ENV=development webpack serve --config webpack/webpack.dev.js --color --open",
+		"start": "node scripts/serve-prp-preview.js",
 		"build": "npm run clean && cross-env NODE_ENV=production webpack --config webpack/webpack.prod.js --color --progress"
 	},
 	"dependencies": {

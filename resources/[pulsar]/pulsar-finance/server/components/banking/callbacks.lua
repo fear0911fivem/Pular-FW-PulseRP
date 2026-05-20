@@ -1,4 +1,26 @@
 local _actionCooldowns = {}
+local SAVINGS_ACCOUNT_CREATION_FEE = 500
+
+local function GetCharacterSummaryBySID(stateId)
+	local sid = tonumber(stateId)
+	if not sid then
+		return false
+	end
+
+	local result = MySQL.single.await("SELECT SID, First, Last FROM characters WHERE SID = ?", {
+		sid
+	})
+
+	if not result then
+		return false
+	end
+
+	return {
+		stateId = tonumber(result.SID) or sid,
+		firstName = result.First or "",
+		lastName = result.Last or "",
+	}
+end
 
 function RegisterBankingCallbacks()
 	exports["pulsar-core"]:RegisterServerCallback("Finance:Paycheck", function(source, data, cb)
@@ -36,8 +58,19 @@ function RegisterBankingCallbacks()
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
 
 		if char ~= nil then
-			if data.type == "personal_savings" then
+			if data and data.type == "personal_savings" then
+				if not exports['pulsar-finance']:WalletModify(source, -SAVINGS_ACCOUNT_CREATION_FEE, true) then
+					cb(false)
+					return
+				end
+
 				local acc = exports['pulsar-finance']:AccountsCreatePersonalSavings(char:GetData("SID"))
+				if not acc then
+					exports['pulsar-finance']:WalletModify(source, SAVINGS_ACCOUNT_CREATION_FEE, true)
+					cb(false)
+					return
+				end
+
 				acc.Permissions = {
 					MANAGE = true,
 					BALANCE = true,
@@ -45,6 +78,15 @@ function RegisterBankingCallbacks()
 					DEPOSIT = true,
 					TRANSACTIONS = true,
 				}
+
+				if acc and data.name and #tostring(data.name) > 0 then
+					MySQL.query.await("UPDATE bank_accounts SET name = ? WHERE account = ?", {
+						tostring(data.name),
+						acc.Account
+					})
+					acc.Name = tostring(data.name)
+				end
+
 				cb(acc)
 			else
 				cb(false)
@@ -55,7 +97,19 @@ function RegisterBankingCallbacks()
 	end)
 
 	exports["pulsar-core"]:RegisterServerCallback("Banking:RenameAccount", function(source, data, cb)
-		cb(false)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+		local accountData = data and exports['pulsar-finance']:AccountsGet(data.account)
+
+		if char and accountData and data.name and HasBankAccountPermission(source, accountData, "MANAGE", char:GetData("SID")) then
+			MySQL.query.await("UPDATE bank_accounts SET name = ? WHERE account = ?", {
+				tostring(data.name),
+				accountData.Account
+			})
+
+			cb(true)
+		else
+			cb(false)
+		end
 	end)
 
 	exports["pulsar-core"]:RegisterServerCallback("Banking:AddJoint", function(source, data, cb)
@@ -95,13 +149,148 @@ function RegisterBankingCallbacks()
 		end
 	end)
 
+	exports["pulsar-core"]:RegisterServerCallback("Banking:AddJointDetails", function(source, data, cb)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+		local target = tonumber(data and data.stateId)
+		local accountData = data and exports['pulsar-finance']:AccountsGet(data.account)
+
+		if not char or not target or not accountData or accountData.Type ~= "personal_savings" then
+			cb(false, "Invalid state id.")
+			return
+		end
+
+		if not HasBankAccountPermission(source, accountData, "MANAGE", char:GetData("SID")) then
+			cb(false, "You don't have permission to manage this account.")
+			return
+		end
+
+		local results = MySQL.Sync.fetchAll('SELECT * FROM characters WHERE SID = @sid', {
+			['@sid'] = target
+		})
+
+		if not results or #results == 0 then
+			cb(false, "Invalid state id.")
+			return
+		end
+
+		local targetCharacter = results[1]
+		if targetCharacter.User == char:GetData("User") then
+			cb(false, "Invalid account owner.")
+			return
+		end
+
+		local success = exports['pulsar-finance']:AccountsAddPersonalSavingsJointOwner(accountData.Account, target)
+
+		if success then
+			cb({
+				stateId = tonumber(targetCharacter.SID) or target,
+				firstName = targetCharacter.First or "",
+				lastName = targetCharacter.Last or "",
+			})
+		else
+			cb(false, "Something went wrong with adding the joint owner, please try again.")
+		end
+	end)
+
 	exports["pulsar-core"]:RegisterServerCallback("Banking:RemoveJoint", function(source, data, cb)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
-		if char then
+		local accountData = data and exports['pulsar-finance']:AccountsGet(data.account)
+
+		if char and accountData and HasBankAccountPermission(source, accountData, "MANAGE", char:GetData("SID")) then
 			cb(exports['pulsar-finance']:AccountsRemovePersonalSavingsJointOwner(data.account, data.target))
 		else
 			cb(false)
 		end
+	end)
+
+	exports["pulsar-core"]:RegisterServerCallback("Banking:ValidateReceiver", function(source, data, cb)
+		local receiver = tonumber(data and data.receiver)
+
+		if not receiver then
+			cb(false)
+			return
+		end
+
+		if data and data.transferType == "STATE_ID" then
+			local character = GetCharacterSummaryBySID(receiver)
+			local personalAccount = character and exports['pulsar-finance']:AccountsGetPersonal(receiver)
+			cb(personalAccount and character or false)
+			return
+		end
+
+		local account = exports['pulsar-finance']:AccountsGet(receiver)
+
+		if not account then
+			cb(false)
+			return
+		end
+
+		if account.Type == "personal" or account.Type == "personal_savings" then
+			cb(GetCharacterSummaryBySID(account.Owner) or {
+				stateId = tonumber(account.Owner) or 0,
+				firstName = "",
+				lastName = account.Name or tostring(account.Account),
+			})
+		else
+			cb({
+				stateId = 0,
+				firstName = "",
+				lastName = account.Name or tostring(account.Account),
+			})
+		end
+	end)
+
+	exports["pulsar-core"]:RegisterServerCallback("Banking:DeleteAccount", function(source, data, cb)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+		local accountNumber = type(data) == "table" and (data.account or data.accountNumber) or data
+
+		if not char or not accountNumber then
+			cb(false)
+			return
+		end
+
+		local SID = tostring(char:GetData("SID"))
+		local accountData = exports['pulsar-finance']:AccountsGet(accountNumber)
+
+		if not accountData or accountData.Type ~= "personal_savings" or accountData.Owner ~= SID then
+			cb(false)
+			return
+		end
+
+		local personalAccount = exports['pulsar-finance']:AccountsGetPersonal(SID)
+		if not personalAccount then
+			personalAccount = exports['pulsar-finance']:AccountsCreatePersonal(SID)
+		end
+
+		if not personalAccount then
+			cb(false)
+			return
+		end
+
+		local balance = tonumber(accountData.Balance) or 0
+		if balance > 0 then
+			exports['pulsar-finance']:BalanceDeposit(personalAccount.Account, balance, {
+				type = "transfer",
+				title = "Account Closure",
+				description = string.format("Remaining balance transferred from closed account: %s.", accountData.Account),
+				transactionAccount = accountData.Account,
+				data = {
+					character = char:GetData("SID"),
+				},
+			}, true)
+		end
+
+		MySQL.query.await("DELETE FROM bank_accounts_permissions WHERE account = ?", {
+			accountData.Account
+		})
+
+		local deleted = MySQL.query.await("DELETE FROM bank_accounts WHERE account = ? AND type = ? AND owner = ?", {
+			accountData.Account,
+			"personal_savings",
+			SID
+		})
+
+		cb(deleted and deleted.affectedRows and deleted.affectedRows > 0)
 	end)
 
 	exports["pulsar-core"]:RegisterServerCallback("Banking:GetAccounts", function(source, data, cb)
@@ -132,7 +321,7 @@ function RegisterBankingCallbacks()
 				table.insert(params, "")
 			end
 
-			local pData = MySQL.query.await(eQry, params)
+			local pData = MySQL.query.await(eQry, params) or {}
 
 			local jobBankAccounts = {}
 			local jobBankPerms = {}
@@ -164,7 +353,7 @@ function RegisterBankingCallbacks()
 				tostring(SID),
 				"personal_savings",
 				tostring(SID)
-			})
+			}) or {}
 
 			local jointOwnerStuff = {}
 
@@ -181,13 +370,19 @@ function RegisterBankingCallbacks()
 						"SELECT account, jointOwner FROM bank_accounts_permissions WHERE account IN (%s) AND type = ?",
 						table.concat(jointOwnerStuff, ",")), {
 						1
-					})
+					}) or {}
 
 				for k, v in ipairs(jO) do
+					local owner = GetCharacterSummaryBySID(v.jointOwner) or {
+						stateId = tonumber(v.jointOwner) or 0,
+						firstName = "State",
+						lastName = tostring(v.jointOwner),
+					}
+
 					if not jointOwnerData[v.account] then
-						jointOwnerData[v.account] = { v.jointOwner }
+						jointOwnerData[v.account] = { owner }
 					else
-						table.insert(jointOwnerData[v.account], v.jointOwner)
+						table.insert(jointOwnerData[v.account], owner)
 					end
 				end
 			end
@@ -255,10 +450,123 @@ function RegisterBankingCallbacks()
 		end
 	end)
 
+	exports["pulsar-core"]:RegisterServerCallback("Banking:GetAccountsLite", function(source, data, cb)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+
+		if not char then
+			cb({})
+			return
+		end
+
+		local SID = tostring(char:GetData("SID"))
+		local accounts = MySQL.query.await(
+			"SELECT account as Account, balance as Balance, type as Type, owner as Owner, name as Name FROM bank_accounts WHERE (type = ? AND owner = ?) OR (type = ? AND owner = ?)",
+			{
+				"personal",
+				SID,
+				"personal_savings",
+				SID,
+			}
+		) or {}
+
+		if #accounts == 0 then
+			local personalAccount = exports['pulsar-finance']:AccountsCreatePersonal(SID)
+
+			if personalAccount then
+				accounts = { personalAccount }
+				char:SetData("BankAccount", personalAccount.Account)
+			end
+		end
+
+		for _, account in ipairs(accounts) do
+			account.Permissions = {
+				MANAGE = account.Type == "personal" or account.Owner == SID,
+				BALANCE = true,
+				WITHDRAW = true,
+				DEPOSIT = true,
+				TRANSACTIONS = true,
+			}
+
+			account.JointOwners = {}
+		end
+
+		cb(accounts)
+	end)
+
+	exports["pulsar-core"]:RegisterServerCallback("Banking:GetRecentTransactions", function(source, data, cb)
+		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+
+		if not char or type(data) ~= "table" or type(data.accounts) ~= "table" then
+			cb({
+				data = {},
+				pages = 1,
+				more = false,
+			})
+			return
+		end
+
+		local SID = char:GetData("SID")
+		local limit = math.floor(tonumber(data.perPage) or 25)
+		limit = math.max(1, math.min(limit, 50))
+
+		local allowedAccounts = {}
+		local seenAccounts = {}
+
+		for _, accountNumber in ipairs(data.accounts) do
+			local normalizedAccount = tonumber(accountNumber)
+
+			if normalizedAccount and not seenAccounts[normalizedAccount] then
+				local accountData = exports['pulsar-finance']:AccountsGet(normalizedAccount)
+
+				if accountData and HasBankAccountPermission(source, accountData, "TRANSACTIONS", SID) then
+					seenAccounts[normalizedAccount] = true
+					table.insert(allowedAccounts, normalizedAccount)
+				end
+			end
+		end
+
+		if #allowedAccounts == 0 then
+			cb({
+				data = {},
+				pages = 1,
+				more = false,
+			})
+			return
+		end
+
+		local placeholders = {}
+		local params = {}
+
+		for _, accountNumber in ipairs(allowedAccounts) do
+			table.insert(placeholders, "?")
+			table.insert(params, accountNumber)
+		end
+
+		table.insert(params, limit + 1)
+
+		local query = (
+			"SELECT type as Type, account as Account, title as Title, timestamp as Timestamp, amount as Amount, description as Description FROM bank_accounts_transactions WHERE account IN (%s) ORDER BY timestamp DESC LIMIT ?"
+		):format(table.concat(placeholders, ","))
+
+		local transactions = MySQL.query.await(query, params) or {}
+
+		local isMore = false
+		if #transactions > limit then
+			table.remove(transactions)
+			isMore = true
+		end
+
+		cb({
+			data = transactions,
+			pages = 1,
+			more = isMore,
+		})
+	end)
+
 	exports["pulsar-core"]:RegisterServerCallback("Banking:GetAccountsTransactions", function(source, data, cb)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
 		if char and data?.account and data?.perPage then
-			local offset = data?.offset
+			local offset = data?.offset or 0
 			if data?.page then
 				offset = data.perPage * (data.page - 1)
 			end
@@ -269,7 +577,7 @@ function RegisterBankingCallbacks()
 					data.account,
 					data.perPage + 1,
 					offset
-				})
+				}) or {}
 
 			local pages = data.page or 1
 			local isMore = false
@@ -292,8 +600,18 @@ function RegisterBankingCallbacks()
 
 	exports["pulsar-core"]:RegisterServerCallback("Banking:DoAccountAction", function(source, data, cb)
 		local char = exports['pulsar-characters']:FetchCharacterSource(source)
+		if not char or not data then
+			cb(false)
+			return
+		end
+
 		local SID = char:GetData("SID")
 		local account, action = data.account, data.action
+		if not account or not action then
+			cb(false)
+			return
+		end
+
 		local accountData = exports['pulsar-finance']:AccountsGet(account)
 		if accountData then
 			if _actionCooldowns[source] and _actionCooldowns[source] > GetGameTimer() then
@@ -450,7 +768,7 @@ function RegisterBankingCallbacks()
 											character = SID,
 										},
 									})
-								cb(success2)
+								cb(success2, exports['pulsar-finance']:BalanceGet(accountData.Account))
 								return
 							end
 						end

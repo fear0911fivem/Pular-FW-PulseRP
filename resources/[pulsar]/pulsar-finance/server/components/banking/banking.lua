@@ -117,7 +117,7 @@ function HasBankAccountPermission(source, accountData, permission, stateId)
             {
                 accountData.Account,
                 0
-            })
+            }) or {}
 
         for k, v in ipairs(pData) do
             local jp = json.decode(v.jobPermissions or "{}")
