@@ -1,13 +1,186 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Bai Jamjuree";
+  src: url("./assets/fonts/BaiJamjuree-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bai Jamjuree";
+  src: url("./assets/fonts/BaiJamjuree-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --perspective: 62.5rem;
+  --accent: #87da21;
+  --accentRgb: 135, 218, 33;
+  --targetIdle: rgba(255, 255, 255, 0.45);
+  --white-100: #fff;
+  font-size: min(0.83333333vw, 1.48148148vh);
+  font-family: "Bai Jamjuree", sans-serif;
+}
+
+html,
 body {
   user-select: none;
   white-space: nowrap;
   margin: 0;
   overflow: hidden;
-  font-family: "Nunito", sans-serif;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  font-family: "Bai Jamjuree", sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.prp-target-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  perspective: var(--perspective);
+  pointer-events: none;
+  --accent: #87da21;
+  --accentRgb: 135, 218, 33;
+  --targetIdle: rgba(255, 255, 255, 0.45);
+  --white-100: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.prp-target-wrapper.visible {
+  opacity: 1;
+}
+
+.prp-target-wrapper.hidden {
+  opacity: 0;
+}
+
+.prp-target-wrapper.hidden .prp-target-item {
+  pointer-events: none;
+}
+
+.prp-target-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: rotateY(var(--rotation));
+  transform-origin: center center;
+  pointer-events: none !important;
+}
+
+.prp-target-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none !important;
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+}
+
+@property --dg {
+  syntax: "<color>";
+  initial-value: rgba(135, 218, 33, 0.05);
+  inherits: false;
+}
+
+.prp-target-menu {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  pointer-events: none !important;
+}
+
+.prp-target-item {
+  --dg: rgba(var(--accentRgb), 0.05);
+  pointer-events: auto;
+  border-radius: 0.25rem;
+  border: 1px solid var(--accent, #87da21);
+  background: linear-gradient(0deg, var(--dg) 0, var(--dg) 100%),
+    rgba(0, 0, 0, 0.55);
+  width: fit-content;
+  cursor: pointer;
+  position: absolute;
+  top: var(--t);
+  left: var(--l);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.625rem 1.25rem;
+  color: var(--white-100, #fff);
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 0.8rem;
+  font-style: normal;
+  min-width: 11.75rem;
+  font-weight: 500;
+  opacity: 1;
+  transition: all 0.2s ease, --dg 0.2s ease;
+}
+
+.prp-target-item.noHover {
+  pointer-events: none;
+}
+
+.prp-target-item i,
+.prp-target-item svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  min-width: 1.3rem;
+  color: var(--accent, #87da21);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.prp-target-item:hover {
+  --dg: rgba(var(--accentRgb), 0.1);
+}
+
+.prp-target-item.preEnter {
+  opacity: 0 !important;
+}
+
+.prp-target-item.entering {
+  opacity: 1;
+  transition-delay: var(--delay, 0ms);
+}
+
+.prp-target-item.exiting {
+  opacity: 0 !important;
+  pointer-events: none;
+  transition-delay: 0ms;
+}
+
+.prp-target-item.left {
+  translate: -100% -50%;
+}
+
+.prp-target-item.right {
+  translate: 0 -50%;
+}
+
+.prp-target-item.center {
+  justify-content: center;
+  translate: -50% -100%;
+}
+
+.prp-target-item.center.down {
+  translate: -50% 0;
 }

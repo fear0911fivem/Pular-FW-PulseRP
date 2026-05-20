@@ -1,0 +1,57 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+        working-directory: web
+
+      - name: Build
+        run: bun run build
+        working-directory: web
+
+      - name: Bundle files
+        run: |
+          mkdir -p ./temp/ox_target/web
+          cp ./{LICENSE,README.md,fxmanifest.lua,config.lua} ./temp/ox_target
+          cp -r ./{client,server,locales} ./temp/ox_target
+          cp -r ./web/build ./temp/ox_target/web/
+          cd ./temp && zip -r ../ox_target.zip ./ox_target
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "OX_TARGET ${{ github.ref_name }}"
+          body: |
+            ![Pulsar Framework](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsarbanner.png)
+
+            ## OX_TARGET ${{ github.ref_name }}
+
+            Targeting system for Pulsar Framework, powered by ox_target.
+
+            ### Installation
+            1. Download `ox_target.zip` below
+            2. Extract into your server's `resources` folder
+            3. Add `ensure ox_target` to your `server.cfg`
+
+            ---
+            ![Pulsar Framework](https://img.shields.io/badge/Pulsar-Framework-7c3aed?style=flat-square)
+            ![Built for FiveM](https://img.shields.io/badge/Built_for-FiveM-F40552?style=flat-square)
+          files: ox_target.zip
+          prerelease: false

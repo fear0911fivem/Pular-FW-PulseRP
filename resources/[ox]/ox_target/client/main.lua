@@ -27,6 +27,7 @@ local HasEntityClearLosToEntity = HasEntityClearLosToEntity
 local GetEntityBoneIndexByName = GetEntityBoneIndexByName
 local GetEntityBonePosition_2 = GetEntityBonePosition_2
 local GetEntityModel = GetEntityModel
+local DoesEntityExist = DoesEntityExist
 local IsDisabledControlJustPressed = IsDisabledControlJustPressed
 local DisableControlAction = DisableControlAction
 local DisablePlayerFiring = DisablePlayerFiring
@@ -34,6 +35,24 @@ local GetModelDimensions = GetModelDimensions
 local GetOffsetFromEntityInWorldCoords = GetOffsetFromEntityInWorldCoords
 local currentTarget = {}
 local currentMenu
+
+local function safeEntityBonePosition(entity, boneId)
+    if not entity or entity == 0 or not DoesEntityExist(entity) then return nil end
+
+    local success, coords = pcall(GetEntityBonePosition_2, entity, boneId)
+    if success then return coords end
+
+    return nil
+end
+
+local function safeEntityBoneIndex(entity, boneName)
+    if not entity or entity == 0 or not DoesEntityExist(entity) then return -1 end
+
+    local success, boneId = pcall(GetEntityBoneIndexByName, entity, boneName)
+    if success then return boneId end
+
+    return -1
+end
 local menuChanged
 local menuHistory = {}
 local nearbyZones
@@ -99,12 +118,17 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
         ---@cast entityType number
         ---@cast entityModel number
 
+        if not entityHit or entityHit == 0 or not DoesEntityExist(entityHit) then
+            return true
+        end
+
         local _type = type(bone)
 
         if _type == 'string' then
-            local boneId = GetEntityBoneIndexByName(entityHit, bone)
+            local boneId = safeEntityBoneIndex(entityHit, bone)
+            local boneCoords = boneId ~= -1 and safeEntityBonePosition(entityHit, boneId) or nil
 
-            if boneId ~= -1 and #(endCoords - GetEntityBonePosition_2(entityHit, boneId)) <= 2 then
+            if boneCoords and #(endCoords - boneCoords) <= 2 then
                 bone = boneId
             else
                 return true
@@ -113,12 +137,13 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
             local closestBone, boneDistance
 
             for j = 1, #bone do
-                local boneId = GetEntityBoneIndexByName(entityHit, bone[j])
+                local boneId = safeEntityBoneIndex(entityHit, bone[j])
 
                 if boneId ~= -1 then
-                    local dist = #(endCoords - GetEntityBonePosition_2(entityHit, boneId))
+                    local boneCoords = safeEntityBonePosition(entityHit, boneId)
+                    local dist = boneCoords and #(endCoords - boneCoords) or nil
 
-                    if dist <= (boneDistance or 1) then
+                    if dist and dist <= (boneDistance or 1) then
                         closestBone = boneId
                         boneDistance = dist
                     end
@@ -131,6 +156,10 @@ local function shouldHide(option, distance, endCoords, entityHit, entityType, en
                 return true
             end
         end
+    end
+
+    if entityHit and entityHit ~= 0 and entityModel and not DoesEntityExist(entityHit) then
+        return true
     end
 
     local offset = entityModel and option.offset or nil

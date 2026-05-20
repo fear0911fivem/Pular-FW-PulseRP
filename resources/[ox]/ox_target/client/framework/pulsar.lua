@@ -258,7 +258,7 @@ function utils.hasPlayerGotGroup(filter, reqDuty, reqOffDuty, workplace, permiss
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function utils.hasPlayerGotItems(data, anyItem)
+function utils.hasPlayerGotItems(data)
     if type(data) == "string" then
         return exports.ox_inventory:ItemsHas(data, 1)
     elseif type(data) == "table" then
@@ -266,22 +266,15 @@ function utils.hasPlayerGotItems(data, anyItem)
             return exports.ox_inventory:ItemsHas(data.item, data.itemCount or 1)
         end
 
-        if anyItem then
-            for k, v in pairs(data) do
-                if type(v) == "number" then
-                    if exports.ox_inventory:ItemsHas(k, v) then return true end
-                else
-                    if exports.ox_inventory:ItemsHas(v, 1) then return true end
-                end
-            end
-            return false
-        end
-
         for k, v in pairs(data) do
             if type(v) == "number" then
-                if not exports.ox_inventory:ItemsHas(k, v) then return false end
+                if not exports.ox_inventory:ItemsHas(k, v) then
+                    return false
+                end
             else
-                if not exports.ox_inventory:ItemsHas(v, 1) then return false end
+                if not exports.ox_inventory:ItemsHas(v, 1) then
+                    return false
+                end
             end
         end
 
