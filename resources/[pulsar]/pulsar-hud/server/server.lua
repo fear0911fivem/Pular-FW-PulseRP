@@ -1,5 +1,24 @@
 local _uircd = {}
 
+local function GetFixedHUDConfig()
+  return {
+    layout = "default",
+    statusType = "numbers",
+    buffsAnchor = "compass",
+    vehicle = "minimal",
+    buffsAnchor2 = true,
+    showRPM = true,
+    hideCrossStreet = false,
+    hideCompassBg = true,
+    largeBars = false,
+    minimapAnchor = true,
+    transparentBg = false,
+    maskRadio = false,
+    condenseAlignment = "left",
+    circleNumbers = false,
+  }
+end
+
 AddEventHandler('onResourceStart', function(resource)
   if resource == GetCurrentResourceName() then
     Wait(1000)
@@ -10,44 +29,21 @@ AddEventHandler('onResourceStart', function(resource)
     exports['pulsar-core']:MiddlewareAdd("Characters:Creating", function(source, cData)
       return {
         {
-          HUDConfig = {
-            layout = "default",
-            statusType = "numbers",
-            buffsAnchor = "compass",
-            vehicle = "default",
-            buffsAnchor2 = true,
-            showRPM = true,
-            hideCrossStreet = false,
-            hideCompassBg = false,
-            minimapAnchor = true,
-            transparentBg = true,
-          },
+          HUDConfig = GetFixedHUDConfig(),
         },
       }
     end)
     exports['pulsar-core']:MiddlewareAdd("Characters:Spawning", function(source)
       local char = exports['pulsar-characters']:FetchCharacterSource(source)
-      local config = char:GetData("HUDConfig")
-      if not config then
-        char:SetData("HUDConfig", {
-          layout = "default",
-          statusType = "numbers",
-          buffsAnchor = "compass",
-          vehicle = "default",
-          buffsAnchor2 = true,
-          showRPM = true,
-          hideCrossStreet = false,
-          hideCompassBg = false,
-          minimapAnchor = true,
-          transparentBg = true,
-        })
+      if char ~= nil then
+        char:SetData("HUDConfig", GetFixedHUDConfig())
       end
     end, 1)
 
     exports["pulsar-core"]:RegisterServerCallback("HUD:SaveConfig", function(source, data, cb)
       local char = exports['pulsar-characters']:FetchCharacterSource(source)
       if char ~= nil then
-        char:SetData("HUDConfig", data)
+        char:SetData("HUDConfig", GetFixedHUDConfig())
         cb(true)
       else
         cb(false)
@@ -133,12 +129,6 @@ function RegisterChatCommands()
     end
   end, {
     help = "Resets UI",
-  })
-
-  exports["pulsar-chat"]:RegisterCommand("hud", function(source, args, rawCommand)
-    TriggerClientEvent("UI:Client:Configure", source, true)
-  end, {
-    help = "Open HUD Config Menu",
   })
 
   exports["pulsar-chat"]:RegisterAdminCommand("testblindfold", function(source, args, rawCommand)

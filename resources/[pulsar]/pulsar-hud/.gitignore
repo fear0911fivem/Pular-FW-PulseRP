@@ -1,6 +1,0 @@
-ui/node_modules/
-ui/dist/
-.idea/
-.vscode/
-*.cfg
-package-lock.json

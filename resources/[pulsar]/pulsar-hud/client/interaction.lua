@@ -1,6 +1,20 @@
 local menus = {}
 local currentItems = {}
 local stack = {}
+local requestedInteractions = false
+
+local function RequestInteractionRegistrations()
+	if requestedInteractions then
+		return
+	end
+
+	requestedInteractions = true
+	CreateThread(function()
+		Wait(250)
+		TriggerEvent("PulsarHud:Client:RegisterInteractions")
+		requestedInteractions = false
+	end)
+end
 
 local function InteractionItemsAsMenu(items)
 	local is = {}
@@ -29,19 +43,6 @@ end
 
 exports("InteractionItemsAsMenu", InteractionItemsAsMenu)
 
-AddEventHandler('onClientResourceStart', function(resource)
-	if resource == GetCurrentResourceName() then
-		Wait(1200)
-		local numRes = GetNumResources()
-		for i = 0, numRes - 1 do
-			local res = GetResourceByFindIndex(i)
-			if res and res ~= GetCurrentResourceName() and GetResourceState(res) == 'started' then
-				TriggerEvent('onClientResourceStart', res)
-			end
-		end
-	end
-end)
-
 exports("InteractionHide", function()
 	SetNuiFocus(false, false)
 	SendNUIMessage({
@@ -56,6 +57,11 @@ exports("InteractionShow", function()
 	if not exports['pulsar-hud']:IsDisabledAllowDead() then
 		exports['pulsar-phone']:Close()
 		exports.ox_inventory:closeInventory()
+
+		if next(menus) == nil then
+			RequestInteractionRegistrations()
+			Wait(300)
+		end
 
 		SetNuiFocus(true, true)
 		SetCursorLocation(0.5, 0.5)
@@ -95,6 +101,8 @@ exports("InteractionRegisterMenu", function(id, label, icon, action, shouldShow,
 	}
 end)
 
+exports("InteractionRefresh", RequestInteractionRegistrations)
+
 exports("InteractionShowMenu", function(items)
 	local is = InteractionItemsAsMenu(items)
 	stack[#stack + 1] = is
@@ -123,7 +131,7 @@ exports("InteractionBack", function()
 	SendNUIMessage({
 		type = "SET_INTERACTION_MENU_ITEMS",
 		data = {
-			items = stack[#stack] or {},
+			items = stack[#stack],
 		},
 	})
 end)
@@ -151,4 +159,14 @@ RegisterNUICallback("Interaction:Back", function(data, cb)
 	exports['pulsar-hud']:InteractionBack()
 	exports['pulsar-sounds']:UISoundsPlayFrontEnd(-1, "BACK", "HUD_FRONTEND_DEFAULT_SOUNDSET")
 	cb(true)
+end)
+
+AddEventHandler('onClientResourceStart', function(resource)
+	if resource == GetCurrentResourceName() then
+		RequestInteractionRegistrations()
+	end
+end)
+
+AddEventHandler("Characters:Client:Spawn", function()
+	RequestInteractionRegistrations()
 end)

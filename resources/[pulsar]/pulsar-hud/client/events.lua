@@ -1,3 +1,22 @@
+local function GetFixedHUDConfig()
+	return {
+		layout = "default",
+		statusType = "numbers",
+		buffsAnchor = "compass",
+		vehicle = "minimal",
+		buffsAnchor2 = true,
+		showRPM = true,
+		hideCrossStreet = false,
+		hideCompassBg = true,
+		largeBars = false,
+		minimapAnchor = true,
+		transparentBg = false,
+		maskRadio = false,
+		condenseAlignment = "left",
+		circleNumbers = false,
+	}
+end
+
 AddEventHandler("Vehicles:Client:EnterVehicle", function(currentVehicle, currentSeat)
 	GLOBAL_VEH = currentVehicle
 	exports['pulsar-hud']:VehicleShow()
@@ -13,7 +32,7 @@ AddEventHandler("Characters:Client:Spawn", function()
 	SendNUIMessage({
 		type = "SET_CONFIG",
 		data = {
-			config = LocalPlayer.state.Character:GetData("HUDConfig"),
+			config = GetFixedHUDConfig(),
 		},
 	})
 
@@ -36,7 +55,7 @@ RegisterNetEvent("UI:Client:Reset", function(manual)
 		SendNUIMessage({
 			type = "SET_CONFIG",
 			data = {
-				config = LocalPlayer.state.Character:GetData("HUDConfig"),
+				config = GetFixedHUDConfig(),
 			},
 		})
 	end
@@ -161,13 +180,7 @@ AddEventHandler("Targeting:Client:CloseMenu", function()
 end)
 
 RegisterNetEvent("UI:Client:Configure", function()
-	SetNuiFocus(true, true)
-	SendNUIMessage({
-		type = "TOGGLE_SETTINGS",
-		data = {
-			state = true,
-		},
-	})
+	SetNuiFocus(false, false)
 end)
 
 RegisterNUICallback("targetingAction", function(data, cb)
@@ -186,7 +199,5 @@ RegisterNUICallback("CloseUI", function(data, cb)
 end)
 
 RegisterNUICallback("SaveConfig", function(data, cb)
-	exports["pulsar-core"]:ServerCallback("HUD:SaveConfig", data, function(s)
-		cb(s)
-	end)
+	cb(false)
 end)

@@ -7,6 +7,29 @@ local _statusCount = 0
 
 local _idsCd = false
 local _zoomLevel = GetResourceKvpInt("zoomLevel") or 3
+local MINIMAP_Y_OFFSET = -0.0445
+local MINIMAP_MASK_Y_OFFSET = 0.002
+local MINIMAP_BLUR_Y_OFFSET = -0.018
+local UNARMED_WEAPON = GetHashKey("WEAPON_UNARMED")
+local PISTOL_WEAPON_GROUP = GetHashKey("GROUP_PISTOL")
+local _lastAmmoVisible = nil
+local _lastAmmoType = nil
+local _lastAmmoMagazine = nil
+local _lastAmmoTotal = nil
+local _lastAmmoGrayOut = nil
+
+local AIRCRAFT_CLASSES = {
+	[15] = true,
+	[16] = true,
+}
+
+local AIRCRAFT_GEAR_STATES = {
+	[1] = true,
+	[2] = true,
+	[3] = false,
+	[4] = false,
+	[5] = false,
+}
 
 local _zoomLevels = {
 	900,
@@ -41,7 +64,7 @@ function GetMinimapAnchor()
 		minimap.width = scaleX * (resX / (2.52 * aspectRatio))
 		minimap.height = scaleY * (resY / (2.3374))
 	else
-		minimapRawX, minimapRawY = GetScriptGfxPosition(-0.0045, -0.0245 + (-0.188888))
+		minimapRawX, minimapRawY = GetScriptGfxPosition(-0.0045, MINIMAP_Y_OFFSET + (-0.188888))
 		minimap.width = scaleX * (resX / (4 * aspectRatio))
 		minimap.height = scaleY * (resY / (5.674))
 	end
@@ -62,9 +85,9 @@ AddEventHandler('onClientResourceStart', function(resource)
 
 		SetBlipAlpha(GetNorthRadarBlip(), 0.0)
 
-		SetMinimapComponentPosition("minimap", "L", "B", -0.0045, -0.0245, 0.150, 0.18888)
-		SetMinimapComponentPosition("minimap_mask", "L", "B", 0.020, 0.022, 0.111, 0.159)
-		SetMinimapComponentPosition("minimap_blur", "L", "B", -0.03, 0.002, 0.266, 0.237)
+		SetMinimapComponentPosition("minimap", "L", "B", -0.0045, MINIMAP_Y_OFFSET, 0.150, 0.18888)
+		SetMinimapComponentPosition("minimap_mask", "L", "B", 0.020, MINIMAP_MASK_Y_OFFSET, 0.111, 0.159)
+		SetMinimapComponentPosition("minimap_blur", "L", "B", -0.03, MINIMAP_BLUR_Y_OFFSET, 0.266, 0.237)
 
 		SetRadarBigmapEnabled(true, false)
 		Wait(0)
@@ -168,6 +191,131 @@ function hasValue(tbl, value)
 	return false
 end
 
+local function GetAmmoType(weapon)
+	return GetWeapontypeGroup(weapon) == PISTOL_WEAPON_GROUP and "short" or "long"
+end
+
+local function SendAmmoData(data)
+	if
+		_lastAmmoVisible == data.visible
+		and _lastAmmoType == data.ammoType
+		and _lastAmmoMagazine == data.magazine
+		and _lastAmmoTotal == data.total
+		and _lastAmmoGrayOut == data.grayOut
+	then
+		return
+	end
+
+	_lastAmmoVisible = data.visible
+	_lastAmmoType = data.ammoType
+	_lastAmmoMagazine = data.magazine
+	_lastAmmoTotal = data.total
+	_lastAmmoGrayOut = data.grayOut
+
+	SendNUIMessage({
+		type = "UPDATE_AMMO",
+		data = data,
+	})
+end
+
+local function GetCurrentAmmoData()
+	local ped = LocalPlayer.state.ped or PlayerPedId()
+
+	if not ped or ped == 0 or not DoesEntityExist(ped) or LocalPlayer.state.isDead then
+		return {
+			visible = false,
+		}
+	end
+
+	local weapon = GetSelectedPedWeapon(ped)
+
+	if not weapon or weapon == 0 or weapon == UNARMED_WEAPON then
+		return {
+			visible = false,
+		}
+	end
+
+	local hasClip, clipAmmo = GetAmmoInClip(ped, weapon)
+	if type(hasClip) == "number" and clipAmmo == nil then
+		clipAmmo = hasClip
+		hasClip = true
+	end
+
+	local magazine = hasClip and (tonumber(clipAmmo) or 0) or 0
+	local totalAmmo = GetAmmoInPedWeapon(ped, weapon)
+	totalAmmo = tonumber(totalAmmo) or 0
+
+	if not hasClip and totalAmmo <= 0 then
+		return {
+			visible = false,
+		}
+	end
+
+	local reserve = math.max(totalAmmo - magazine, 0)
+
+	return {
+		visible = true,
+		ammoType = GetAmmoType(weapon),
+		magazine = magazine,
+		total = reserve,
+		grayOut = magazine <= 0,
+	}
+end
+
+local function GetAircraftData(vehicle)
+	if not vehicle or vehicle == 0 or not DoesEntityExist(vehicle) then
+		return false
+	end
+
+	local rotation = GetEntityRotation(vehicle, 2)
+	local gear = nil
+
+	if DoesVehicleHaveLandingGear(vehicle) then
+		local gearState = GetLandingGearState(vehicle)
+		gear = AIRCRAFT_GEAR_STATES[gearState]
+
+		if gear == nil then
+			gear = false
+		end
+	end
+
+	return {
+		agl = math.ceil(GetEntityHeightAboveGround(vehicle)),
+		altitude = math.ceil(GetEntityCoords(vehicle).z),
+		airSpeed = math.ceil(GetEntitySpeed(vehicle) * 2.237),
+		pitch = rotation.x,
+		roll = -rotation.y,
+		gear = gear,
+	}
+end
+
+CreateThread(function()
+	while true do
+		if not _paused and not IsPauseMenuActive() then
+			local ammoData = GetCurrentAmmoData()
+			SendAmmoData(ammoData)
+			Wait(ammoData.visible and 25 or 200)
+		else
+			SendAmmoData({
+				visible = false,
+			})
+			Wait(300)
+		end
+	end
+end)
+
+CreateThread(function()
+	while true do
+		HideHudComponentThisFrame(2)
+
+		if DisplayAmmoThisFrame then
+			DisplayAmmoThisFrame(false)
+		end
+
+		Wait(0)
+	end
+end)
+
 exports("IsDisabled", function()
 	return (
 		LocalPlayer.state.isDead
@@ -268,6 +416,10 @@ exports("Toggle", function()
 		end
 		exports['pulsar-hud']:VehicleHide()
 	end
+end)
+
+exports("IsShowing", function()
+	return _toggled
 end)
 
 exports("ShiftLocation", function(status)
@@ -718,6 +870,35 @@ function StartVehicleThreads()
 		end
 	end)
 
+	if AIRCRAFT_CLASSES[class] then
+		CreateThread(function()
+			while _vehToggled do
+				SendNUIMessage({
+					type = "UPDATE_AIRCRAFT",
+					data = {
+						aircraftData = GetAircraftData(GLOBAL_VEH),
+					},
+				})
+
+				Wait(0)
+			end
+
+			SendNUIMessage({
+				type = "UPDATE_AIRCRAFT",
+				data = {
+					aircraftData = false,
+				},
+			})
+		end)
+	else
+		SendNUIMessage({
+			type = "UPDATE_AIRCRAFT",
+			data = {
+				aircraftData = false,
+			},
+		})
+	end
+
 	if GetPedInVehicleSeat(GLOBAL_VEH, -1) ~= LocalPlayer.state.ped then
 		CreateThread(function()
 			local lastIgnition = Entity(GLOBAL_VEH).state.VEH_IGNITION
@@ -739,124 +920,35 @@ function StartVehicleThreads()
 		end)
 	end
 
-	CreateThread(function()
-		local lastLocked = nil
-		while _vehToggled do
-			if GLOBAL_VEH and DoesEntityExist(GLOBAL_VEH) then
-				local locked = Entity(GLOBAL_VEH).state.Locked
-				if locked ~= lastLocked then
-					lastLocked = locked
-					SendNUIMessage({
-						type = "UPDATE_DOORLOCK",
-						data = { state = locked },
-					})
-				end
-			end
-			Wait(500)
-		end
-	end)
-
-	-- headlights
-	CreateThread(function()
-		local lastOn = nil
-		while _vehToggled do
-			if GLOBAL_VEH and DoesEntityExist(GLOBAL_VEH) then
-				local _, lightsOn = GetVehicleLightsState(GLOBAL_VEH)
-				if lightsOn ~= lastOn then
-					lastOn = lightsOn
-					SendNUIMessage({ type = "UPDATE_HEADLIGHTS", data = { state = lightsOn == true } })
-				end
-			end
-			Wait(200)
-		end
-	end)
-
-	-- turn signals
-	CreateThread(function()
-		local lastLeft, lastRight = nil, nil
-		while _vehToggled do
-			if GLOBAL_VEH and DoesEntityExist(GLOBAL_VEH) then
-				local leftOn, rightOn = GetVehicleIndicatorLights(GLOBAL_VEH)
-				if leftOn ~= lastLeft then
-					lastLeft = leftOn
-					SendNUIMessage({ type = "UPDATE_LEFT_SIGNAL", data = { state = leftOn } })
-				end
-				if rightOn ~= lastRight then
-					lastRight = rightOn
-					SendNUIMessage({ type = "UPDATE_RIGHT_SIGNAL", data = { state = rightOn } })
-				end
-			end
-			Wait(80)
-		end
-	end)
-
-	-- battery (entity state set by vehicle resource)
-	CreateThread(function()
-		local lastBattery = nil
-		while _vehToggled do
-			if GLOBAL_VEH and DoesEntityExist(GLOBAL_VEH) then
-				local battery = Entity(GLOBAL_VEH).state.Battery
-				if battery ~= lastBattery then
-					lastBattery = battery
-					SendNUIMessage({
-						type = "UPDATE_BATTERY",
-						data = { state = battery == true },
-					})
-				end
-			end
-			Wait(1000)
-		end
-	end)
-
-	-- mileage
-	CreateThread(function()
-		local lastMileage = nil
-		while _vehToggled do
-			if GLOBAL_VEH and DoesEntityExist(GLOBAL_VEH) then
-				local m = Entity(GLOBAL_VEH).state.Mileage
-				if m ~= lastMileage then
-					lastMileage = m
-					SendNUIMessage({ type = "UPDATE_MILEAGE", data = { mileage = m or 0 } })
-				end
-			end
-			Wait(2000)
-		end
-	end)
-
 	if class ~= 13 then
 		CreateThread(function()
 			while _vehToggled do
-				-- 0 = ok, 1 = warning (orange), 2 = critical (red flash)
-				local engineState = 0
+				local checkEngine = false
 
 				if GLOBAL_VEH then
 					local ent = Entity(GLOBAL_VEH)
 
 					if class ~= 14 and class ~= 15 and class ~= 16 then
 						local damageStuff = ent.state.DamagedParts or {}
+
 						for k, v in pairs(damageStuff) do
 							if type(v) == "number" and v < 25.0 then
-								engineState = 2
-							elseif type(v) == "number" and v < 60.0 and engineState < 2 then
-								engineState = 1
+								checkEngine = true
 							end
 						end
 					end
 
-					local engineHealth = GetVehicleEngineHealth(GLOBAL_VEH)
-					if engineHealth <= 400.0 then
-						engineState = 2
-					elseif engineHealth <= 700.0 and engineState < 2 then
-						engineState = 1
+					if GetVehicleEngineHealth(GLOBAL_VEH) <= 400.0 then
+						checkEngine = true
 					end
 				end
 
 				SendNUIMessage({
 					type = "UPDATE_ENGINELIGHT",
-					data = { checkEngine = engineState },
+					data = { checkEngine = checkEngine },
 				})
 
-				Wait(2000)
+				Wait(10000)
 			end
 		end)
 	else
@@ -897,5 +989,3 @@ AddEventHandler("Keybinds:Client:KeyUp:cancel_action", function()
 		exports['pulsar-hud']:OverlayHide()
 	end
 end)
-
-

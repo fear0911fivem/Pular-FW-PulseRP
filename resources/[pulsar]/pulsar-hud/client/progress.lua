@@ -123,12 +123,12 @@ end
 function runMdfr(duration)
 	local c = 0
 	CreateThread(function()
-		exports['pulsar-hud']:ApplyBuff("prog_mod", duration / 1000, false)
+		exports['pulsar-hud']:ApplyUniqueBuff("prog_mod", duration / 1000, false)
 		while LocalPlayer.state.loggedIn and c < duration / 1000 do
 			c = c + 1
 			Wait(1000)
 		end
-		exports['pulsar-hud']:RemoveBuff("prog_mod")
+		exports['pulsar-hud']:RemoveBuffType("prog_mod")
 		_mdfr = 1.0
 	end)
 end

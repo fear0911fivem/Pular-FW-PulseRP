@@ -13,13 +13,10 @@
 ![Lua](https://img.shields.io/badge/Lua_5.4-2C2D72?style=flat-square&logo=lua&logoColor=white)
 ![FiveM](https://img.shields.io/badge/FiveM-F40552?style=flat-square)
 ![React](https://img.shields.io/badge/React_18-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Mantine](https://img.shields.io/badge/Mantine-339AF0?style=flat-square&logo=mantine&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-%888888?style=flat&logo=react&logoColor=white)
 
 <br/>
 
-[Overview](#overview) · [UI Development](#ui-development) · [Dependencies](#dependencies) · [Credits](#credits)
+[Overview](#overview) · [UI Development](#ui-development) · [Dependencies](#dependencies)
 
 </div>
 
@@ -27,47 +24,19 @@
 
 ## Overview
 
-The UI layer of the Pulsar Framework. Provides all shared UI components used across the stack — notifications, progress bars, input dialogs, confirm dialogs, action banners, list menus, interaction menus, info overlays, the HUD, vehicle HUD, buff system, and minimap. Every resource that displays UI goes through pulsar-hud.
+The UI layer of the Pulsar Framework. Provides all shared UI components used across the stack — notifications, progress bars, input dialogs, confirm dialogs, action menus, list menus, info overlays, the HUD, and the minimap. Every resource that shows UI goes through pulsar-hud.
 
-
----
-
-## Preview
-
-### Hud Components w/ buffs, action, compass and progress bar:
-![Hud](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-status.png)
-![action](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-action2.png)
-![Compass](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-compass.png)
-![ProgressBar](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-progress.png)
-### Vehicle Hud w/ milage tracking
-![vehhud](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-vehhud.png)
-## Interaction Menu (radial Menu)
-![RadialMenu](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-redial.png)
-### Hud Menus (settings, input, confirm)
-![SettingsMenu](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-settings.png)
-### List Menu (context Menu)
-![context](https://r2.fivemanage.com/GPYOH8Hq4GPyAY7czrgLe/pulsar-hud-listmenu.png)
 ---
 
 ## UI Development
 
-The NUI is built with React 18, Mantine, and Vite.
+The NUI is a React 18 + Webpack app.
 
 ```bash
 cd ui
-bun install
-bun run dev      # dev server with hot reload
-bun run build    # production build → ui/dist/
-```
-
-### Themes
-
-Pre-built themes are included in `ui/src/`. To switch themes, rename the theme file you want to use by removing the color suffix so it becomes `hudTheme.ts`, then rebuild.
-
-```
-hudTheme.ts         ← active theme (purple, default)
-hudTheme.red.ts     ← rename to hudTheme.ts to use
-hudTheme.teal.ts    ← rename to hudTheme.ts to use
+npm install
+npm run start    # dev server with hot reload
+npm run build    # production build → ui/dist/
 ```
 
 ---
@@ -79,16 +48,9 @@ hudTheme.teal.ts    ← rename to hudTheme.ts to use
 
 ---
 
-## Credits
-
-- Lead framework maintainer & Mantine UI redesign — [@Artmines](https://github.com/Artmines)
-- SQL migration & component exports — [@AutLaaw](https://github.com/AutLaaw)
-
----
-
 ## License
 
-This resource is released under a custom source-available license. Free to use on any FiveM server. Selling, paid redistribution, and monetization are strictly prohibited. See [LICENSE](./LICENSE) for full terms.
+This resource is proprietary software. All rights reserved by the Pulsar Framework team. Unauthorized distribution or resale is prohibited.
 
 ---
 

@@ -74,4 +74,5 @@ exports("ListMenuClose", function()
 	SendNUIMessage({
 		type = "CLOSE_LIST_MENU",
 	})
+	TriggerEvent("ListMenu:Client:Closed")
 end)
