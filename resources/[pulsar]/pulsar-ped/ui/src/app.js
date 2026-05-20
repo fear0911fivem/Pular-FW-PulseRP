@@ -1,4 +1,5 @@
 import '@babel/polyfill';
+import './srp-hud.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -22,19 +23,19 @@ const MOUNT_NODE = document.getElementById('app');
 const render = () => {
 	const muiTheme = createTheme({
 		typography: {
-			fontFamily: ["'Oswald'", 'sans-serif'],
+			fontFamily: ['Bai Jamjuree', 'sans-serif'],
 		},
 		palette: {
 			primary: {
-				main: '#b14cff',
-				light: '#c97dff',
-				dark: '#7a22c9',
+				main: '#87da21',
+				light: '#9eff00',
+				dark: '#425c2c',
 				contrastText: '#ffffff',
 			},
 			secondary: {
-				main: '#000000',
-				light: '#111111',
-				dark: '#000000',
+				main: 'rgba(26, 31, 20, 0.85)',
+				light: '#425c2c',
+				dark: '#0b1203',
 				contrastText: '#ffffff',
 			},
 			error: {
@@ -43,8 +44,8 @@ const render = () => {
 				dark: '#430b0b',
 			},
 			success: {
-				main: '#52984a',
-				light: '#60eb50',
+				main: '#87da21',
+				light: '#9eff00',
 				dark: '#244a20',
 			},
 			warning: {
@@ -66,9 +67,9 @@ const render = () => {
 			},
 			rarities: {
 				rare1: '#ffffff',
-				rare2: '#52984a',
+				rare2: '#87da21',
 				rare3: '#247ba5',
-				rare4: '#8e3bb8',
+				rare4: '#11121b',
 				rare5: '#f2d411',
 			},
 			border: {
@@ -76,7 +77,8 @@ const render = () => {
 				light: '#ffffff',
 				dark: '#26292d',
 				input: 'rgba(255, 255, 255, 0.23)',
-				divider: 'rgba(255, 255, 255, 0.12)',
+				divider: '#2d2e44',
+				item: 'rgb(255, 255, 255)',
 			},
 			mode: 'dark',
 		},
@@ -90,17 +92,21 @@ const render = () => {
 								: 'transparent',
 					},
 					'*': {
-						'&::-webkit-scrollbar': { width: 4 },
+						'&::-webkit-scrollbar': { width: 6 },
 						'&::-webkit-scrollbar-thumb': {
-							background: 'rgba(177,76,255,0.3)',
-							borderRadius: 2,
-							transition: 'background ease-in 0.15s',
-						},
-						'&::-webkit-scrollbar-thumb:hover': {
-							background: 'rgba(177,76,255,0.55)',
+							background: '#87da21',
 						},
 						'&::-webkit-scrollbar-track': {
-							background: 'transparent',
+							background: '#101010',
+						},
+					},
+					body: {
+						'.fade-enter': { opacity: 0 },
+						'.fade-exit': { opacity: 1 },
+						'.fade-enter-active': { opacity: 1 },
+						'.fade-exit-active': { opacity: 0 },
+						'.fade-enter-active, .fade-exit-active': {
+							transition: 'opacity 500ms',
 						},
 					},
 				},
@@ -108,13 +114,17 @@ const render = () => {
 			MuiTooltip: {
 				styleOverrides: {
 					tooltip: {
-						fontSize: 12,
-						fontFamily: "'Oswald', sans-serif",
-						fontWeight: 600,
-						backgroundColor: 'rgba(0,0,0,0.82)',
-						border: '1px solid rgba(177,76,255,0.25)',
-						boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
-						color: '#ffffff',
+						fontSize: 16,
+						backgroundColor: '#111315',
+						border: '1px solid rgba(255, 255, 255, 0.23)',
+						boxShadow: '0 0 10px #000',
+					},
+				},
+			},
+			MuiPaper: {
+				styleOverrides: {
+					root: {
+						background: '#111315',
 					},
 				},
 			},
@@ -125,7 +135,6 @@ const render = () => {
 					},
 					colorTransparent: {
 						backgroundColor: 'transparent',
-						border: '1px solid rgba(177,76,255,0.2)',
 						boxShadow: 'none',
 					},
 				},
@@ -133,14 +142,14 @@ const render = () => {
 			MuiTab: {
 				styleOverrides: {
 					root: {
-						fontFamily: "'Oswald', sans-serif",
+						fontFamily: "'Bai Jamjuree', sans-serif",
 						fontWeight: 700,
 						fontSize: 12,
 						letterSpacing: '0.1em',
 						color: 'rgba(255,255,255,0.6)',
 						transition: 'color 0.2s ease',
 						'&.Mui-selected': {
-							color: '#b14cff',
+							color: '#87da21',
 						},
 					},
 				},
@@ -148,7 +157,7 @@ const render = () => {
 			MuiTabs: {
 				styleOverrides: {
 					indicator: {
-						backgroundColor: '#b14cff',
+						backgroundColor: '#87da21',
 					},
 				},
 			},

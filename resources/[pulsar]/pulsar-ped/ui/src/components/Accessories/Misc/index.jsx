@@ -6,7 +6,7 @@ export default connect()((props) => {
 	const ped = useSelector((state) => state.app.ped);
 
 	return (
-		<div style={{ height: '100%' }}>
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
 			<Component
 				label={'Mask'}
 				component={ped.customization.components.mask}

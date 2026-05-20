@@ -10,12 +10,10 @@ import { Button, IconButton } from '@mui/material';
 
 const useStyles = makeStyles(() => ({
 	body: {
-		maxHeight: '100%',
-		overflow: 'hidden',
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '75% 25%',
-		justifyContent: 'space-around',
+		gap: '.75rem',
+		gridTemplateColumns: 'minmax(0, 1fr) auto',
+		alignItems: 'stretch',
 	},
 	del: {
 		height: 'fit-content',
@@ -33,20 +31,20 @@ const useStyles = makeStyles(() => ({
 		marginBottom: 12,
 		padding: '6px 0',
 		borderRadius: 2,
-		fontFamily: "'Oswald', sans-serif",
+		fontFamily: "'Bai Jamjuree', sans-serif",
 		fontSize: 11,
 		fontWeight: 700,
 		letterSpacing: '0.15em',
 		textTransform: 'uppercase',
-		color: '#b14cff',
-		borderColor: 'rgba(177,76,255,0.4)',
+		color: '#87da21',
+		borderColor: 'rgba(135, 218, 33, .4)',
 		'&:hover': {
-			borderColor: '#b14cff',
-			background: 'rgba(177,76,255,0.08)',
+			borderColor: '#87da21',
+			background: 'rgba(135, 218, 33, .08)',
 		},
 		'&.Mui-disabled': {
-			color: 'rgba(177,76,255,0.3)',
-			borderColor: 'rgba(177,76,255,0.15)',
+			color: 'rgba(135, 218, 33, .3)',
+			borderColor: 'rgba(135, 218, 33, .15)',
 		},
 	},
 }));

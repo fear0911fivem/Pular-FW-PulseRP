@@ -1,4 +1,6 @@
-_creatorLocation = { x = 1844.212, y = 2594.376, z = 45.016, h = 89.374 }
+TargetPed = PlayerPedId()
+-- Same creator location used by SRP.
+_creatorLocation = { x = 250.986, y = -907.082, z = 29.52, h = 19.691 }
 _currentState = nil
 _data = nil
 _playingIdle = false
@@ -14,6 +16,22 @@ _camOffsets = {
 _glassesOff = false
 _vestOff = false
 attachedProps = {}
+
+local function SetCreatorEnvironment(enabled)
+	if enabled then
+		NetworkOverrideClockTime(12, 0, 0)
+		ClearOverrideWeather()
+		ClearWeatherTypePersist()
+		SetWeatherTypeNowPersist("EXTRASUNNY")
+		SetWeatherTypeNow("EXTRASUNNY")
+		SetOverrideWeather("EXTRASUNNY")
+		return
+	end
+
+	NetworkClearClockTimeOverride()
+	ClearOverrideWeather()
+	ClearWeatherTypePersist()
+end
 
 AddEventHandler('onClientResourceStart', function(resource)
 	if resource == GetCurrentResourceName() then
@@ -247,6 +265,8 @@ function RegisterInteraction()
 	end)
 end
 
+AddEventHandler("PulsarHud:Client:RegisterInteractions", RegisterInteraction)
+
 RegisterNetEvent("Characters:Client:Logout", function()
 	withinPedShop = false
 	_glassesOff = false
@@ -340,11 +360,16 @@ function AttachProp(propId, attachModel, boneNumberSent, x, y, z, xR, yR, zR, ke
 end
 
 exports("ApplyToPed", function(ped, skip, entityOverride)
+	if ped == nil or ped.customization == nil then
+		return
+	end
+
 	local playerPed = entityOverride or PlayerPedId()
 
 	if not skip then
-		local gender = LocalPlayer.state.Character:GetData("Gender")
-		local gangChain = LocalPlayer.state.Character:GetData("GangChain")
+		local character = LocalPlayer.state.Character
+		local gender = character ~= nil and character:GetData("Gender") or 0
+		local gangChain = character ~= nil and character:GetData("GangChain") or nil
 		local gangChainData = gangChain ~= nil and GlobalState["GangChains"][gangChain] or nil
 
 		SetPedEyeColor(playerPed, ped.customization.eyeColor)
@@ -357,7 +382,7 @@ exports("ApplyToPed", function(ped, skip, entityOverride)
 				ped.customization.face.face3.index,
 				ped.customization.face.face1.texture,
 				ped.customization.face.face2.texture,
-				ped.customization.face.face3.index,
+				ped.customization.face.face3.texture,
 				(ped.customization.face.face1.mix / 100) + 0.0,
 				(ped.customization.face.face2.mix / 100) + 0.0,
 				(ped.customization.face.face3.mix / 100) + 0.0,
@@ -386,12 +411,13 @@ exports("ApplyToPed", function(ped, skip, entityOverride)
 			else
 				SetPedHeadOverlay(playerPed, value.id, value.index, (value.opacity / 100) + 0.0)
 
-				if value.color1 and value.color1 > 0 then
+				if type(value.color1) == "number" then
+					local color2 = 0
 					if type(value.color2) == "number" then
-						SetPedHeadOverlayColor(playerPed, value.id, 2, value.color1, 0)
-					else
-						SetPedHeadOverlayColor(playerPed, value.id, 2, value.color1, value.color2)
+						color2 = value.color2
 					end
+					local colorType = k == "chesthair" and 1 or 2
+					SetPedHeadOverlayColor(playerPed, value.id, colorType, value.color1, color2)
 				else
 					SetPedHeadOverlayColor(playerPed, value.id, 0, 0, 0)
 				end
@@ -489,6 +515,10 @@ exports("ApplyToPed", function(ped, skip, entityOverride)
 end)
 
 exports("Preview", function(entity, gender, ped, skip, gangChain)
+	if ped == nil or ped.customization == nil then
+		return
+	end
+
 	local playerPed = entity
 
 	if not skip then
@@ -504,7 +534,7 @@ exports("Preview", function(entity, gender, ped, skip, gangChain)
 				ped.customization.face.face3.index,
 				ped.customization.face.face1.texture,
 				ped.customization.face.face2.texture,
-				ped.customization.face.face3.index,
+				ped.customization.face.face3.texture,
 				(ped.customization.face.face1.mix / 100) + 0.0,
 				(ped.customization.face.face2.mix / 100) + 0.0,
 				(ped.customization.face.face3.mix / 100) + 0.0,
@@ -529,12 +559,13 @@ exports("Preview", function(entity, gender, ped, skip, gangChain)
 			else
 				SetPedHeadOverlay(playerPed, value.id, value.index, (value.opacity / 100) + 0.0)
 
-				if value.color1 and value.color1 > 0 then
+				if type(value.color1) == "number" then
+					local color2 = 0
 					if type(value.color2) == "number" then
-						SetPedHeadOverlayColor(playerPed, value.id, 2, value.color1, 0)
-					else
-						SetPedHeadOverlayColor(playerPed, value.id, 2, value.color1, value.color2)
+						color2 = value.color2
 					end
+					local colorType = k == "chesthair" and 1 or 2
+					SetPedHeadOverlayColor(playerPed, value.id, colorType, value.color1, color2)
 				else
 					SetPedHeadOverlayColor(playerPed, value.id, 0, 0, 0)
 				end
@@ -633,6 +664,7 @@ end)
 
 exports("CreatorStart", function(data)
 	_data = data
+	LocalPed = data.Ped
 
 	LocalPlayer.state.inCreator = true
 	_currentState = "CREATOR"
@@ -640,6 +672,7 @@ exports("CreatorStart", function(data)
 	exports["pulsar-sync"]:Start()
 	Wait(300)
 	exports["pulsar-sync"]:Stop(true)
+	SetCreatorEnvironment(true)
 
 	FROZEN = true
 	local player = PlayerPedId()
@@ -661,6 +694,8 @@ exports("CreatorStart", function(data)
 	end
 	SetPlayerModel(PlayerId(), model)
 	player = PlayerPedId()
+	TargetPed = player
+	LocalPlayer.state.ped = player
 	SetEntityMaxHealth(player, 200)
 	SetEntityHealth(player, GetEntityMaxHealth(player))
 	FreezePedCameraRotation(player, true)
@@ -680,6 +715,13 @@ exports("CreatorStart", function(data)
 		type = "SET_TATTOOS_DATA",
 		data = {
 			data = PedTattoos
+		},
+	})
+	SendNUIMessage({
+		type = "SET_PED_DATA",
+		data = {
+			ped = LocalPed,
+			gender = data.Gender,
 		},
 	})
 
@@ -708,6 +750,7 @@ exports("CreatorStart", function(data)
 end)
 
 exports("CreatorEnd", function()
+	SetCreatorEnvironment(false)
 	exports["pulsar-sync"]:Start()
 	TriggerServerEvent("Ped:LeaveCreator")
 
@@ -725,14 +768,52 @@ exports("CreatorEnd", function()
 	exports["pulsar-core"]:ServerCallback("Apartment:SpawnInside", {})
 end)
 
+local customizationHudWasVisible = nil
+
+local function HideCustomizationHud()
+	if customizationHudWasVisible == nil then
+		local success, isShowing = pcall(function()
+			return exports["pulsar-hud"]:IsShowing()
+		end)
+
+		customizationHudWasVisible = success and isShowing == true or true
+	end
+
+	exports["pulsar-hud"]:Hide()
+
+	if HidePedShopAction then
+		HidePedShopAction()
+	else
+		exports["pulsar-hud"]:ActionHide("pedshop")
+	end
+end
+
+local function RestoreCustomizationHud()
+	if customizationHudWasVisible == nil then
+		return
+	end
+
+	if customizationHudWasVisible then
+		exports["pulsar-hud"]:Show()
+	end
+
+	customizationHudWasVisible = nil
+
+	if RestorePedShopAction then
+		RestorePedShopAction()
+	end
+end
+
 exports("CustomizationShow", function(type, data)
 	FROZEN = true
 	local player = PlayerPedId()
+	TargetPed = player
 
 	LocalPed = LocalPlayer.state.Character:GetData("Ped")
 	exports['pulsar-ped']:ApplyToPed(LocalPed)
 	_currentState = type
 
+	HideCustomizationHud()
 	Camera.Activate()
 
 	NetworkSetEntityInvisibleToNetwork(player, false)
@@ -756,6 +837,13 @@ exports("CustomizationShow", function(type, data)
 	end
 
 	SendNUIMessage({
+		type = "SET_PED_DATA",
+		data = {
+			ped = LocalPed,
+			gender = LocalPlayer.state.Character:GetData("Gender"),
+		},
+	})
+	SendNUIMessage({
 		type = "SET_STATE",
 		data = {
 			state = type,
@@ -772,6 +860,7 @@ exports("CustomizationHide", function()
 	SetNuiFocus(false, false)
 	_currentState = nil
 	FROZEN = false
+	RestoreCustomizationHud()
 end)
 
 exports("CustomizationSave", function(cb)

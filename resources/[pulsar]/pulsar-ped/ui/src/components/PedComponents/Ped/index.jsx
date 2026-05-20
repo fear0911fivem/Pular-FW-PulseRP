@@ -11,13 +11,9 @@ import { Alert, Select, FormControl, MenuItem, ListItemText, OutlinedInput } fro
 
 const useStyles = makeStyles((theme) => ({
 	body: {
-		maxHeight: '100%',
-		overflow: 'hidden',
-		margin: 25,
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '100%',
-		justifyContent: 'space-around',
+		gap: '.75rem',
+		gridTemplateColumns: '1fr',
 	},
 }));
 

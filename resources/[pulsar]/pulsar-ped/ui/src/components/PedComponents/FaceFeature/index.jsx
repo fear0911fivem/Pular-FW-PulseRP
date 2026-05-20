@@ -7,13 +7,9 @@ import ElementBox from '../../UIComponents/ElementBox/ElementBox';
 
 const useStyles = makeStyles(() => ({
 	body: {
-		maxHeight: '100%',
-		overflowX: 'hidden',
-		overflowY: 'auto',
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '49% 49%',
-		justifyContent: 'space-around',
+		gap: '.75rem',
+		gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
 	},
 }));
 

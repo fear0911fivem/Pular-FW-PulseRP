@@ -8,11 +8,36 @@ import PedModels from './Ped/peds';
 
 const useStyles = makeStyles((theme) => ({
 	nekked: {
-		position: 'absolute',
-		top: 0,
-		left: 8,
 		width: 'fit-content',
-		margin: 'auto',
+		margin: 0,
+		'& .MuiFormControlLabel-root': {
+			margin: 0,
+			display: 'flex',
+			padding: '.75rem 1rem',
+			height: 'fit-content',
+			alignItems: 'center',
+			justifyContent: 'center',
+			width: 'fit-content',
+			gap: '.6125rem',
+			color: '#fff',
+			fontFamily: "'Bai Jamjuree', sans-serif",
+			fontSize: '1rem',
+			lineHeight: 1,
+			borderRadius: '.5rem',
+			background: 'var(--dark-green-bg)',
+		},
+		'& .MuiFormControlLabel-label': {
+			fontFamily: "'Bai Jamjuree', sans-serif",
+			fontSize: '1rem',
+			lineHeight: 1,
+		},
+		'& .MuiCheckbox-root': {
+			color: 'hsla(0, 0%, 100%, .5)',
+			padding: 0,
+		},
+		'& .MuiCheckbox-root.Mui-checked': {
+			color: '#87da21',
+		},
 	},
 }));
 

@@ -157,7 +157,7 @@ Config.HairOverlays = {
 		[61] = { collection = 'multiplayer_overlays',  overlay = 'NGInd_F_Hair_000' },
 		[62] = { collection = 'mplowrider_overlays',   overlay = 'LR_F_Hair_000' },
 		[63] = { collection = 'mplowrider_overlays',   overlay = 'LR_F_Hair_001' },
-		[64] = { collection = 'mplowrider_overlays',   overlay = 'LR_F_Hair_002' },
+	   	[64] = { collection = 'mplowrider_overlays',   overlay = 'LR_F_Hair_002' },
 		[65] = { collection = 'mplowrider2_overlays',  overlay = 'LR_F_Hair_003' },
 		[66] = { collection = 'mplowrider2_overlays',  overlay = 'LR_F_Hair_003' },
 		[67] = { collection = 'mplowrider2_overlays',  overlay = 'LR_F_Hair_004' },

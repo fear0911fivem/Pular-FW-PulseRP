@@ -5,7 +5,7 @@ import Ped from '../../PedComponents/Ped';
 export default (props) => {
 	const ped = useSelector((state) => state.app.ped);
 	return (
-		<div style={{ height: '100%' }}>
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
             <Ped model={ped.model} />
 		</div>
 	);

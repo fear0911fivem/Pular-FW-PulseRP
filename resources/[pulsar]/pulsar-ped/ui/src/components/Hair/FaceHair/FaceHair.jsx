@@ -9,14 +9,10 @@ import Nui from '../../../util/Nui';
 
 const useStyles = makeStyles((theme) => ({
 	body: {
-		maxHeight: '100%',
-		overflowX: 'hidden',
-		overflowY: 'auto',
-		margin: 25,
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '20% 80%',
-		justifyContent: 'space-around',
+		gap: '.75rem',
+		gridTemplateColumns: 'auto minmax(0, 1fr)',
+		alignItems: 'stretch',
 	},
 	color: {
 		width: '50%',

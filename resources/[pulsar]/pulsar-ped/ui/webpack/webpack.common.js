@@ -11,6 +11,8 @@ module.exports = options => ({
 		publicPath: options.mode !== 'production' ? '/' : '/ui/dist/',
 		filename: '[name].js',
 	},
+	devServer: options.devServer,
+	devtool: options.devtool,
 	performance: {
 		hints: false,
 	},

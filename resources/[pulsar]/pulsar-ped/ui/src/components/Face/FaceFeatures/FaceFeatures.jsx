@@ -7,7 +7,7 @@ export default (props) => {
 	const ped = useSelector((state) => state.app.ped);
 
 	return (
-		<div style={{ height: '100%' }}>
+		<div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
 			<EyeColor
 				label={'Eye Color'}
 				component={ped.customization.eyeColor}
@@ -67,7 +67,7 @@ export default (props) => {
 				}}
 			/>
 			<FaceFeature
-				label={'Cheeks'}
+				label={'Cheek Bones'}
 				data={{
 					items: [
 						{
@@ -81,7 +81,7 @@ export default (props) => {
 							current: ped.customization.face.features[9],
 						},
 						{
-							label: 'Cheek Width',
+							label: 'Width',
 							index: 10,
 							current: ped.customization.face.features[10],
 						},
@@ -89,43 +89,36 @@ export default (props) => {
 				}}
 			/>
 			<FaceFeature
-				label={'Jaw'}
+				label={'Jaw and Chin'}
 				data={{
 					items: [
 						{
-							label: 'Width',
+							label: 'Jaw Width',
 							index: 13,
 							current: ped.customization.face.features[13],
 						},
 						{
-							label: 'Length',
+							label: 'Jaw Length',
 							index: 14,
 							current: ped.customization.face.features[14],
 						},
-					],
-				}}
-			/>
-			<FaceFeature
-				label={'Chin'}
-				data={{
-					items: [
 						{
-							label: 'Height',
+							label: 'Chin Height',
 							index: 15,
 							current: ped.customization.face.features[15],
 						},
 						{
-							label: 'Length',
+							label: 'Chin Length',
 							index: 16,
 							current: ped.customization.face.features[16],
 						},
 						{
-							label: 'Width',
+							label: 'Chin Width',
 							index: 17,
 							current: ped.customization.face.features[17],
 						},
 						{
-							label: 'Dimple',
+							label: 'Chin Dimple',
 							index: 18,
 							current: ped.customization.face.features[18],
 						},

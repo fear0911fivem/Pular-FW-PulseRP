@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = require('./webpack.common')({
-	modt: 'development',
+	mode: 'development',
 	entry: './src/app.js',
 	output: {
 		path: path.join(__dirname, '../dist'),
@@ -11,7 +11,11 @@ module.exports = require('./webpack.common')({
 	},
 	devServer: {
 		port: 3000,
-		watchContentBase: true,
+		static: {
+			directory: path.resolve(process.cwd(), 'src/assets'),
+			publicPath: '/assets',
+			watch: true,
+		},
 		historyApiFallback: true,
 	},
 

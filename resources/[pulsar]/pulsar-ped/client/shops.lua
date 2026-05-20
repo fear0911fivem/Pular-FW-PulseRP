@@ -1,4 +1,32 @@
 local withinPedShop = false
+local pedShopActionSuppressed = false
+
+local function GetPedShopAction(pedShop)
+	local action =
+	"{keybind}primary_action{/keybind} Clothing Store ($%s) | {keybind}secondary_action{/keybind} Wardrobe"
+	if pedShop == "barber" then
+		action = "{keybind}primary_action{/keybind} Barber Shop ($%s)"
+	elseif pedShop == "tattoo" then
+		action = "{keybind}primary_action{/keybind} Tattoo Parlor ($%s)"
+	elseif pedShop == "surgery" then
+		action = "{keybind}primary_action{/keybind} Plastic Surgery ($%s)"
+	end
+
+	return string.format(action, GetPedShopCost(pedShop))
+end
+
+function HidePedShopAction()
+	pedShopActionSuppressed = true
+	exports['pulsar-hud']:ActionHide("pedshop")
+end
+
+function RestorePedShopAction()
+	pedShopActionSuppressed = false
+
+	if withinPedShop then
+		exports['pulsar-hud']:ActionShow("pedshop", GetPedShopAction(withinPedShop))
+	end
+end
 
 function CreateSpecificPolyzoneType(type, id, data)
 	if data.type == "poly" then
@@ -64,17 +92,9 @@ end
 AddEventHandler("Polyzone:Enter", function(id, point, insideZone, data)
 	if data.pedShop then
 		withinPedShop = data.pedShop
-		local action =
-		"{keybind}primary_action{/keybind} Clothing Store ($%s) | {keybind}secondary_action{/keybind} Wardrobe"
-		if withinPedShop == "barber" then
-			action = "{keybind}primary_action{/keybind} Barber Shop ($%s)"
-		elseif withinPedShop == "tattoo" then
-			action = "{keybind}primary_action{/keybind} Tattoo Parlor ($%s)"
-		elseif withinPedShop == "surgery" then
-			action = "{keybind}primary_action{/keybind} Plastic Surgery ($%s)"
+		if not pedShopActionSuppressed then
+			exports['pulsar-hud']:ActionShow("pedshop", GetPedShopAction(withinPedShop))
 		end
-
-		exports['pulsar-hud']:ActionShow("pedshop", string.format(action, GetPedShopCost(withinPedShop)))
 	end
 end)
 
@@ -138,6 +158,13 @@ AddEventHandler("Keybinds:Client:KeyUp:secondary_action", function()
 			shopType = string.upper(withinPedShop)
 		end
 
+		HidePedShopAction()
 		exports['pulsar-ped']:WardrobeShow()
+	end
+end)
+
+AddEventHandler("ListMenu:Client:Closed", function()
+	if pedShopActionSuppressed and not _currentState then
+		RestorePedShopAction()
 	end
 end)

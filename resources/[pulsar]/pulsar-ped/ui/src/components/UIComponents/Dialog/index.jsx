@@ -6,87 +6,93 @@ import {
 	DialogActions,
 	Button,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const useStyles = makeStyles(() => ({
-	dialogPaper: {
-		background: 'rgba(0,0,0,0.82)',
-		border: '1px solid rgba(177,76,255,0.25)',
-		borderRadius: 2,
-		boxShadow: '0 0 0 1px rgba(177,76,255,0.08), 0 32px 80px rgba(0,0,0,0.8)',
-		color: '#ffffff',
-		minWidth: 380,
-		overflow: 'hidden',
+const srpDialogTheme = createTheme({
+	typography: {
+		fontFamily: ['Bai Jamjuree'],
 	},
-	dialogAccent: {
-		height: 2,
-		background: 'linear-gradient(90deg, transparent, #b14cff, transparent)',
+	palette: {
+		primary: {
+			main: '#4B6611',
+			light: '#D9D9D9',
+			dark: '#11121b',
+			contrastText: '#ffffff',
+		},
+		secondary: {
+			main: '#000D1A',
+			light: '#223239',
+			dark: '#000617',
+			contrastText: '#ffffff',
+		},
+		error: {
+			main: '#6e1616',
+			light: '#a13434',
+			dark: '#430b0b',
+		},
+		success: {
+			main: '#4B6611',
+			light: '#60eb50',
+			dark: '#244a20',
+		},
+		warning: {
+			main: '#f09348',
+			light: '#f2b583',
+			dark: '#b05d1a',
+		},
+		info: {
+			main: '#247ba5',
+			light: '#247ba5',
+			dark: '#175878',
+		},
+		text: {
+			main: '#ffffff',
+			light: '#000000',
+			dark: '#cecece',
+		},
+		border: {
+			main: '#e0e0e008',
+			light: '#ffffff',
+			dark: '#26292d',
+			input: 'rgba(255, 255, 255, 0.23)',
+			divider: '#2d2e44',
+			item: 'rgb(255, 255, 255)',
+		},
+		mode: 'dark',
 	},
-	dialogTitle: {
-		fontFamily: "'Oswald', sans-serif",
-		fontSize: 14,
-		fontWeight: 700,
-		letterSpacing: '0.06em',
-		color: '#ffffff',
-		borderBottom: '1px solid rgba(177,76,255,0.15)',
-		padding: '16px 20px 12px',
-	},
-	dialogContent: {
-		fontFamily: "'Oswald', sans-serif",
-		fontSize: 14,
-		color: 'rgba(255,255,255,0.7)',
-		letterSpacing: '0.02em',
-		padding: '16px 20px',
-		'& p': { margin: '0 0 8px', '&:last-child': { marginBottom: 0 } },
-	},
-	dialogActions: {
-		padding: '12px 20px 16px',
-		gap: 8,
-		borderTop: '1px solid rgba(177,76,255,0.12)',
-		display: 'flex',
-	},
-	btn: {
-		flex: 1,
-		height: 34,
-		padding: '0 14px',
-		borderRadius: 2,
-		textTransform: 'uppercase',
-		fontSize: 11,
-		fontWeight: 700,
-		fontFamily: "'Oswald', sans-serif",
-		letterSpacing: '0.15em',
-		color: 'rgba(255,255,255,0.6)',
-		background: 'transparent',
-		border: '1px solid rgba(255,255,255,0.15)',
-		boxShadow: 'none',
-		transition: 'all 150ms ease',
-		'&:hover': {
-			color: '#ffffff',
-			borderColor: 'rgba(255,255,255,0.35)',
-			background: 'rgba(255,255,255,0.05)',
+	components: {
+		MuiTooltip: {
+			styleOverrides: {
+				tooltip: {
+					fontSize: 16,
+					backgroundColor: '#111315',
+					border: '1px solid rgba(255, 255, 255, 0.23)',
+					boxShadow: '0 0 10px #000',
+				},
+			},
+		},
+		MuiPaper: {
+			styleOverrides: {
+				root: {
+					background: '#111315',
+				},
+			},
+		},
+		MuiCssBaseline: {
+			styleOverrides: {
+				body: {
+					'.fade-enter': { opacity: 0 },
+					'.fade-exit': { opacity: 1 },
+					'.fade-enter-active': { opacity: 1 },
+					'.fade-exit-active': { opacity: 0 },
+					'.fade-enter-active, .fade-exit-active': {
+						transition: 'opacity 500ms',
+					},
+				},
+			},
 		},
 	},
-	btnPrimary: {
-		color: '#c97dff',
-		background: 'rgba(177,76,255,0.15)',
-		borderColor: 'rgba(177,76,255,0.5)',
-		'&:hover': {
-			background: 'rgba(177,76,255,0.3)',
-			borderColor: '#c97dff',
-			boxShadow: '0 0 10px rgba(177,76,255,0.3)',
-		},
-	},
-	btnDanger: {
-		color: '#a13434',
-		background: 'rgba(110,22,22,0.12)',
-		borderColor: 'rgba(110,22,22,0.4)',
-		'&:hover': {
-			background: 'rgba(110,22,22,0.25)',
-			borderColor: '#a13434',
-			boxShadow: '0 0 10px rgba(110,22,22,0.25)',
-		},
-	},
-}));
+});
 
 export default ({
 	open,
@@ -96,32 +102,23 @@ export default ({
 	children,
 	declineLang = 'Cancel',
 	acceptLang = 'Save',
-}) => {
-	const classes = useStyles();
-
-	return (
-		<Dialog
-			fullWidth
-			maxWidth="sm"
-			open={open}
-			onClose={onDecline}
-			PaperProps={{ className: classes.dialogPaper }}
-		>
-			<div className={classes.dialogAccent} />
-			<DialogTitle className={classes.dialogTitle} style={{ userSelect: 'none' }}>
+}) => (
+	<ThemeProvider theme={srpDialogTheme}>
+		<Dialog fullWidth maxWidth="sm" open={open}>
+			<DialogTitle>
 				{title}
 			</DialogTitle>
-			<DialogContent className={classes.dialogContent}>
+			<DialogContent dividers>
 				{children}
 			</DialogContent>
-			<DialogActions className={classes.dialogActions}>
-				<Button className={`${classes.btn} ${classes.btnDanger}`} onClick={onDecline}>
+			<DialogActions>
+				<Button onClick={onDecline}>
 					{declineLang}
 				</Button>
-				<Button className={`${classes.btn} ${classes.btnPrimary}`} onClick={onAccept}>
+				<Button onClick={onAccept}>
 					{acceptLang}
 				</Button>
 			</DialogActions>
 		</Dialog>
-	);
-};
+	</ThemeProvider>
+);

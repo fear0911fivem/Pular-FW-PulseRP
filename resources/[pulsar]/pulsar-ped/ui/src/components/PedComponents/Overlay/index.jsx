@@ -9,13 +9,10 @@ import ElementBox from '../../UIComponents/ElementBox/ElementBox';
 
 const useStyles = makeStyles(() => ({
 	body: {
-		maxHeight: '100%',
-		overflow: 'hidden',
-		margin: 25,
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '10% 43% 43%',
-		justifyContent: 'space-around',
+		gap: '.75rem',
+		gridTemplateColumns: 'auto repeat(2, minmax(0, 1fr))',
+		alignItems: 'stretch',
 	},
 }));
 

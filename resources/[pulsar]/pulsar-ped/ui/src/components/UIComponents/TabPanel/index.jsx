@@ -4,8 +4,9 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
 	tabPanel: {
-		height: '100%',
-		overflow: 'auto',
+		width: '100%',
+		minHeight: 0,
+		overflow: 'visible',
 	},
 }));
 

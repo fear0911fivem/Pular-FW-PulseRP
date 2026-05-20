@@ -26,21 +26,14 @@ export default (props) => {
 			Nui.send(`Animation`);
 		}
 	};
-	let isOnElm = false;
 	const handleScroll = (event) => {
-		let elm = document.getElementById("noHover");
-		
-		elm.addEventListener("mouseenter", function(e){
-			isOnElm = true;
+		const elm = document.getElementById('noHover');
+		if (elm && elm.matches(':hover')) return;
+		if (event.target?.closest?.('[data-no-camera-controls]')) return;
+
+		Nui.send('Zoom', {
+			dy: event.deltaY,
 		});
-		elm.addEventListener("mouseleave", function(e){
-			isOnElm = false;
-		});
-		if(!isOnElm){
-			Nui.send(`Zoom`, {
-				zoom: event.deltaY / 2000,
-			});
-		}
 	};
 
 	useEffect(() => {

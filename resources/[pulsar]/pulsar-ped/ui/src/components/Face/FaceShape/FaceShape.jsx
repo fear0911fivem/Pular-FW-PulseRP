@@ -14,16 +14,11 @@ const useStyles = makeStyles((theme) => ({
 		padding: 15,
 	},
 	body: {
-		maxHeight: '100%',
-		overflowX: 'hidden',
-		overflowY: 'auto',
 		display: 'grid',
-		gridGap: 0,
-		gridTemplateColumns: '100%',
-		justifyContent: 'space-between',
-		margin: 25,
+		gap: '.75rem',
+		gridTemplateColumns: '1fr',
 		'&.advanced': {
-			gridTemplateColumns: '50% 50%',
+			gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
 		},
 	},
 }));
@@ -51,7 +46,7 @@ export default (props) => {
 	};
 
 	return (
-		<div style={{ height: '100%' }}>
+		<div>
 			<FormGroup className={classes.advCheck}>
 				<FormControlLabel
 					control={<Checkbox checked={advanced} />}
@@ -92,7 +87,7 @@ export default (props) => {
 							}}
 							current={ped.customization.face.face1.index}
 							min={0}
-							max={46}
+							max={92}
 						/>
 						<Ticker
 							label={'Skin'}
@@ -103,7 +98,7 @@ export default (props) => {
 							}}
 							current={ped.customization.face.face1.texture}
 							min={0}
-							max={46}
+							max={92}
 						/>
 					</ElementBox>
 					<ElementBox label={'Face 2'} bodyClass={classes.body}>
@@ -116,7 +111,7 @@ export default (props) => {
 							}}
 							current={ped.customization.face.face2.index}
 							min={0}
-							max={46}
+							max={92}
 						/>
 						<Ticker
 							label={'Skin'}
@@ -127,7 +122,7 @@ export default (props) => {
 							}}
 							current={ped.customization.face.face2.texture}
 							min={0}
-							max={46}
+							max={92}
 						/>
 					</ElementBox>
 					<ElementBox label={'Mixes'} bodyClass={classes.body}>

@@ -8,14 +8,9 @@ import { connect, useSelector } from 'react-redux';
 
 const useStyles = makeStyles(() => ({
 	body: {
-		maxHeight: '100%',
-		overflowX: 'hidden',
-		overflowY: 'auto',
-		margin: 25,
 		display: 'grid',
-		gap: 8,
-		gridTemplateColumns: '1fr 1fr',
-		gridAutoRows: '84px',
+		gap: '.75rem',
+		gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
 		alignItems: 'stretch',
 	},
 }));

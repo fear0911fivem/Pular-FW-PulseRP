@@ -1,65 +1,55 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Nui from '../../../util/Nui';
-
-const useStyles = makeStyles(() => ({
-	wrapper: {
-		position: 'absolute',
-		left: 12,
-		top: '50%',
-		transform: 'translateY(-50%)',
-		display: 'flex',
-		flexDirection: 'column',
-		gap: 6,
-		padding: '10px 8px',
-		background: 'rgba(0,0,0,0.72)',
-		border: '1px solid rgba(177,76,255,0.2)',
-		boxShadow: '0 0 24px rgba(0,0,0,0.6), 0 0 16px rgba(177,76,255,0.06)',
-		borderRadius: 2,
-		zIndex: 15,
-		animation: '$camSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
-	},
-	divider: {
-		height: 1,
-		background: 'rgba(177,76,255,0.15)',
-		margin: '2px 0',
-	},
-	button: {
-		width: 40,
-		height: 40,
-		borderRadius: 2,
-		color: 'rgba(255,255,255,0.4)',
-		background: 'transparent',
-		border: '1px solid transparent',
-		transition: 'all 0.15s ease',
-		'&:hover': {
-			color: 'rgba(255,255,255,0.8)',
-			background: 'rgba(177,76,255,0.1)',
-			borderColor: 'rgba(177,76,255,0.25)',
-		},
-		'&.active': {
-			color: '#b14cff',
-			background: 'rgba(177,76,255,0.15)',
-			borderColor: 'rgba(177,76,255,0.4)',
-			boxShadow: '0 0 8px rgba(177,76,255,0.2)',
-		},
-	},
-	'@keyframes camSlide': {
-		'0%': { opacity: 0, transform: 'translateY(-50%) translateX(-16px)' },
-		'100%': { opacity: 1, transform: 'translateY(-50%) translateX(0)' },
-	},
-}));
+import faceIcon from '../../../assets/srp-hud/clothing/icons/camera_face.svg';
+import upperIcon from '../../../assets/srp-hud/clothing/icons/camera_upper.svg';
+import lowerIcon from '../../../assets/srp-hud/clothing/icons/camera_lower.svg';
 
 const cams = [
-	{ icon: ['fas', 'person'], id: 0 },
-	{ icon: ['fas', 'face-smile'], id: 1 },
-	{ icon: ['fas', 'shirt'], id: 2 },
-	{ icon: ['fas', 'shoe-prints'], id: 3 },
+	{ label: 'Full', icon: upperIcon, value: 'upper' },
+	{ label: 'Head', icon: faceIcon, value: 'face' },
+	{ label: 'Torso', icon: upperIcon, value: 'upper' },
+	{ label: 'Legs', icon: lowerIcon, value: 'lower' },
 ];
+
+const useStyles = makeStyles(() => ({
+	list: {
+		position: 'absolute',
+		left: 0,
+		top: '2rem',
+		transform: 'translateX(-100%)',
+		display: 'flex',
+		flexDirection: 'column',
+		gap: '.5rem',
+	},
+	button: {
+		borderRadius: '.5rem 0 0 .5rem',
+		background: 'var(--dark-green-bg)',
+		border: 0,
+		transition: 'background-color .2s ease, opacity .2s ease',
+		cursor: 'pointer',
+		padding: '.5rem',
+		width: '2.75rem',
+		height: '2.75rem',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		'&:hover': {
+			opacity: .9,
+		},
+	},
+	active: {
+		background: 'var(--green-bg)',
+		boxShadow: 'inset 0 0 0 1px var(--bright-green)',
+	},
+	icon: {
+		width: '1.5rem',
+		height: '1.5rem',
+		objectFit: 'contain',
+	},
+}));
 
 export default function CamBar() {
 	const classes = useStyles();
@@ -68,7 +58,7 @@ export default function CamBar() {
 
 	const setCam = async (cam) => {
 		try {
-			const res = await (await Nui.send('ChangeCamera', cam)).json();
+			const res = await (await Nui.send('ChangeCamera', { cameraType: cams[cam].value })).json();
 			if (res) {
 				dispatch({ type: 'SET_CAM', payload: { cam } });
 			}
@@ -76,17 +66,17 @@ export default function CamBar() {
 	};
 
 	return (
-		<div className={classes.wrapper}>
-			{cams.map((c, i) => (
-				<React.Fragment key={c.id}>
-					<IconButton
-						className={`${classes.button}${camera === c.id ? ' active' : ''}`}
-						onClick={() => setCam(c.id)}
-					>
-						<FontAwesomeIcon icon={c.icon} style={{ fontSize: 15 }} />
-					</IconButton>
-					{i < cams.length - 1 && <div className={classes.divider} />}
-				</React.Fragment>
+		<div className={classes.list}>
+			{cams.map((cam, index) => (
+				<button
+					key={cam.label}
+					className={`${classes.button} ${camera === index ? classes.active : ''}`}
+					type="button"
+					title={cam.label}
+					onClick={() => setCam(index)}
+				>
+					<img className={classes.icon} src={cam.icon} alt="" />
+				</button>
 			))}
 		</div>
 	);

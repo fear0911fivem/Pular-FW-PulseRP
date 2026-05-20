@@ -5,7 +5,12 @@ export default {
 		/// #endif
 
 		/* eslint-disable no-unreachable */
-		return fetch(`https://pulsar-ped/${event}`, {
+		const resource =
+			typeof GetParentResourceName === 'function'
+				? GetParentResourceName()
+				: 'pulsar-ped';
+
+		return fetch(`https://${resource}/${event}`, {
 			method: 'post',
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',

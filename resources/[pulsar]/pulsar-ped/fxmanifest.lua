@@ -11,6 +11,10 @@ ui_page("ui/dist/index.html")
 
 files({
   "ui/dist/*.*",
+  "ui/dist/**/*",
+  "ui/dist/**/*.*",
+  "ui/src/assets/**/*",
+  "ui/src/assets/**/*.*",
 })
 
 client_scripts({

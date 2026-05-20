@@ -58,45 +58,163 @@ function deepcopy(orig)
 end
 
 local nakedPed = nil
+local nakedState = {
+	toggle = false,
+	head = false,
+	torso = false,
+	pants = false,
+	shoes = false,
+}
+
+local function normalizeNakedState(data)
+	if type(data) ~= "table" then
+		local enabled = data == true
+		return {
+			toggle = enabled,
+			head = enabled,
+			torso = enabled,
+			pants = enabled,
+			shoes = enabled,
+		}
+	end
+
+	local state = {
+		head = data.head == true,
+		torso = data.torso == true,
+		pants = data.pants == true,
+		shoes = data.shoes == true,
+	}
+	state.toggle = data.toggle == true or state.head or state.torso or state.pants or state.shoes
+	return state
+end
+
+local function copyPedPart(target, source)
+	if target == nil or source == nil then
+		return
+	end
+
+	for key, value in pairs(source) do
+		target[key] = value
+	end
+end
+
+local function setPedPart(target, values)
+	if target == nil or values == nil then
+		return
+	end
+
+	for key, value in pairs(values) do
+		target[key] = value
+	end
+end
+
+local function restoreComponent(name)
+	copyPedPart(
+		nakedPed.customization.components[name],
+		LocalPed.customization.components[name]
+	)
+end
+
+local function restoreProp(name)
+	copyPedPart(
+		nakedPed.customization.props[name],
+		LocalPed.customization.props[name]
+	)
+end
+
 function ToggleNekked(data)
-	if data then
+	local state = normalizeNakedState(data)
+	nakedState = state
+
+	if state.toggle then
 		LocalPlayer.state.isNaked = true
 		nakedPed = deepcopy(LocalPed)
 		local isMale = LocalPlayer.state.Character:GetData("Gender") == 0
+
 		if isMale then
-			local randTxture = GetRandomIntInRange(0, 13)
-			nakedPed.customization.components.torso.drawableId = 15
-			nakedPed.customization.components.torso2.drawableId = 15
-			nakedPed.customization.components.undershirt.drawableId = 15
-			nakedPed.customization.components.leg.drawableId = 61
-			nakedPed.customization.components.leg.textureId = randTxture
-			nakedPed.customization.components.kevlar.drawableId = 0
-			nakedPed.customization.components.shoes.drawableId = 34
+			if state.torso then
+				setPedPart(nakedPed.customization.components.torso, { drawableId = 15, textureId = 0 })
+				setPedPart(nakedPed.customization.components.torso2, { drawableId = 252, textureId = 0 })
+				setPedPart(nakedPed.customization.components.undershirt, { drawableId = 15, textureId = 0 })
+				setPedPart(nakedPed.customization.components.kevlar, { drawableId = 0, textureId = 0 })
+			else
+				restoreComponent("torso")
+				restoreComponent("torso2")
+				restoreComponent("undershirt")
+				restoreComponent("kevlar")
+			end
+
+			if state.pants then
+				setPedPart(nakedPed.customization.components.leg, { drawableId = 21, textureId = 0 })
+			else
+				restoreComponent("leg")
+			end
+
+			if state.shoes then
+				setPedPart(nakedPed.customization.components.shoes, { drawableId = 34, textureId = 0 })
+			else
+				restoreComponent("shoes")
+			end
 		else
-			local randTxture = GetRandomIntInRange(0, 11)
-			local randTxture2 = GetRandomIntInRange(0, 15)
-			nakedPed.customization.components.torso.drawableId = 15
-			nakedPed.customization.components.torso2.drawableId = 18
-			nakedPed.customization.components.torso2.textureId = randTxture
-			nakedPed.customization.components.undershirt.drawableId = 14
-			nakedPed.customization.components.leg.drawableId = 15
-			nakedPed.customization.components.leg.textureId = randTxture2
-			nakedPed.customization.components.kevlar.drawableId = 0
-			nakedPed.customization.components.shoes.drawableId = 35
+			if state.torso then
+				setPedPart(nakedPed.customization.components.torso, { drawableId = 15, textureId = 0 })
+				setPedPart(nakedPed.customization.components.torso2, { drawableId = 15, textureId = 0 })
+				setPedPart(nakedPed.customization.components.undershirt, { drawableId = 14, textureId = 0 })
+				setPedPart(nakedPed.customization.components.kevlar, { drawableId = 0, textureId = 0 })
+			else
+				restoreComponent("torso")
+				restoreComponent("torso2")
+				restoreComponent("undershirt")
+				restoreComponent("kevlar")
+			end
+
+			if state.pants then
+				setPedPart(nakedPed.customization.components.leg, { drawableId = 15, textureId = 0 })
+			else
+				restoreComponent("leg")
+			end
+
+			if state.shoes then
+				setPedPart(nakedPed.customization.components.shoes, { drawableId = 35, textureId = 0 })
+			else
+				restoreComponent("shoes")
+			end
 		end
 
-		nakedPed.customization.components.mask.drawableId = 0
-		nakedPed.customization.components.bag.drawableId = 0
-		nakedPed.customization.components.badge.drawableId = 0
-		nakedPed.customization.components.accessory.drawableId = 0
-		nakedPed.customization.props.hat.disabled = true
-		nakedPed.customization.props.glass.disabled = true
-		nakedPed.customization.props.ear.disabled = true
+		if state.torso then
+			setPedPart(nakedPed.customization.components.bag, { drawableId = 0, textureId = 0 })
+			setPedPart(nakedPed.customization.components.badge, { drawableId = 0, textureId = 0 })
+			setPedPart(nakedPed.customization.components.accessory, { drawableId = 0, textureId = 0 })
+		else
+			restoreComponent("bag")
+			restoreComponent("badge")
+			restoreComponent("accessory")
+		end
+
+		if state.head then
+			setPedPart(nakedPed.customization.components.mask, { drawableId = 0, textureId = 0 })
+			setPedPart(nakedPed.customization.props.hat, { disabled = true })
+			setPedPart(nakedPed.customization.props.glass, { disabled = true })
+			setPedPart(nakedPed.customization.props.ear, { disabled = true })
+		else
+			restoreComponent("mask")
+			restoreProp("hat")
+			restoreProp("glass")
+			restoreProp("ear")
+		end
+
 		exports['pulsar-ped']:ApplyToPed(nakedPed)
 	else
 		LocalPlayer.state.isNaked = false
 		exports['pulsar-ped']:ApplyToPed(LocalPed)
 		nakedPed = nil
+		nakedState = {
+			toggle = false,
+			head = false,
+			torso = false,
+			pants = false,
+			shoes = false,
+		}
 	end
 end
 
@@ -105,30 +223,109 @@ RegisterNUICallback("ToggleNekked", function(data, cb)
 	cb("ok")
 end)
 
-RegisterNUICallback("ChangeCamera", function(data, cb)
+RegisterNUICallback("SetClothingToggle", function(data, cb)
+	if type(data) ~= "table" or data.key == nil then
+		cb(false)
+		return
+	end
+
+	nakedState[data.key] = data.value == true
+	nakedState.toggle = nakedState.head or nakedState.torso or nakedState.pants or nakedState.shoes
+	ToggleNekked(nakedState)
 	cb("ok")
-	SetEntityHeading(PlayerPedId(), _creatorLocation.h)
-	Camera.SetView(_camOffsets[data])
+end)
+
+local cameraDragX = 0
+local cameraDragY = 0
+
+local function getCameraType(data)
+	if type(data) == "table" then
+		return data.cameraType or data.cam or data.value or data[1]
+	end
+
+	return data
+end
+
+local function getCameraDelta(data, key, fallback)
+	if type(data) ~= "table" then
+		return tonumber(data) or fallback or 0
+	end
+
+	return tonumber(data[key]) or fallback or 0
+end
+
+RegisterNUICallback("ChangeCamera", function(data, cb)
+	local cameraType = getCameraType(data)
+	cb(Camera.SelectCamera(cameraType))
+end)
+
+RegisterNUICallback("CameraMove", function(data, cb)
+	cb("ok")
+	Camera.Move(getCameraDelta(data, "dx"), getCameraDelta(data, "dy"))
+end)
+
+RegisterNUICallback("rotation:setClicked", function(data, cb)
+	cb("yes")
+
+	if type(data) == "table" and data.state == true then
+		cameraDragX = tonumber(data.x) or cameraDragX
+		cameraDragY = tonumber(data.y) or cameraDragY
+	end
+end)
+
+RegisterNUICallback("rotation:rotatePlayer", function(data, cb)
+	cb("yes")
+
+	if type(data) ~= "table" then
+		return
+	end
+
+	local x = tonumber(data.x)
+	local y = tonumber(data.y)
+	if not x then
+		return
+	end
+
+	y = y or cameraDragY
+
+	local multiplier = 1.0
+	if data.control and not data.shift then
+		multiplier = 0.5
+	elseif data.shift and not data.control then
+		multiplier = 2.0
+	end
+
+	Camera.Move((x - cameraDragX) * multiplier, (y - cameraDragY) * multiplier)
+
+	cameraDragX = x
+	cameraDragY = y
 end)
 
 RegisterNUICallback("RotateLeft", function(data, cb)
 	cb("ok")
-	local playerPed = PlayerPedId()
-	local heading = GetEntityHeading(playerPed)
-	SetEntityHeading(playerPed, heading - 5)
+	Camera.Rotate(15.0)
 end)
 
 RegisterNUICallback("RotateRight", function(data, cb)
 	cb("ok")
-	local playerPed = PlayerPedId()
-	local heading = GetEntityHeading(playerPed)
-	SetEntityHeading(playerPed, heading + 5)
+	Camera.Rotate(-15.0)
 end)
 
 RegisterNUICallback("Zoom", function(data, cb)
 	cb("ok")
-	Camera.radius = Camera.radius + (tonumber(data.zoom))
-	Camera.updateZoom = true
+
+	local dy = 0
+	if type(data) == "table" then
+		dy = tonumber(data.dy) or tonumber(data.zoom) or 0
+	else
+		dy = tonumber(data) or 0
+	end
+
+	if math.abs(dy) < 1.0 then
+		dy = dy * 2000.0
+	end
+
+	Camera.Zoom(dy)
 end)
 
 RegisterNUICallback("Animation", function(data, cb)
@@ -143,6 +340,10 @@ end)
 
 RegisterNUICallback("SetPedHeadBlendData", function(data, cb)
 	cb("OK")
+	if LocalPed == nil or LocalPed.customization == nil or LocalPed.customization.face[data.face] == nil then
+		return
+	end
+
 	LocalPed.customization.face[data.face][data.type] = data.value
 	if LocalPlayer.state.isNaked then
 		nakedPed.customization.face[data.face][data.type] = data.value
@@ -176,6 +377,11 @@ RegisterNUICallback("SetPed", function(data, cb)
 
 	SetPlayerModel(PlayerId(), model)
 	player = PlayerPedId()
+	TargetPed = player
+	if Camera and Camera.active then
+		FreezePedCameraRotation(player, true)
+		FreezeEntityPosition(player, true)
+	end
 	SetEntityMaxHealth(player, 200)
 	SetEntityHealth(player, GetEntityMaxHealth(player))
 	LocalPlayer.state.ped = player
@@ -194,6 +400,10 @@ end)
 
 RegisterNUICallback("SetPedFaceFeature", function(data, cb)
 	cb("OK")
+	if LocalPed == nil or LocalPed.customization == nil then
+		return
+	end
+
 	LocalPed.customization.face.features[data.index] = data.value
 	if LocalPlayer.state.isNaked then
 		nakedPed.customization.face.features[data.index] = data.value
@@ -205,6 +415,10 @@ end)
 
 RegisterNUICallback("SetPedHeadOverlay", function(data, cb)
 	cb("OK")
+	if LocalPed == nil or LocalPed.customization == nil or LocalPed.customization.overlay[data.type] == nil then
+		return
+	end
+
 	if data.extraType == "opacity" then
 		LocalPed.customization.overlay[data.type].opacity = data.value
 	else
@@ -216,6 +430,22 @@ RegisterNUICallback("SetPedHeadOverlay", function(data, cb)
 		else
 			nakedPed.customization.overlay[data.type][data.extraType] = data.value
 		end
+		exports['pulsar-ped']:ApplyToPed(nakedPed)
+	else
+		exports['pulsar-ped']:ApplyToPed(LocalPed)
+	end
+end)
+
+RegisterNUICallback("SetPedHeadOverlayColor", function(data, cb)
+	cb("OK")
+	if LocalPed == nil or LocalPed.customization == nil or LocalPed.customization.overlay[data.type] == nil then
+		return
+	end
+
+	local colorType = data.extraType or data.color or "color1"
+	LocalPed.customization.overlay[data.type][colorType] = data.value
+	if LocalPlayer.state.isNaked then
+		nakedPed.customization.overlay[data.type][colorType] = data.value
 		exports['pulsar-ped']:ApplyToPed(nakedPed)
 	else
 		exports['pulsar-ped']:ApplyToPed(LocalPed)
@@ -344,17 +574,22 @@ RegisterNUICallback("GetPedHairRgbColor", function(data, cb)
 	})
 end)
 
+local function isStoreDrawableHidden(section, componentId, gender, drawableId)
+	local hidden = GlobalState["ClothingStoreHidden"]
+	local sectionHidden = hidden and hidden[section]
+	local componentHidden = sectionHidden and sectionHidden[componentId]
+	local genderHidden = componentHidden and componentHidden[gender]
+
+	return genderHidden and genderHidden[tostring(drawableId)] == true
+end
+
 RegisterNUICallback("GetNumberOfPedDrawableVariations", function(data, cb)
 	cb("OK")
 
 	local gender = LocalPlayer.state.Character:GetData("Gender")
 	local comps = {}
 	for i = 0, GetNumberOfPedDrawableVariations(PlayerPedId(), data.componentId) do
-		if
-			GlobalState["ClothingStoreHidden"].components[data.componentId] == nil
-			or GlobalState["ClothingStoreHidden"].props[data.componentId][gender] == nil
-			or not GlobalState["ClothingStoreHidden"].components[data.componentId][gender][tostring(i)]
-		then
+		if not isStoreDrawableHidden("components", data.componentId, gender, i) then
 			table.insert(comps, i)
 		end
 	end
@@ -387,11 +622,7 @@ RegisterNUICallback("GetNumberOfPedPropDrawableVariations", function(data, cb)
 	local gender = LocalPlayer.state.Character:GetData("Gender")
 	local comps = {}
 	for i = 0, GetNumberOfPedPropDrawableVariations(PlayerPedId(), data.componentId) do
-		if
-			GlobalState["ClothingStoreHidden"].components[data.componentId] == nil
-			or GlobalState["ClothingStoreHidden"].props[data.componentId][gender] == nil
-			or not GlobalState["ClothingStoreHidden"].components[data.componentId][gender][tostring(i)]
-		then
+		if not isStoreDrawableHidden("props", data.componentId, gender, i) then
 			table.insert(comps, i)
 		end
 	end
