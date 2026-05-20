@@ -176,7 +176,7 @@ local deathHashTable = {
 	[`WEAPON_FIVESEVEN_PD`] = "PD Six Eight",
 	[`WEAPON_FM1_P226_PD`] = "PD P226",
 	[`WEAPON_2011_PD`] = "PD 2011 Tactical",
-	-- Marko Mods
+	-- MARKO MODS RIFLES
 	[`WEAPON_UBR_OG`] = "UBR OG",
 	[`WEAPON_UBR_MODERN`] = "UBR MODERN",
 	[`WEAPON_UBR_CQB`] = "UBR CQB",
@@ -185,6 +185,10 @@ local deathHashTable = {
 	[`WEAPON_DRAGON_GOLD`] = "Dragon Gold Rifle",
 	[`WEAPON_VIRTUS_1`] = "PD Virtus Rifle",
 	[`WEAPON_MB47`] = "AK-MB47",
+	-- MARKO MODS PISTOLS
+	[`WEAPON_X17M`] = "GLOCK X17M",
+	[`WEAPON_X19`] = "GLOCK X19",
+	[`WEAPON_X17MS`] = "GLOCK X17MS",
 }
 
 AddEventHandler("Ped:Client:Died", function(execution)

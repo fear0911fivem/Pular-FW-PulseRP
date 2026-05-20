@@ -75,9 +75,9 @@ function LeaveBed()
 		end
 
 		if _reductions > 0 then
-			exports['pulsar-hud']:ApplyBuff("weakness", -1)
+			exports['pulsar-hud']:ApplyUniqueBuff("weakness", -1)
 		else
-			exports['pulsar-hud']:RemoveBuff("weakness")
+			exports['pulsar-hud']:RemoveBuffType("weakness")
 		end
 
 		SetEntityInvincible(player, false)

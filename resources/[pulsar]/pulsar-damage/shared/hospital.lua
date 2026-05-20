@@ -4,7 +4,7 @@ Config.EnableDownblur = true
 Config.EnableScreenFlash = true
 
 Config.ICUBeds = {
-	-- -- Mt Zonah ICU
+	-- Mt Zonah ICU
 	--[[vector4(-484.631, -329.334, 69.523, 352.380),
 	vector4(-483.648, -341.486, 69.523, 178.489),
 	vector4(-477.289, -330.050, 69.523, 1.676),
@@ -14,17 +14,18 @@ Config.ICUBeds = {
 	vector4(-462.200, -332.150, 69.521, 4.846),
 	vector4(-461.303, -344.223, 69.523, 174.951),
 	vector4(-445.279, -346.800, 69.523, 176.390),
-	vector4(-435.775, -336.701, 69.523, 274.043),
+	vector4(-435.775, -336.701, 69.523, 274.043),]]
 
 	-- Pillbox ICU
-	vector4(359.54, -586.23, 42.84, 250.00),
+	--[[vector4(359.54, -586.23, 42.84, 250.00),
 	vector4(361.36, -581.30, 42.83, 250.00),
 	vector4(354.44, -600.19, 42.85, 250.00),
 	vector4(363.80, -589.12, 42.85, 250.00),
 	vector4(364.96, -585.94, 42.85, 250.00),
-	vector4(366.52, -581.66, 42.85, 250.00),--]]
+	vector4(366.52, -581.66, 42.85, 250.00),]]
 
 	-- St. Fiacre
+
 	vector4(1153.138, -1554.661, 39.537, 128.510), -- W2
 	vector4(1153.051, -1549.002, 39.537, 114.474), -- W4
 	vector4(1153.272, -1543.038, 39.537, 112.909), -- W6
@@ -141,6 +142,7 @@ Config.BedPolys = {
 		},
 		laydown = vector4(307.680, -581.889, 44.204, 338.434),
 	},
+
 	{ -- #2
 		center = vector3(309.35, -577.41, 43.28),
 		length = 2.6,
@@ -236,7 +238,7 @@ Config.BedPolys = {
 			maxZ = 45.84,
 		},
 		laydown = vector4(322.617, -587.217, 44.204, 335.997),
-	},--]]
+	},]]
 
 	-- St. Farcre Beds
 	{ -- Xray #2
@@ -317,9 +319,9 @@ Config.BedModels = {
 	`v_med_bed1`,
 	`v_med_bed2`,
 	`v_med_emptybed`,
-	-- `gabz_pillbox_diagnostics_bed_01`,
-	-- `gabz_pillbox_diagnostics_bed_02`,
-	-- `gabz_pillbox_diagnostics_bed_03`,
+	`gabz_pillbox_diagnostics_bed_01`,
+	`gabz_pillbox_diagnostics_bed_02`,
+	`gabz_pillbox_diagnostics_bed_03`,
 }
 
 Config.Beds = {
@@ -373,5 +375,5 @@ Config.Beds = {
 	{ x = 316.87, y = -584.93, z = 43.29, h = 247.1 },
 	{ x = 313.56, y = -583.83, z = 43.29, h = 250.0 },
 	{ x = 314.91, y = -579.39, z = 43.29, h = 68.7 },
-	{ x = 312.01, y = -583.34, z = 43.29, h = 66.16 },--]]
+	{ x = 312.01, y = -583.34, z = 43.29, h = 66.16 },]]
 }

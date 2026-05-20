@@ -193,6 +193,10 @@ Config.WeaponClassBindings = {
 	[`WEAPON_FIVESEVEN_PD`] = Config.WeaponClasses["SMALL_CALIBER"],
 	[`WEAPON_FM1_P226_PD`] = Config.WeaponClasses["SMALL_CALIBER"],
 	[`WEAPON_2011_PD`] = Config.WeaponClasses["SMALL_CALIBER"],
+	-- MARKO MODS PISTOLS	
+	[`WEAPON_X19`] = Config.WeaponClasses["SMALL_CALIBER"],
+	[`WEAPON_X17M`] = Config.WeaponClasses["SMALL_CALIBER"],
+	[`WEAPON_X17MS`] = Config.WeaponClasses["SMALL_CALIBER"],
 
 	--[[ Medium Caliber ]]
 	--
@@ -256,7 +260,7 @@ Config.WeaponClassBindings = {
 	[`WEAPON_NSR9`] = Config.WeaponClasses["HIGH_CALIBER"],
 	[`WEAPON_PM4`] = Config.WeaponClasses["HIGH_CALIBER"],
 	[`WEAPON_RFB`] = Config.WeaponClasses["HIGH_CALIBER"],
-	-- Marko Mods
+	-- MARKO MODS RIFLES
 	[`WEAPON_UBR_OG`] = Config.WeaponClasses["HIGH_CALIBER"],
 	[`WEAPON_UBR_MODERN`] = Config.WeaponClasses["HIGH_CALIBER"],
 	[`WEAPON_UBR_CQB`] = Config.WeaponClasses["HIGH_CALIBER"],

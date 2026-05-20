@@ -77,7 +77,7 @@ function DoDeadEvent()
 	if LocalPlayer.state.isDead then
 		TriggerEvent('ox_inventory:disarm', LocalPlayer.state.ped, true)
 		if not LocalPlayer.state.gameMode then
-			exports['pulsar-hud']:RemoveBuff("weakness")
+			exports['pulsar-hud']:RemoveBuffType("weakness")
 			DisableControls()
 			DeadAnimLoop()
 		else
