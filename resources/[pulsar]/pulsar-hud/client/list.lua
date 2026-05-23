@@ -36,7 +36,11 @@ end)
 RegisterNUICallback("ListMenu:Clicked", function(data, cb)
 	exports['pulsar-sounds']:UISoundsPlayFrontEnd(-1, "SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET")
 	exports['pulsar-hud']:ListMenuClose()
-	TriggerEvent(data.event, data.data)
+	if data.type == "server" then
+		TriggerServerEvent(data.event, data.data)
+	else
+		TriggerEvent(data.event, data.data)
+	end
 	cb("ok")
 end)
 

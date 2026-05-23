@@ -21,13 +21,15 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        margin: 'auto',
+        bottom: '5.35rem',
+        left: '1.8rem',
         width: 'fit-content',
         display: 'flex',
-        gap: 6,
+        alignItems: 'flex-end',
+        gap: '.45rem',
+        transformOrigin: 'left center',
+        transform: 'rotateY(8deg)',
+        pointerEvents: 'none',
     },
     status: {
         position: 'absolute',
@@ -110,6 +112,8 @@ export default withTheme(() => {
             {buffs.map((s, i) => {
                 if (!Boolean(s)) return null;
                 const buffDef = buffDefs[s?.buff];
+                if (!Boolean(buffDef)) return null;
+
                 switch (buffDef.type) {
                     case 'timed':
                         return (

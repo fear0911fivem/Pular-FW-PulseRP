@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
     },
     action: {
         color: '#fff',
-        fontFamily: 'Oswald, "Bai Jamjuree", Arial, sans-serif',
+        fontFamily: '"Bai Jamjuree", Arial, sans-serif',
         fontSize: '1.125rem',
         fontWeight: 500,
         textTransform: 'uppercase',

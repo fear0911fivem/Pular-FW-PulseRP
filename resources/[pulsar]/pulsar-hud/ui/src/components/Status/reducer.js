@@ -7,8 +7,38 @@ export const initialState = {
     maxHealth: 100,
     armor: 100,
     isDead: false,
-    buffDefs: {},
-    buffs: [],
+    buffDefs: preview
+        ? {
+              weakness: {
+                  icon: 'bandage',
+                  color: '#FF0049',
+                  duration: -1,
+                  type: 'permanent',
+              },
+              heal_ticks: {
+                  icon: 'suitcase-medical',
+                  color: '#52984a',
+                  duration: 30,
+                  type: 'timed',
+              },
+          }
+        : {},
+    buffs: preview
+        ? [
+              {
+                  buff: 'weakness',
+                  val: -1,
+                  options: {},
+                  startTime: Math.floor(Date.now() / 1000),
+              },
+              {
+                  buff: 'heal_ticks',
+                  val: 30,
+                  options: {},
+                  startTime: Math.floor(Date.now() / 1000),
+              },
+          ]
+        : [],
     statuses:
         preview
             ? [

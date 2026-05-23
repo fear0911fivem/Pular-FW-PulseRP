@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: '"Bai Jamjuree", Arial, sans-serif',
         isolation: 'isolate',
         overflow: 'visible',
-        boxShadow:
-            '0 0.5rem 1.5rem rgba(0, 0, 0, 0.35), 0 0 1.25rem rgba(0, 178, 255, 0.18)',
+        boxShadow: 'none',
         '&:before': {
             position: 'absolute',
             inset: 'calc(var(--accentWidth) * -0.5)',
@@ -52,15 +51,11 @@ const useStyles = makeStyles((theme) => ({
             '--bg': '#7d000080',
             '--border': '#734e5a',
             '--accentColor': 'red',
-            boxShadow:
-                '0 0.5rem 1.5rem rgba(0, 0, 0, 0.35), 0 0 1.25rem rgba(255, 0, 0, 0.22)',
         },
         '&.success': {
             '--bg': '#39620680',
             '--border': '#64744d',
             '--accentColor': '#87da21',
-            boxShadow:
-                '0 0.5rem 1.5rem rgba(0, 0, 0, 0.35), 0 0 1.25rem rgba(135, 218, 33, 0.22)',
         },
     },
     title: {

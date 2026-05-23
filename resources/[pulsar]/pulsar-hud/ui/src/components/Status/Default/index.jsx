@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ACTIVE_COLOR = '135, 218, 33';
 const ARMOR_COLOR = '0, 178, 255';
@@ -160,7 +161,7 @@ const useStyles = makeStyles(() => ({
     },
     barElement: {
         display: 'flex',
-        gap: '0.6125em',
+        gap: '0.82em',
         alignItems: 'center',
         position: 'relative',
         transition: 'opacity 0.35s ease, transform 0.35s ease',
@@ -180,7 +181,8 @@ const useStyles = makeStyles(() => ({
         '& p': {
             width: 'calc(1em / 0.725)',
             margin: 0,
-            textShadow: '1px 1px 1px rgba(0, 0, 0, 0.5)',
+            textShadow:
+                '1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 0.35em rgba(var(--dataGlow, 255, 255, 255), 0.22)',
         },
 
         '& svg': {
@@ -189,6 +191,8 @@ const useStyles = makeStyles(() => ({
             color: 'rgba(255, 255, 255, 0.5)',
             fill: 'currentColor',
             stroke: 'currentColor',
+            filter:
+                'drop-shadow(0 0 0.18em rgba(var(--dataGlow, 255, 255, 255), 0.18))',
         },
 
         '& svg.dying': {
@@ -219,7 +223,7 @@ const useStyles = makeStyles(() => ({
     },
     progressPart: {
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'visible',
         borderRadius: '0.125em',
         border: '0.25px solid rgba(255, 255, 255, 0.1)',
         background: 'rgba(18, 18, 18, 0.6)',
@@ -232,7 +236,7 @@ const useStyles = makeStyles(() => ({
         transform: 'scaleX(var(--val))',
         transformOrigin: 'left center',
         boxShadow:
-            '0 0.25em 0.25em 0 rgba(var(--bg), 0.25), 0 0.25em 1em 0 rgba(var(--bg), 0.35)',
+            '0 0.25em 0.25em rgba(var(--bg), 0.18), 0 0.25em 0.85em rgba(var(--bg), 0.28)',
         transition: 'background 0.2s ease, box-shadow 0.2s ease',
     },
     overPart: {
@@ -263,12 +267,21 @@ const useStyles = makeStyles(() => ({
             animation: '$blink 1s infinite',
         },
     },
+    buffText: {
+        minWidth: '1.25em',
+        color: '#fff',
+        fontSize: '0.85em',
+        fontWeight: 600,
+        lineHeight: 1,
+        textAlign: 'center',
+        textShadow: '0 0 0.25em rgba(var(--buffGlow), 255, 255, 255, 0.3)',
+    },
     verticalProgress: {
         width: '0.1875em',
         height: '1.5em',
         borderRadius: '0.125em',
         background: 'rgba(48, 48, 48, 0.95)',
-        overflow: 'hidden',
+        overflow: 'visible',
     },
     verticalInternal: {
         width: '100%',
@@ -278,8 +291,8 @@ const useStyles = makeStyles(() => ({
         background: 'rgb(var(--bg))',
         borderRadius: 'inherit',
         boxShadow:
-            '0 0.25em 0.25em 0 rgba(var(--bg), 0.25), 0 0.25em 1em 0 rgba(var(--bg), 0.35)',
-        transition: 'transform 0.5s ease',
+            '0 0.25em 0.25em rgba(var(--bg), 0.18), 0 0.25em 0.8em rgba(var(--bg), 0.28)',
+        transition: 'transform 0.5s ease, box-shadow 0.2s ease',
     },
 }));
 
@@ -387,11 +400,14 @@ const SeparatedProgress = ({
                     : 0;
 
                 return (
-                    <div className={classes.progressPart} key={index}>
+                    <div
+                        className={classes.progressPart}
+                        key={index}
+                        style={{ '--bg': color }}
+                    >
                         <div
                             className={classes.innerPart}
                             style={{
-                                '--bg': color,
                                 '--val': partValue,
                             }}
                         />
@@ -416,11 +432,10 @@ const VerticalProgress = ({ color, value }) => {
     const displayValue = useAnimatedNumber(value, 500);
 
     return (
-        <div className={classes.verticalProgress}>
+        <div className={classes.verticalProgress} style={{ '--bg': color }}>
             <div
                 className={classes.verticalInternal}
                 style={{
-                    '--bg': color,
                     '--val': clamp(displayValue),
                 }}
             />
@@ -482,6 +497,35 @@ const getSideStatus = (status) => {
     };
 };
 
+const getBuffStatus = (buff, buffDef, now) => {
+    if (!buff || !buffDef) return null;
+
+    let progress = 1;
+
+    if (buffDef.type === 'timed') {
+        const duration = getNumber(buff.val, getNumber(buffDef.duration));
+
+        if (duration <= 0) return null;
+
+        const elapsed = Math.max(0, now - getNumber(buff.startTime, now));
+        const remaining = Math.max(0, duration - elapsed);
+
+        if (remaining <= 0) return null;
+
+        progress = clamp(remaining / duration);
+    } else if (buffDef.type === 'value') {
+        progress = clamp(getNumber(buff.val) / 100);
+    }
+
+    return {
+        color: hexToRgb(buffDef.color, ACTIVE_COLOR),
+        icon: buffDef.icon,
+        name: buff.buff,
+        override: buff.override,
+        progress,
+    };
+};
+
 export default () => {
     const classes = useStyles();
 
@@ -490,8 +534,11 @@ export default () => {
     const health = useSelector((state) => state.status.health);
     const maxHealth = useSelector((state) => state.status.maxHealth);
     const armor = useSelector((state) => state.status.armor);
+    const buffDefs = useSelector((state) => state.status.buffDefs);
+    const buffs = useSelector((state) => state.status.buffs);
     const lastHealth = useRef(health);
     const [hit, setHit] = useState(false);
+    const [now, setNow] = useState(Math.floor(Date.now() / 1000));
 
     const healthPercent = isDead
         ? 0
@@ -509,6 +556,14 @@ export default () => {
         [statuses],
     );
 
+    const sideBuffs = useMemo(
+        () =>
+            buffs
+                .map((buff) => getBuffStatus(buff, buffDefs[buff?.buff], now))
+                .filter(Boolean),
+        [buffDefs, buffs, now],
+    );
+
     useEffect(() => {
         if (health < lastHealth.current) {
             setHit(true);
@@ -518,6 +573,22 @@ export default () => {
         lastHealth.current = health;
     }, [health]);
 
+    useEffect(() => {
+        if (
+            !buffs.some(
+                (buff) => buffDefs[buff?.buff]?.type === 'timed',
+            )
+        ) {
+            return undefined;
+        }
+
+        const interval = window.setInterval(() => {
+            setNow(Math.floor(Date.now() / 1000));
+        }, 1000);
+
+        return () => window.clearInterval(interval);
+    }, [buffDefs, buffs]);
+
     return (
         <div className={classes.status}>
             <div className={classes.hud}>
@@ -526,7 +597,10 @@ export default () => {
                         <div
                             className={`${classes.barElement} ${classes.armorElement}`}
                         >
-                            <div className={classes.data}>
+                            <div
+                                className={classes.data}
+                                style={{ '--dataGlow': ARMOR_COLOR }}
+                            >
                                 <StatusIcon name="Shield" />
                                 <p style={{ color: '#00B2FF' }}>
                                     <Counter value={armor} />
@@ -543,7 +617,10 @@ export default () => {
                         </div>
                     )}
                     <div className={classes.barElement}>
-                        <div className={classes.data}>
+                        <div
+                            className={classes.data}
+                            style={{ '--dataGlow': healthColor }}
+                        >
                             <StatusIcon
                                 className={healthPercent < 0.1 ? 'dying' : ''}
                                 name="Heart"
@@ -580,6 +657,27 @@ export default () => {
                                 name={status.icon}
                                 strokeWidth={2}
                             />
+                        </div>
+                    ))}
+                    {sideBuffs.map((buff) => (
+                        <div
+                            className={classes.element}
+                            key={`buff-${buff.name}`}
+                        >
+                            <VerticalProgress
+                                color={buff.color}
+                                value={buff.progress}
+                            />
+                            {Boolean(buff.override) ? (
+                                <span
+                                    className={classes.buffText}
+                                    style={{ '--buffGlow': buff.color }}
+                                >
+                                    {buff.override}
+                                </span>
+                            ) : (
+                                <FontAwesomeIcon icon={buff.icon || 'circle'} />
+                            )}
                         </div>
                     ))}
                 </div>

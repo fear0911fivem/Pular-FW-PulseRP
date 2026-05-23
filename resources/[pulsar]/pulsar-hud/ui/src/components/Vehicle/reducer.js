@@ -16,6 +16,7 @@ export const initialState = {
     fuel: 8,
     fuelHide: false,
     aircraftData: null,
+    markerDist: preview ? '1.4' : 0,
 };
 
 export default (state = initialState, action) => {
@@ -30,6 +31,7 @@ export default (state = initialState, action) => {
                 ...state,
                 showing: false,
                 aircraftData: null,
+                markerDist: 0,
             };
         case 'UPDATE_IGNITION':
             return {
@@ -107,6 +109,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 aircraftData: action.payload.aircraftData || null,
+            };
+        case 'UPDATE_MARKER_DISTANCE':
+            return {
+                ...state,
+                markerDist: action.payload.markerDist || 0,
             };
         default:
             return state;

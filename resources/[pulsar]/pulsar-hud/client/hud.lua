@@ -859,6 +859,38 @@ function StartVehicleThreads()
 	end)
 
 	CreateThread(function()
+		local lastMarkerDist = nil
+
+		while _vehToggled do
+			local markerDist = 0
+			local waypoint = GetFirstBlipInfoId(8)
+
+			if waypoint and DoesBlipExist(waypoint) and GLOBAL_VEH then
+				local waypointCoords = GetBlipInfoIdCoord(waypoint)
+				local vehicleCoords = GetEntityCoords(GLOBAL_VEH)
+				local distance = #(vehicleCoords - waypointCoords)
+
+				markerDist = string.format("%.1f", (distance / 1000) * 0.621371192)
+			end
+
+			if markerDist ~= lastMarkerDist then
+				lastMarkerDist = markerDist
+				SendNUIMessage({
+					type = "UPDATE_MARKER_DISTANCE",
+					data = { markerDist = markerDist },
+				})
+			end
+
+			Wait(markerDist ~= 0 and 500 or 1000)
+		end
+
+		SendNUIMessage({
+			type = "UPDATE_MARKER_DISTANCE",
+			data = { markerDist = 0 },
+		})
+	end)
+
+	CreateThread(function()
 		while _vehToggled do
 			if GLOBAL_VEH then
 				SendNUIMessage({

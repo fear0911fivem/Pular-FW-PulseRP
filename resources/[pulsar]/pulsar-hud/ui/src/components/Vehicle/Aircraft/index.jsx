@@ -333,9 +333,14 @@ const useStyles = makeStyles(() => ({
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
-        transform: 'translateX(-50%)',
+        transform: 'translate3d(-50%, 0, 0)',
         pointerEvents: 'none',
         fontFamily: '"Bai Jamjuree", Arial, sans-serif',
+        transition: 'transform 680ms cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'transform',
+    },
+    anchorLifted: {
+        transform: 'translate3d(-50%, -3.6rem, 0)',
     },
     aircraftHud: {
         display: 'flex',
@@ -691,12 +696,23 @@ export default () => {
     const fuel = useSelector((state) => state.vehicle.fuel);
     const ignition = useSelector((state) => state.vehicle.ignition);
     const aircraftData = useSelector((state) => state.vehicle.aircraftData);
+    const progressShowing = useSelector((state) => state.progress.showing);
+    const actionShowing = useSelector(
+        (state) =>
+            Boolean(state.action?.showing) ||
+            Boolean(state.action2?.actions?.length),
+    );
     const visible = showing && Boolean(aircraftData);
+    const lifted = progressShowing || actionShowing;
     const data = aircraftData || {};
 
     return (
         <Fade in={visible}>
-            <div className={classes.anchor}>
+            <div
+                className={`${classes.anchor} ${
+                    lifted ? classes.anchorLifted : ''
+                }`}
+            >
                 <div className={classes.aircraftHud}>
                     <AircraftIndicator
                         title="FUEL"

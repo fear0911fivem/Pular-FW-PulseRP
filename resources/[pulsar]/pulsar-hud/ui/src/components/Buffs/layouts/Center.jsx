@@ -21,17 +21,21 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         display: 'flex',
-        gap: 6,
+        alignItems: 'flex-end',
+        gap: '.45rem',
         flexFlow: 'wrap-reverse',
-        width: 255,
-        marginBottom: 4,
+        width: '16rem',
+        marginBottom: '.35rem',
+        pointerEvents: 'none',
     },
     minimapContainer: {
         display: 'flex',
-        gap: 6,
+        alignItems: 'flex-end',
+        gap: '.45rem',
         flexFlow: 'row',
         position: 'absolute',
-        bottom: 2,
+        bottom: '.35rem',
+        pointerEvents: 'none',
     },
     status: {
         position: 'absolute',
@@ -127,6 +131,8 @@ export default withTheme(() => {
             {buffs.map((s, i) => {
                 if (!Boolean(s)) return null;
                 const buffDef = buffDefs[s?.buff];
+                if (!Boolean(buffDef)) return null;
+
                 switch (buffDef.type) {
                     case 'timed':
                         return (

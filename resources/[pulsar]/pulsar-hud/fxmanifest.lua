@@ -24,6 +24,7 @@ files({
   "ui/dist/index.html",
   "ui/dist/*.png",
   "ui/dist/*.webp",
+  "ui/dist/*.svg",
   "ui/dist/*.js",
   "ui/dist/*.mp3",
   "ui/dist/*.ttf",

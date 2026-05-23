@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Fade } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-import { Location } from '../../../components';
+import { Location, Waypoint } from '../../../components';
 import {
     Aircraft,
     Minimalistic,
@@ -11,7 +11,6 @@ import {
     Simple as VehicleSimple,
 } from '../../../components/Vehicle';
 import { Default as Status } from '../../../components/Status';
-import { Default as Buffs } from '../../../components/Buffs';
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -53,7 +52,7 @@ export default () => {
                     <Status />
                 </div>
                 <Location />
-                <Buffs />
+                <Waypoint />
                 <Aircraft />
                 {getVehicleLayout()}
             </div>
