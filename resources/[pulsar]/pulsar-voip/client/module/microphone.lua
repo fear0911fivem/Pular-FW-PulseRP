@@ -16,7 +16,7 @@ function StartUsingMicrophone(withRange)
 			do
 				--TriggerServerEvent('VOIP:Server:Microphone:SetPlayerState', true)
 
-				MumbleSetTalkerProximity(withRange + 0.0)
+				NetworkSetTalkerProximity(withRange + 0.0)
 				Wait(7500)
 			end
 
@@ -34,7 +34,7 @@ function StopUsingMicrophone()
 
 		MumbleSetAudioInputIntent(`speech`)
 
-		MumbleSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
+		NetworkSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
 		UpdateVOIPIndicatorStatus()
 	end
 end

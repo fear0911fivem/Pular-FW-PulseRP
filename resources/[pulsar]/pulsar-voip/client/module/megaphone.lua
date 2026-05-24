@@ -18,7 +18,7 @@ function StartUsingMegaphone(vehAnim)
 			do
 				TriggerServerEvent("VOIP:Server:Megaphone:SetPlayerState", true)
 
-				MumbleSetTalkerProximity(VOIP_CONFIG.MegaphoneRange + 0.0)
+				NetworkSetTalkerProximity(VOIP_CONFIG.MegaphoneRange + 0.0)
 				Wait(7500)
 			end
 
@@ -34,7 +34,7 @@ function StopUsingMegaphone()
 		USING_MEGAPHONE = false
 		TriggerServerEvent("VOIP:Server:Megaphone:SetPlayerState", false)
 
-		MumbleSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
+		NetworkSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
 		exports['pulsar-animations']:EmotesForceCancel()
 		UpdateVOIPIndicatorStatus()
 	end

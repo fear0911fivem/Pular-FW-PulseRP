@@ -1,87 +1,77 @@
-function DoProximityCheck(myCoords, player, proximity)
-    local tgtPed = GetPlayerPed(player)
-    local voiceRange = GetConvar('voice_useNativeAudio', 'false') == 'true' and proximity * 3 or proximity
-    local distance = #(myCoords - GetEntityCoords(tgtPed))
-    return distance < voiceRange, distance
+local zoneRadius = GetConvarInt('voice_zoneRadius', 256)
+local _routeBucket = 0
+local _customChannelOverride = false
+
+function GetPlayerGridZone()
+	local pos = GetEntityCoords(PlayerPedId(), false)
+	local sectorX = math.max(pos.x + 8192.0, 0.0) / zoneRadius
+	local sectorY = math.max(pos.y + 8192.0, 0.0) / zoneRadius
+	return math.ceil(sectorX + sectorY)
 end
 
 function StartVOIPGridThreads()
-    CreateThread(function()
-        while _characterLoaded do
-            local coords = GetEntityCoords(LocalPlayer.state.ped)
-            local proximity = MumbleGetTalkerProximity()
+	CreateThread(function()
+		while _characterLoaded do
+			if not _customChannelOverride then
+				local newGrid = GetPlayerGridZone()
+				if newGrid ~= CURRENT_GRID then
+					exports['pulsar-core']:LoggerTrace('VOIP', ('Grid: %s -> %s'):format(CURRENT_GRID, newGrid))
+					CURRENT_GRID = newGrid
 
-            MumbleClearVoiceTargetChannels(1)
-
-            MumbleAddVoiceChannelListen(LocalPlayer.state.voiceChannel)
-            MumbleAddVoiceTargetChannel(1, LocalPlayer.state.voiceChannel)
-
-            for k, v in pairs(CALL_DATA) do
-                if k ~= PLAYER_SERVER_ID then
-                    MumbleAddVoiceTargetChannel(1, MumbleGetVoiceChannelFromServerId(k))
-                end
-            end
-
-            local players = GetActivePlayers()
-            local added = {}
-            for _, player in ipairs(players) do
-                local serverId = GetPlayerServerId(player)
-                local shouldAdd, dist = DoProximityCheck(coords, player, proximity)
-                if shouldAdd then
-                    MumbleAddVoiceTargetChannel(1, MumbleGetVoiceChannelFromServerId(serverId))
-                    table.insert(added, { serverId, MumbleGetVoiceChannelFromServerId(serverId) })
-                end
-            end
-
-            if _inDebug then
-                print(#added, json.encode(added), proximity, json.encode(CALL_DATA), LocalPlayer.state.voiceChannel)
-            end
-
-            local isSpectating = NetworkIsInSpectatorMode()
-            if isSpectating then
-                SetSpectatorVoiceMode(true)
-            else
-                SetSpectatorVoiceMode(false)
-            end
-
-            Wait(200)
-        end
-    end)
+					MumbleClearVoiceTargetChannels(1)
+					MumbleAddVoiceTargetChannel(1, CURRENT_GRID)
+					for g = CURRENT_GRID - 3, CURRENT_GRID + 3 do
+						MumbleAddVoiceTargetChannel(1, g)
+					end
+				end
+			else
+				if CURRENT_GRID ~= _customChannelOverride then
+					exports['pulsar-core']:LoggerTrace('VOIP', ('Channel Override: %s'):format(_customChannelOverride))
+					CURRENT_GRID = _customChannelOverride
+					MumbleClearVoiceTargetChannels(1)
+					MumbleAddVoiceTargetChannel(1, CURRENT_GRID)
+				end
+			end
+			Wait(100)
+		end
+	end)
 end
 
-local isSpecVoiceEnabled = true
-function SetSpectatorVoiceMode(enabled)
-    if enabled then
-        isSpecVoiceEnabled = true
-
-        for _, player in ipairs(GetActivePlayers()) do
-            local serverId = GetPlayerServerId(player)
-            if serverId ~= PLAYER_SERVER_ID then
-                MumbleAddVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
-            end
-        end
-    else
-        if isSpecVoiceEnabled then
-            for _, player in ipairs(GetActivePlayers()) do
-                local serverId = GetPlayerServerId(player)
-                if serverId ~= PLAYER_SERVER_ID then
-                    MumbleRemoveVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
-                end
-            end
-        end
-
-        isSpecVoiceEnabled = false
-    end
+function GetCurrentVOIPGrid()
+	return CURRENT_GRID
 end
 
-RegisterNetEvent('onPlayerJoining', function(serverId)
-    if isSpecVoiceEnabled then
-        MumbleAddVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
-    end
+RegisterNetEvent('Routing:Client:NewRoute', function(route)
+	_routeBucket = route
+	_customChannelOverride = _routeBucket > 1 and (1024 + _routeBucket) or false
 end)
 
-RegisterNetEvent('onPlayerDropped', function(serverId)
-    if isSpecVoiceEnabled then
-        MumbleRemoveVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
-    end
+local isSpecVoiceEnabled = false
+function SetSpectatorVoiceMode(enabled)
+	if enabled and not isSpecVoiceEnabled then
+		isSpecVoiceEnabled = true
+		for _, player in ipairs(GetActivePlayers()) do
+			local serverId = GetPlayerServerId(player)
+			if serverId ~= PLAYER_SERVER_ID then
+				MumbleAddVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
+			end
+		end
+	elseif not enabled and isSpecVoiceEnabled then
+		isSpecVoiceEnabled = false
+		for _, player in ipairs(GetActivePlayers()) do
+			local serverId = GetPlayerServerId(player)
+			if serverId ~= PLAYER_SERVER_ID then
+				MumbleRemoveVoiceChannelListen(MumbleGetVoiceChannelFromServerId(serverId))
+			end
+		end
+	end
+end
+
+CreateThread(function()
+	while true do
+		Wait(1000)
+		if _characterLoaded then
+			SetSpectatorVoiceMode(NetworkIsInSpectatorMode())
+		end
+	end
 end)

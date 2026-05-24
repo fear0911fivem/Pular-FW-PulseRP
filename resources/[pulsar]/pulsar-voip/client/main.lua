@@ -97,6 +97,13 @@ AddEventHandler("Characters:Client:Spawn", function()
 
 	CreateThread(function()
 		while _characterLoaded do
+			GLOBAL_PED = PlayerPedId()
+			Wait(5000)
+		end
+	end)
+
+	CreateThread(function()
+		while _characterLoaded do
 			Wait(100)
 			local isTalking = NetworkIsPlayerTalking(PlayerId())
 			if isTalking and not PLAYER_TALKING then
@@ -126,25 +133,12 @@ AddEventHandler("VOIP:Client:ConnectionState", function(state)
 	if state then
 		exports['pulsar-core']:LoggerInfo("VOIP", "Connected to Mumble Server")
 
-		while not LocalPlayer.state.voiceChannel do
-			print("Waiting to Be Assigned Voice Channel")
-			Wait(100)
+		MumbleClearVoiceTargetPlayers(1)
+		for i = 1, 4 do
+			MumbleClearVoiceTarget(i)
 		end
 
-		MumbleClearVoiceTarget(1)
-		MumbleSetVoiceTarget(1)
-
-		print("Assigned Voice Channel", LocalPlayer.state.voiceChannel)
-		MumbleSetVoiceChannel(LocalPlayer.state.voiceChannel)
-
-		while MumbleGetVoiceChannelFromServerId(PLAYER_SERVER_ID) ~= LocalPlayer.state.voiceChannel do
-			Wait(250)
-			MumbleSetVoiceChannel(LocalPlayer.state.voiceChannel)
-		end
-
-		MumbleAddVoiceTargetChannel(1, LocalPlayer.state.voiceChannel)
-
-		MumbleSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
+		NetworkSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
 	else
 		exports['pulsar-core']:LoggerWarn("VOIP", "Disconnected from Mumble Server")
 		StopUsingMegaphone()
@@ -171,6 +165,10 @@ function UpdateVOIPIndicatorStatus()
 		indicatorColor = "#ababab"
 		indicatorIcon = "microphone"
 
+		if RADIO_CHANNEL and RADIO_CHANNEL > 0 then
+			indicatorIcon = "walkie-talkie"
+		end
+
 		if CALL_CHANNEL and CALL_CHANNEL > 0 then
 			indicatorIcon = "phone-volume"
 		end
@@ -181,7 +179,6 @@ function UpdateVOIPIndicatorStatus()
 
 		if RADIO_TALKING then
 			talking = 2
-			indicatorIcon = "walkie-talkie"
 		end
 
 		fillPercent = (100 / #VOIP_CONFIG.Modes) * CURRENT_VOICE_MODE
@@ -218,11 +215,10 @@ exports("Cycle", function(num)
 
 	CURRENT_VOICE_MODE = newMode
 	CURRENT_VOICE_MODE_DATA = VOIP_CONFIG.Modes[CURRENT_VOICE_MODE]
-	--MumbleSetAudioInputDistance(CURRENT_VOICE_MODE_DATA.Range + 0.0)
-	MumbleSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
+	NetworkSetTalkerProximity(CURRENT_VOICE_MODE_DATA.Range + 0.0)
 	UpdateVOIPIndicatorStatus()
 
-	LocalPlayer.state:set("proximity", CURRENT_VOICE_MODE_DATA.Range, false)
+	LocalPlayer.state:set("proximity", CURRENT_VOICE_MODE_DATA.Range, true)
 	exports['pulsar-core']:LoggerTrace("VOIP", "New Voice Range: " .. CURRENT_VOICE_MODE)
 end)
 
